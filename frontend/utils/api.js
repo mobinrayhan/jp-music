@@ -1,4 +1,5 @@
 const apiKey = process.env.API_KEY;
+const apiUrl = process.env.API_URL;
 
 export const fetchWithApiKey = async (url, options = {}) => {
   const headers = {
@@ -7,7 +8,7 @@ export const fetchWithApiKey = async (url, options = {}) => {
     ...options.headers,
   };
 
-  const response = await fetch(url, {
+  const response = await fetch(url || apiUrl, {
     ...options,
     headers,
   });
