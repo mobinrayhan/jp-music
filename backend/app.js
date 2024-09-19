@@ -8,7 +8,9 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 4000;
 const path = require('path');
-const { connectToDatabase } = require('./model/db');
+const { connectToDatabase } = require('./models/db');
+
+const categoryRouter = require('./routes/category');
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -20,6 +22,8 @@ app.use(limiter);
 // app.use(morgan('combined'));
 app.use(helmet());
 
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
 const apiKeyMiddleware = (req, res, next) => {
   const apiKey = req.headers['x-api-key'];
   if (!apiKey || apiKey !== process.env.API_KEY) {
@@ -29,10 +33,17 @@ const apiKeyMiddleware = (req, res, next) => {
 };
 app.use(apiKeyMiddleware);
 
-app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('/category', categoryRouter);
 
 app.use('/', (req, res) => {
   res.json({ message: 'api is working' });
+});
+
+app.use((error, req, res, next) => {
+  console.log(error);
+  const status = error.statusCode || 500;
+  const message = error.message;
+  res.status(status).json({ message });
 });
 
 async function startServer() {
