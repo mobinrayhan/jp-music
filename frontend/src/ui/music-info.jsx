@@ -17,6 +17,8 @@ import {
 import Image from "next/image";
 
 import citicel from "../../private-audios/citicel.mp3";
+import { useAudioDrawerCtx } from "@/context/audio-drawer-ctx";
+import { FaPause } from "react-icons/fa6";
 
 const audioData = [
   {
@@ -65,6 +67,9 @@ const audioData = [
 ];
 
 export default function AudioTable() {
+  const audioDrawerCtx = useAudioDrawerCtx();
+
+
   return (
     <Table>
       <TableBody>
@@ -74,7 +79,13 @@ export default function AudioTable() {
             className="group flex items-center justify-between"
           >
             <TableCell>
-              <div className="grid grid-cols-[max-content_1fr] gap-2">
+              <div
+                className="grid grid-cols-[max-content_1fr] gap-2"
+                onClick={audioDrawerCtx.handleActiveDrawer.bind(
+                  null,
+                  `/api/audio/${item.id}`,
+                )}
+              >
                 <div className="relative col-span-1 row-span-2 cursor-pointer">
                   <Image
                     width={30}
@@ -84,8 +95,15 @@ export default function AudioTable() {
                     className="h-12 w-12 object-cover"
                   />
 
-                  <span className="absolute left-0 top-0 hidden h-full w-full items-center justify-center bg-gray-700 text-lg group-hover:flex">
-                    <FaPlay />
+                  <span
+                    className={`absolute left-0 top-0 hidden h-full w-full items-center justify-center bg-gray-700 text-lg group-hover:flex ${audioDrawerCtx.songFromImage === `/api/audio/${item.id}` ? "!flex" : ""}`}
+                  >
+                    {audioDrawerCtx.songFromImage ===
+                    `/api/audio/${item.id}` ? (
+                      <FaPause />
+                    ) : (
+                      <FaPlay />
+                    )}
                   </span>
                 </div>
 
@@ -153,7 +171,7 @@ function DropDownMenuLIst() {
   );
 }
 
-function ExpandActionList() {
+export function ExpandActionList() {
   return (
     <>
       <Button variant="ghost">
