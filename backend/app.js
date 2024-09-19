@@ -7,6 +7,8 @@ const cors = require('cors');
 
 const app = express();
 const port = process.env.PORT || 4000;
+const path = require('path');
+const { connectToDatabase } = require('./model/db');
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -20,9 +22,6 @@ app.use(helmet());
 
 const apiKeyMiddleware = (req, res, next) => {
   const apiKey = req.headers['x-api-key'];
-
-  console.log(apiKey === process.env.API_KEY);
-
   if (!apiKey || apiKey !== process.env.API_KEY) {
     return res.status(403).json({ message: 'Forbidden: Invalid API Key' });
   }
@@ -30,8 +29,23 @@ const apiKeyMiddleware = (req, res, next) => {
 };
 app.use(apiKeyMiddleware);
 
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
 app.use('/', (req, res) => {
   res.json({ message: 'api is working' });
 });
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+async function startServer() {
+  try {
+    const db = await connectToDatabase();
+    app.listen(port, () => {
+      console.log(
+        `Connected to the database and server is running on port ${port}`
+      );
+    });
+  } catch (error) {
+    console.error('Failed to connect to the database. Server not started.');
+    process.exit(1); // Exit the process with failure code
+  }
+}
+startServer();
