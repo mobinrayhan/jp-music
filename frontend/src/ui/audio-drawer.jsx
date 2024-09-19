@@ -10,11 +10,11 @@ export default function AudioDrawer() {
 
   return (
     <section
-      className={`invisible absolute bottom-0 w-full bg-[#292C33] opacity-0 transition-all duration-150 ${audioDrawerCtx.songFromImage ? "!visible opacity-100" : ""}`}
+      className={`invisible absolute bottom-0 w-full bg-[#292C33] opacity-0 transition-all duration-150 ${audioDrawerCtx.songFromImage ? "!visible sticky opacity-100" : "sticky"}`}
     >
       <div className="container mx-auto px-2">
         <div className="container mx-auto flex items-center justify-between p-4">
-          {audioDrawerCtx.songFromImage && (
+          {audioDrawerCtx.songFromImage ? (
             <AudioPlayer
               src={audioDrawerCtx.songFromImage}
               showSkipControls={true}
@@ -25,6 +25,8 @@ export default function AudioDrawer() {
               autoPlay
               className="custom-audio-player w-full md:max-w-[30rem]"
             />
+          ) : (
+            <span />
           )}
 
           <div className="hidden md:flex">

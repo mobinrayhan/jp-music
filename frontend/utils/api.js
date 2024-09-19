@@ -1,14 +1,14 @@
 const apiKey = process.env.API_KEY;
 const apiUrl = process.env.API_URL;
 
-export const fetchWithApiKey = async (url, options = {}) => {
+export const fetchWithApiKey = async (endpoint, options = {}) => {
   const headers = {
     "Content-Type": "application/json",
     "x-api-key": apiKey,
     ...options.headers,
   };
 
-  const response = await fetch(url || apiUrl, {
+  const response = await fetch(apiUrl + endpoint, {
     ...options,
     headers,
   });

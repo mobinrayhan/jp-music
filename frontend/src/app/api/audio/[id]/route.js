@@ -35,40 +35,60 @@ const audioData = [
   },
 ];
 
-// Function to handle streaming of audio
-export async function GET(request, { params }) {
-  const { id } = params;
-
-  // Find the audio by ID from the array
+export async function GET(request) {
+  const id = request.url.split("/").pop();
   const audio = audioData.find((item) => item.id === parseInt(id));
 
   if (!audio) {
     return NextResponse.json({ error: "Audio not found" }, { status: 404 });
   }
 
-  // Construct the full file path
   const audioFilePath = path.join(process.cwd(), audio.audioUrl);
 
   try {
-    // Check if the file exists
     if (!fs.existsSync(audioFilePath)) {
       return NextResponse.json({ error: "File not found" }, { status: 404 });
     }
 
-    // Open a read stream for the audio file
-    const audioStream = fs.createReadStream(audioFilePath);
+    const stat = fs.statSync(audioFilePath);
+    const fileSize = stat.size;
 
-    // Set headers to ensure that the file is streamed and not downloaded
-    const headers = {
-      "Content-Type": audio.audioType === "MP3" ? "audio/mpeg" : "audio/wav",
-      "Content-Disposition": "inline", // Ensures it's streamed, not downloaded
-      "Cache-Control": "no-store", // No caching to prevent easy access
-      "Content-Transfer-Encoding": "binary",
-      "X-Content-Type-Options": "nosniff", // Prevent MIME-type sniffing
-    };
+    const range = request.headers.get("range");
 
-    return new NextResponse(audioStream, { headers });
-  } catch (error) {
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    if (range) {
+      const parts = range.replace(/bytes=/, "").split("-");
+      const start = parseInt(parts[0], 10);
+      const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+      const chunkSize = end - start + 1;
+
+      const audioStream = fs.createReadStream(audioFilePath, { start, end });
+
+      const headers = {
+        "Content-Range": `bytes ${start}-${end}/${fileSize}`,
+        "Accept-Ranges": "bytes",
+        "Content-Length": chunkSize,
+        "Content-Type": audio.audioType === "MP3" ? "audio/mpeg" : "audio/wav",
+        "Cache-Control": "no-store",
+        "X-Content-Type-Options": "nosniff",
+      };
+
+      return new NextResponse(audioStream, { status: 206, headers });
+    } else {
+      const audioStream = fs.createReadStream(audioFilePath);
+
+      const headers = {
+        "Content-Length": fileSize,
+        "Content-Type": audio.audioType === "MP3" ? "audio/mpeg" : "audio/wav",
+        "Cache-Control": "no-store",
+        "X-Content-Type-Options": "nosniff",
+      };
+
+      return new NextResponse(audioStream, { headers });
+    }
+  } catch (err) {
+    return NextResponse.json(
+      { error: "Something went wrong" },
+      { status: 500 },
+    );
   }
 }

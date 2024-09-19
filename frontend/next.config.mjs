@@ -5,7 +5,7 @@ const config = (phase) => {
     return {
       env: {
         API_KEY: "9c035862-3350-4204-9c87-0a65d5c7c85f",
-        API_URL: "http://localhost:4000/",
+        API_URL: "http://localhost:4000",
       },
 
       webpack(config) {
@@ -24,6 +24,14 @@ const config = (phase) => {
         });
 
         return config;
+      },
+
+      images: {
+        remotePatterns: [
+          {
+            hostname: "localhost",
+          },
+        ],
       },
     };
   }
@@ -50,6 +58,14 @@ const config = (phase) => {
       });
 
       return config;
+    },
+
+    images: {
+      remotePatterns: [
+        {
+          hostname: "localhost",
+        },
+      ],
     },
   };
 };
