@@ -4,6 +4,7 @@ const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 require('dotenv').config();
 const cors = require('cors');
+const fs = require('fs');
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -11,18 +12,81 @@ const path = require('path');
 const { connectToDatabase } = require('./models/db');
 
 const categoryRouter = require('./routes/category');
+const audioRouter = require('./routes/audio');
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // Limit each IP to 100 requests per windowMs
 });
 
-app.use(cors());
 app.use(limiter);
 // app.use(morgan('combined'));
 app.use(helmet());
 
-app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use(
+  cors({
+    origin: 'http://localhost:3000', // Your Next.js frontend URL
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type'],
+    exposedHeaders: ['Cross-Origin-Resource-Policy'],
+  })
+);
+
+// Serve static images
+app.use(
+  '/images',
+  express.static(path.join(__dirname, 'images'), {
+    setHeaders: (res, path) => {
+      res.setHeader('Cross-Origin-Resource-Policy', 'same-site'); // If on the same domain
+    },
+  })
+);
+
+// Serve audio files with proper CORS and resource policy headers
+app.get('/audio-files/:category/:name', (req, res) => {
+  const { category, name } = req.params;
+  const audioFilePath = path.join(__dirname, 'audio-files', category, name);
+
+  if (!fs.existsSync(audioFilePath)) {
+    return res.status(404).send('Audio file not found');
+  }
+
+  const stat = fs.statSync(audioFilePath);
+  const fileSize = stat.size;
+  const range = req.headers.range;
+
+  // Set CORS and Cross-Origin-Resource-Policy headers for audio streaming
+  res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+
+  if (range) {
+    const parts = range.replace(/bytes=/, '').split('-');
+    const start = parseInt(parts[0], 10);
+    const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+    const chunkSize = end - start + 1;
+    const fileStream = fs.createReadStream(audioFilePath, { start, end });
+
+    res.writeHead(206, {
+      'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+      'Accept-Ranges': 'bytes',
+      'Content-Length': chunkSize,
+      'Content-Type': 'audio/mpeg',
+      'Cache-Control': 'no-store',
+      'X-Content-Type-Options': 'nosniff',
+    });
+
+    fileStream.pipe(res);
+  } else {
+    res.writeHead(200, {
+      'Content-Length': fileSize,
+      'Content-Type': 'audio/mpeg',
+      'Cache-Control': 'no-store',
+      'X-Content-Type-Options': 'nosniff',
+    });
+
+    fs.createReadStream(audioFilePath).pipe(res);
+  }
+});
 
 const apiKeyMiddleware = (req, res, next) => {
   const apiKey = req.headers['x-api-key'];
@@ -33,6 +97,7 @@ const apiKeyMiddleware = (req, res, next) => {
 };
 app.use(apiKeyMiddleware);
 
+app.use('/audios', audioRouter);
 app.use('/category', categoryRouter);
 
 app.use('/', (req, res) => {
