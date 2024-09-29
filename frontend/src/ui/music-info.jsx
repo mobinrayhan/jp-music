@@ -19,6 +19,7 @@ import Image from "next/image";
 import citicel from "../../private-audios/citicel.mp3";
 import { useAudioDrawerCtx } from "@/context/audio-drawer-ctx";
 import { FaPause } from "react-icons/fa6";
+import { useCategoryCtx } from "@/context/category-ctx";
 
 const audioData = [
   {
@@ -68,7 +69,9 @@ const audioData = [
 
 export default function AudioTable() {
   const audioDrawerCtx = useAudioDrawerCtx();
+  const categoryCtx = useCategoryCtx();
 
+  console.log(categoryCtx.category);
 
   return (
     <Table>
@@ -146,7 +149,7 @@ export default function AudioTable() {
   );
 }
 
-function DropDownMenuLIst() {
+export function DropDownMenuLIst() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="flex md:hidden">

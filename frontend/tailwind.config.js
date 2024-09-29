@@ -9,6 +9,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      screens: {
+        cSm: "450px",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
@@ -56,6 +59,10 @@ module.exports = {
           5: "hsl(var(--chart-5))",
         },
       },
+    },
+
+    fontFamily: {
+      sans: ['"Heebo"," system-ui", "sans-serif"'],
     },
   },
   plugins: [require("tailwindcss-animate")],

@@ -22,7 +22,6 @@ export default function AudioDrawerCtxProvider({ children }) {
 
 export function useAudioDrawerCtx() {
   const ctx = useContext(AudioDrawerCtx);
-
   if (!ctx || ctx === undefined) {
     throw new Error(
       "You Can not use useAudioDrawerCtx outside of the AudioDrawerCtxProvider provider",

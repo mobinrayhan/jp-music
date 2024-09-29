@@ -7,7 +7,7 @@ export default function Footer() {
 
   return (
     !audioDrawerCtx.songFromImage && (
-      <footer className="border-gray-500-300 container mx-auto flex items-center justify-between border-t px-2 pt-6">
+      <footer className="border-gray-500-300 container mx-auto flex items-center justify-between border-t px-2 py-6">
         <small>&copy; Copyright soundei {new Date().getFullYear()}</small>
 
         {/* <ul>
