@@ -1,6 +1,5 @@
 import Header from "@/ui/header";
-import SearchInput from "@/ui/search-input";
-import Footer from "@/ui/footer";
+import Footer from "@/components/footer/footer";
 import AudioDrawerCtxProvider from "@/context/audio-drawer-ctx";
 
 export const metadata = {
@@ -16,7 +15,6 @@ export default function RootLayout({ children }) {
           <header className="xl:10 2xl:12 container mx-auto flex items-center justify-between px-4 py-6 pt-2 md:px-6 lg:px-8">
             <Header />
           </header>
-          <SearchInput />
 
           {children}
 

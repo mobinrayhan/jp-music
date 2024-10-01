@@ -12,7 +12,10 @@ export default function NotFound() {
         amazing sounds!
       </p>
 
-      <Link href={"/"} className="inline-block rounded bg-green-500 px-4 py-2">
+      <Link
+        href={"/"}
+        className="inline-block rounded bg-green-500 px-4 py-2 duration-75 hover:bg-green-400"
+      >
         Go back Home
       </Link>
     </section>

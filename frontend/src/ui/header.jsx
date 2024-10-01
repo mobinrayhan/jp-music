@@ -4,13 +4,9 @@ import { IoMenuSharp } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
 
 import Link from "next/link";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
-import { usePathname } from "next/navigation";
+
+import { usePathname, useRouter } from "next/navigation";
+import DropdownNavbar from "@/components/header/dropdown-navbar";
 
 const menuOptions = [
   {
@@ -18,7 +14,7 @@ const menuOptions = [
     label: "Sound Effect",
   },
   {
-    href: "/saved",
+    href: "/library",
     label: "Saved",
   },
 ];
@@ -26,14 +22,23 @@ const menuOptions = [
 export default function Header() {
   const pathName = usePathname();
 
+  const activePath = pathName.split("/")[1]
+    ? "/" + pathName.split("/")[1]
+    : "/";
+
   return (
     <>
-      <h3>LOGO</h3>
+      <h3>
+        <Link href="/">LOGO</Link>
+      </h3>
 
       <ul className="flex align-middle">
         {menuOptions.map(({ href, label }) => (
           <li key={label}>
-            <Button asChild variant="secondary">
+            <Button
+              asChild
+              variant={`${activePath === href ? "secondary" : "ghost"}`}
+            >
               <Link href={href}>{label}</Link>
             </Button>
           </li>
@@ -42,18 +47,5 @@ export default function Header() {
 
       <DropdownNavbar />
     </>
-  );
-}
-
-function DropdownNavbar() {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger>
-        <IoMenuSharp size={32} />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem>hasdf</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
   );
 }
