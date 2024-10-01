@@ -2,21 +2,37 @@
   {
     "name": "Keyboard, Apple, Typing",
     "type": "mp3",
-    "category": "Computer"
+    "category": "computer",
+    "downloadURL": ""
   },
   {
     "name": "Keyboard, Cooler Master, Various, Motions 03",
     "type": "mp3",
-    "category": "Computer"
+    "category": "computer",
+    "downloadURL": ""
   },
   {
     "name": "Bed, Sit Down, Spring Rattling",
     "type": "wav",
-    "category": "Object"
+    "category": "object",
+    "downloadURL": ""
   },
   {
     "name": "Chair, Wood, Move On Floor, Perspective 01",
     "type": "wav",
-    "category": "Object"
+    "category": "object",
+    "downloadURL": ""
+  },
+  {
+    "name": "Plastic Cart, Constant, Fast, Shaking",
+    "type": "wav",
+    "category": "object",
+    "downloadURL": ""
+  },
+  {
+    "name": "Shower Curtain, Plastic, Moves On Metal Bar",
+    "type": "mp3",
+    "category": "object",
+    "downloadURL": ""
   }
 ]

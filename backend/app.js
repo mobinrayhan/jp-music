@@ -14,21 +14,20 @@ const { connectToDatabase } = require('./models/db');
 const categoryRouter = require('./routes/category');
 const audioRouter = require('./routes/audio');
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
-});
+// const limiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 minutes
+//   max: 100, // Limit each IP to 100 requests per windowMs
+// });
 
-app.use(limiter);
+// app.use(limiter);
 // app.use(morgan('combined'));
 app.use(helmet());
 
 app.use(
   cors({
-    origin: 'http://localhost:3000', // Your Next.js frontend URL
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type'],
-    exposedHeaders: ['Cross-Origin-Resource-Policy'],
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key'],
   })
 );
 
@@ -55,9 +54,13 @@ app.get('/audio-files/:category/:name', (req, res) => {
   const fileSize = stat.size;
   const range = req.headers.range;
 
-  // Set CORS and Cross-Origin-Resource-Policy headers for audio streaming
   res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.setHeader('Access-Control-Allow-Headers', 'Range');
+  res.setHeader(
+    'Access-Control-Expose-Headers',
+    'Content-Range, Accept-Ranges'
+  );
 
   if (range) {
     const parts = range.replace(/bytes=/, '').split('-');
@@ -71,7 +74,8 @@ app.get('/audio-files/:category/:name', (req, res) => {
       'Accept-Ranges': 'bytes',
       'Content-Length': chunkSize,
       'Content-Type': 'audio/mpeg',
-      'Cache-Control': 'no-store',
+      'Content-Disposition': 'inline', // Ensure in-browser playback
+      'Cache-Control': 'public, max-age=3600', // Allow caching
       'X-Content-Type-Options': 'nosniff',
     });
 
@@ -80,7 +84,8 @@ app.get('/audio-files/:category/:name', (req, res) => {
     res.writeHead(200, {
       'Content-Length': fileSize,
       'Content-Type': 'audio/mpeg',
-      'Cache-Control': 'no-store',
+      'Content-Disposition': 'inline', // Ensure in-browser playback
+      'Cache-Control': 'public, max-age=3600', // Allow caching
       'X-Content-Type-Options': 'nosniff',
     });
 
