@@ -11,7 +11,7 @@ export default function CategoryBox({ categoryList, categoryParams }) {
         {categoryList.map((catItem) => (
           <li
             key={catItem._id.toString()}
-            className={`cursor-pointer shadow-inner hover:shadow-[0_0_0_2px_green] ${catItem.category === categoryParams && "!shadow-[0_0_0_2px_green]"}`}
+            className={`cursor-pointer shadow-inner hover:shadow-[0_0_0_2px_green] ${catItem.category === categoryParams ? "!shadow-[0_0_0_2px_green]" : ""}`}
           >
             <Link href={`/?category=${catItem.category}`}>
               <div className="relative">
@@ -20,6 +20,7 @@ export default function CategoryBox({ categoryList, categoryParams }) {
                   width={200}
                   height={200}
                   alt={catItem.category}
+                  priority
                 />
 
                 <h3 className="absolute bottom-[10%] left-2 font-semibold capitalize tracking-widest text-gray-900">

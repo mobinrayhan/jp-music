@@ -21,10 +21,11 @@ export default async function Home({ searchParams }) {
   const categoryParams = searchParams?.category;
 
   try {
-    const audios = await fetchWithApiKey(
+    const { audios, message } = await fetchWithApiKey(
       categoryParams ? `/audios/category/${categoryParams}` : "/audios/all",
       { cache: "no-store" },
     );
+
     return (
       <>
         <SearchInput />
@@ -42,7 +43,10 @@ export default async function Home({ searchParams }) {
     return (
       <>
         <SearchInput />
-        <CategoryBox categoryList={categoryList?.category} />
+        <CategoryBox
+          categoryList={categoryList?.category}
+          categoryParams={categoryParams}
+        />
 
         <main className="xl:10 2xl:12 container mx-auto px-4 pt-2 md:px-6 lg:px-8">
           <h3>{error.message || "Something Went Wrong 😭!"}</h3>

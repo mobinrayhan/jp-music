@@ -14,7 +14,8 @@ export const fetchWithApiKey = async (endpoint, options = {}) => {
   });
 
   if (!response.ok) {
-    throw new Error(`Error: ${response.statusText}`);
+    const { message } = await response.json();
+    throw new Error(message);
   }
 
   return response.json();

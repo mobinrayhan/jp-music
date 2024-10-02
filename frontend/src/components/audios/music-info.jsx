@@ -7,12 +7,12 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 
 import Image from "next/image";
 
-import { useAudioDrawerCtx } from "@/context/audio-drawer-ctx";
-import { FaPause } from "react-icons/fa6";
-import { Suspense } from "react";
 import DropDownMenuLIst from "@/components/audios/dropdown-menulist";
 import ExpandAction from "@/components/audios/expand-action";
 import WaveSurferComponent from "@/components/audios/wave-surfer";
+import { useAudioDrawerCtx } from "@/context/audio-drawer-ctx";
+import { Suspense } from "react";
+import { FaPause } from "react-icons/fa6";
 
 const apiUrl = process.env.API_URL;
 
@@ -34,10 +34,9 @@ function MusicTableList({ category: categoryList, audios }) {
   return (
     <Table>
       <TableBody>
-        {audios?.allAudios.map((item) => (
+        {audios?.map((item) => (
           <TableRow
-            // key={item._id.toString()}
-            key={item.title}
+            key={item._id.toString()}
             className="group flex max-h-16 items-center justify-between overflow-hidden"
           >
             <TableCell>
