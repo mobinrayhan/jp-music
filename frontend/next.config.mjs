@@ -5,7 +5,8 @@ const config = (phase) => {
     return {
       env: {
         API_KEY: "9c035862-3350-4204-9c87-0a65d5c7c85f",
-        API_URL: "http://192.168.0.104:4000",
+        // API_URL: "http://192.168.0.104:4000",
+        API_URL: "https://jp-music.onrender.com",
       },
 
       webpack(config) {
@@ -31,8 +32,9 @@ const config = (phase) => {
           {
             hostname: "localhost",
           },
-        ],
-        remotePatterns: [
+          {
+            hostname: "jp-music.onrender.com",
+          },
           {
             hostname: "192.168.0.104",
           },
@@ -44,8 +46,7 @@ const config = (phase) => {
   return {
     env: {
       API_KEY: "9c035862-3350-4204-9c87-0a65d5c7c85f",
-      API_URL: "https://jp-music.onrender.com/",
-      // API_URL: "http://192.168.0.104:4000",
+      API_URL: "https://jp-music.onrender.com",
     },
 
     webpack(config) {
@@ -71,8 +72,9 @@ const config = (phase) => {
         {
           hostname: "localhost",
         },
-      ],
-      remotePatterns: [
+        {
+          hostname: "jp-music.onrender.com",
+        },
         {
           hostname: "192.168.0.104",
         },

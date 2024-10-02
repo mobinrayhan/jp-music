@@ -8,7 +8,7 @@ export default function CategoryBox({ categoryList, categoryParams }) {
   return (
     <section className="container mx-auto px-4 pb-8 pt-2 md:px-6 lg:px-8">
       <ul className="grid grid-cols-2 gap-4 cSm:grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
-        {categoryList.map((catItem) => (
+        {categoryList?.map((catItem) => (
           <li
             key={catItem._id.toString()}
             className={`cursor-pointer shadow-inner hover:shadow-[0_0_0_2px_green] ${catItem.category === categoryParams ? "!shadow-[0_0_0_2px_green]" : ""}`}

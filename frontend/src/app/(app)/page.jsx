@@ -21,7 +21,7 @@ export default async function Home({ searchParams }) {
   const categoryParams = searchParams?.category;
 
   try {
-    const { audios, message } = await fetchWithApiKey(
+    const { audios } = await fetchWithApiKey(
       categoryParams ? `/audios/category/${categoryParams}` : "/audios/all",
       { cache: "no-store" },
     );
