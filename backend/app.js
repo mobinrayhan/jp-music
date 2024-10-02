@@ -42,9 +42,15 @@ app.use(
 );
 
 // Serve audio files with proper CORS and resource policy headers
-app.get('/audio-files/:category/:name', (req, res) => {
+app.get('/audio-files/preview/:category/:name', (req, res) => {
   const { category, name } = req.params;
-  const audioFilePath = path.join(__dirname, 'audio-files', category, name);
+  const audioFilePath = path.join(
+    __dirname,
+    'audio-files',
+    'preview',
+    category,
+    name
+  );
 
   if (!fs.existsSync(audioFilePath)) {
     return res.status(404).send('Audio file not found');
@@ -56,6 +62,7 @@ app.get('/audio-files/:category/:name', (req, res) => {
 
   res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  // res.setHeader('Access-Control-Allow-Origin', 'jp-music.vercel.app');
   res.setHeader('Access-Control-Allow-Headers', 'Range');
   res.setHeader(
     'Access-Control-Expose-Headers',
@@ -95,6 +102,7 @@ app.get('/audio-files/:category/:name', (req, res) => {
 
 const apiKeyMiddleware = (req, res, next) => {
   const apiKey = req.headers['x-api-key'];
+
   if (!apiKey || apiKey !== process.env.API_KEY) {
     return res.status(403).json({ message: 'Forbidden: Invalid API Key' });
   }
@@ -110,9 +118,9 @@ app.use('/', (req, res) => {
 });
 
 app.use((error, req, res, next) => {
-  console.log(error);
   const status = error.statusCode || 500;
   const message = error.message;
+  console.log(error);
   res.status(status).json({ message });
 });
 
@@ -129,4 +137,5 @@ async function startServer() {
     process.exit(1); // Exit the process with failure code
   }
 }
+
 startServer();
