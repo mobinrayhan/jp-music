@@ -61,11 +61,17 @@ app.get('/audio-files/preview/:category/:name', (req, res) => {
   const range = req.headers.range;
 
   res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
-  res.setHeader('Access-Control-Allow-Origin', [
-    'https://jp-music.vercel.app',
+
+  const allowedOrigins = [
+    'https://jp-music.vercel.app/',
     'http://localhost:3000',
     'https://soundei.netlify.app',
-  ]);
+  ];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+
   res.setHeader('Access-Control-Allow-Headers', 'Range');
   res.setHeader(
     'Access-Control-Expose-Headers',
