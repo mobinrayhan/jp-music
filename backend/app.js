@@ -25,7 +25,7 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: ['http://localhost:3000', 'https://jp-music.vercel.app/'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key'],
   })
@@ -61,8 +61,8 @@ app.get('/audio-files/preview/:category/:name', (req, res) => {
   const range = req.headers.range;
 
   res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+  res.setHeader('Access-Control-Allow-Origin', 'https://jp-music.vercel.app/');
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-  // res.setHeader('Access-Control-Allow-Origin', 'jp-music.vercel.app');
   res.setHeader('Access-Control-Allow-Headers', 'Range');
   res.setHeader(
     'Access-Control-Expose-Headers',
@@ -137,5 +137,7 @@ async function startServer() {
     process.exit(1); // Exit the process with failure code
   }
 }
+
+console.log('MY_VARIABLE:', process.env.MY_VARIABLE);
 
 startServer();
