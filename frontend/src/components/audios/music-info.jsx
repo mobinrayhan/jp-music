@@ -44,7 +44,7 @@ function MusicTableList({ category: categoryList, audios }) {
                 className="grid grid-cols-[max-content_1fr] gap-2"
                 onClick={audioDrawerCtx.handleActiveDrawer.bind(
                   null,
-                  `${apiUrl}/audio-files/${item.category}/${item.name}.${item.type}`,
+                  `${apiUrl}/audio-files/preview/${item.category}/${item.name}.${item.type}`,
                 )}
               >
                 <div className="relative col-span-1 row-span-2 cursor-pointer">
@@ -60,7 +60,7 @@ function MusicTableList({ category: categoryList, audios }) {
                     className={`absolute left-0 top-0 hidden h-full w-full items-center justify-center bg-gray-700 text-lg group-hover:flex ${audioDrawerCtx.songFromImage === `${apiUrl}/audio-files/${item.category}/${item.name}.${item.type}` ? "!flex" : ""}`}
                   >
                     {audioDrawerCtx.songFromImage ===
-                    `${apiUrl}/audio-files/${item.category}/${item.name}.${item.type}` ? (
+                    `${apiUrl}/audio-files/preview/${item.category}/${item.name}.${item.type}` ? (
                       <FaPause />
                     ) : (
                       <FaPlay />
@@ -82,7 +82,7 @@ function MusicTableList({ category: categoryList, audios }) {
 
             <TableCell className="hidden min-w-[10rem] lg:block">
               <WaveSurferComponent
-                audioUrl={`${apiUrl}/audio-files/${item.category}/${item.name}.${item.type}`}
+                audioUrl={`${apiUrl}/audio-files/preview/${item.category}/${item.name}.${item.type}`}
               />
             </TableCell>
 
