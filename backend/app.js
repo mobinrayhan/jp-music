@@ -63,7 +63,7 @@ app.get('/audio-files/preview/:category/:name', (req, res) => {
   res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
 
   const allowedOrigins = [
-    'https://jp-music.vercel.app/',
+    'https://jp-music.vercel.app',
     'http://localhost:3000',
     'https://soundei.netlify.app',
   ];
@@ -146,7 +146,5 @@ async function startServer() {
     process.exit(1); // Exit the process with failure code
   }
 }
-
-console.log('MY_VARIABLE:', process.env.MY_VARIABLE);
 
 startServer();
