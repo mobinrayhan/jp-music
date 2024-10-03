@@ -10,7 +10,7 @@ export default function HomePage() {
 
       <p> Thank you for your patience and support!</p>
 
-      <em> &mdash; James Prince</em>
+      <em> &mdash; soundei</em>
     </section>
   );
 }
