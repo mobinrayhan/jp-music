@@ -5,39 +5,39 @@ import CategoryBox from "@/ui/category-box";
 import SearchInput from "@/ui/search-input";
 import { fetchWithApiKey } from "../../../utils/api";
 
-export const metadata = {
-  title: "SoundEi - Your Ultimate Sound Library",
-  description: "",
-};
+// async function SoundEffects({ categoryParams }) {
+//   const { audios } = await fetchWithApiKey(
+//     categoryParams ? `/audios/category/${categoryParams}` : "/audios/all",
+//     { cache: "no-store" },
+//   );
+
+//   return <AudioTable category={[]} audios={audios} />;
+// }
 
 export default async function Home({ searchParams }) {
-  const categoryList = await fetchWithApiKey("/category", {
+  const { category } = await fetchWithApiKey("/category", {
     cache: "no-store",
   });
-
   const categoryParams = searchParams?.category;
 
-  try {
-    const { audios } = await fetchWithApiKey(
-      categoryParams ? `/audios/category/${categoryParams}` : "/audios/all",
-      { cache: "no-store" },
-    );
+  const { audios } = await fetchWithApiKey(
+    categoryParams ? `/audios/category/${categoryParams}` : "/audios/all",
+    { cache: "no-store" },
+  );
 
+  try {
     return (
       <>
         <SearchInput />
         <Advertise />
-        <CategoryBox
-          categoryList={categoryList?.category}
-          categoryParams={categoryParams}
-        />
+        <CategoryBox categoryList={category} categoryParams={categoryParams} />
         <div className="text-center">
           <p className="inline-block border-b-2 border-indigo-100 py-4 text-center">
             Recommended Sound Effect For You
           </p>
         </div>
         <main className="custom-container">
-          <AudioTable category={categoryList?.category} audios={audios} />
+          <AudioTable category={category} audios={audios} />{" "}
         </main>
         <AudioDrawer />
       </>

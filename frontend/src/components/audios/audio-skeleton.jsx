@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function Component() {
+export default function AudioSkeleton() {
   return Array.apply(null, Array(5)).map(function (_, i) {
     return (
       <Table key={i}>

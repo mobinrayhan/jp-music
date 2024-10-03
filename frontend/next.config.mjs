@@ -6,6 +6,7 @@ const config = (phase) => {
       env: {
         API_KEY: "9c035862-3350-4204-9c87-0a65d5c7c85f",
         API_URL: "http://192.168.0.101:4000",
+        // API_URL: "https://dev-api.soundei.com",
       },
 
       webpack(config) {
@@ -32,7 +33,7 @@ const config = (phase) => {
             hostname: "localhost",
           },
           {
-            hostname: "jp-music.onrender.com",
+            hostname: "dev-api.soundei.com",
           },
           {
             hostname: "192.168.0.101",

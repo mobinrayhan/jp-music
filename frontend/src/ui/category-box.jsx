@@ -7,7 +7,7 @@ const apiUrl = process.env.API_URL;
 export default function CategoryBox({ categoryList, categoryParams }) {
   return (
     <section className="custom-container pb-8 pt-4">
-      <ul className="grid grid-cols-2 gap-4 cSm:grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
+      <ul className="grid grid-cols-3 gap-4 cSm:grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
         {categoryList?.map((catItem) => (
           <li
             key={catItem._id.toString()}
