@@ -66,6 +66,8 @@ app.get('/audio-files/preview/:category/:name', (req, res) => {
     'https://jp-music.vercel.app',
     'http://localhost:3000',
     'https://soundei.com',
+    'https://dev-front.soundei.com',
+    'https://dev-admin.soundei.com',
     'https://soundei.netlify.app',
   ];
   const origin = req.headers.origin;
