@@ -16,6 +16,9 @@ export async function generateMetadata() {
     description,
     author,
     keywords,
+    type: "website",
+    locale: "en_US",
+    url: "https://soundei.com",
     openGraph: {
       title,
       description,
@@ -24,7 +27,7 @@ export async function generateMetadata() {
           url: image,
           width: 1200,
           height: 630,
-          alt: "Share Image",
+          alt: "SoundEi Image Link Preview Image",
         },
       ],
     },
