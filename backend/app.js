@@ -65,6 +65,7 @@ app.get('/audio-files/preview/:category/:name', (req, res) => {
   const allowedOrigins = [
     'https://jp-music.vercel.app',
     'http://localhost:3000',
+    'https://soundei.com',
     'https://soundei.netlify.app',
     'https://soundei.com',
     'https://dev-front.soundei.com',
