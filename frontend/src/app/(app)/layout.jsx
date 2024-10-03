@@ -4,7 +4,7 @@ import Header from "@/ui/header";
 
 const baseUrl =
   process.env.NODE_ENV === "production"
-    ? "https://soundei.com"
+    ? "https://dev-front.soundei.com"
     : "http://localhost:3000";
 
 export async function generateMetadata() {
