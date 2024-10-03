@@ -2,6 +2,11 @@ import Footer from "@/components/footer/footer";
 import AudioDrawerCtxProvider from "@/context/audio-drawer-ctx";
 import Header from "@/ui/header";
 
+const baseUrl =
+  process.env.NODE_ENV === "production"
+    ? "https://soundei.com"
+    : "http://localhost:3000";
+
 export async function generateMetadata() {
   const title = "SoundEi - Your Ultimate Sound Library";
   const description =
@@ -9,7 +14,7 @@ export async function generateMetadata() {
   const keywords =
     "Sound downloads, audio clips, sound effects, royalty-free sounds, music for content creators, downloadable audio, sound library, SoundEi";
   const author = "James Prince";
-  const image = "/app-logo.png";
+  const image = `${baseUrl}/app-logo.png`;
 
   return {
     title,
@@ -18,7 +23,7 @@ export async function generateMetadata() {
     keywords,
     type: "website",
     locale: "en_US",
-    url: "https://soundei.com",
+    url: baseUrl,
     openGraph: {
       title,
       description,
