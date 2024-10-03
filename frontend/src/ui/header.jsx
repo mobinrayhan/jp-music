@@ -1,21 +1,29 @@
 "use client";
 
-import { IoMenuSharp } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
 
 import Link from "next/link";
 
-import { usePathname, useRouter } from "next/navigation";
 import DropdownNavbar from "@/components/header/dropdown-navbar";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 const menuOptions = [
   {
     href: "/",
-    label: "Sound Effect",
+    label: "Home",
   },
   {
-    href: "/library",
-    label: "Saved",
+    href: "/newest",
+    label: "Newest",
+  },
+  {
+    href: "/all-sfx",
+    label: "All SFX",
+  },
+  {
+    href: "/my-library",
+    label: "My Library",
   },
 ];
 
@@ -28,9 +36,12 @@ export default function Header() {
 
   return (
     <>
-      <h3>
-        <Link href="/">LOGO</Link>
-      </h3>
+      <Link href={"/"} className="flex items-center gap-1">
+        <div href="/" className="relative block aspect-video h-10">
+          <Image src={"/soundei-logo.png"} fill alt="Soundei Logo" />
+        </div>
+        <h3 className="md:text-2xl">Soundei</h3>
+      </Link>
 
       <ul className="flex align-middle">
         {menuOptions.map(({ href, label }) => (

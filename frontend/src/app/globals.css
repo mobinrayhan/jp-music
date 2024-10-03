@@ -9,6 +9,12 @@ body {
   height: 100%;
 }
 
+@layer components {
+  .custom-container {
+    @apply container mx-auto px-4 pt-2 md:px-6 lg:px-8 xl:px-10 2xl:px-12;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
