@@ -4,11 +4,14 @@ export async function generateMetadata() {
   const title = "SoundEi - Your Ultimate Sound Library";
   const description =
     "SoundEi is a sound platform where users can upload, browse, and download high-quality audio clips and sound effects for creative projects. Join us today!";
-  const image = "/app-logo.png"; // Replace with your image URL
+  const image = "/app-logo.png";
 
   return {
     title,
     description,
+    type: "website",
+    locale: "en_US",
+    url: "https://soundei.com",
     openGraph: {
       title,
       description,
