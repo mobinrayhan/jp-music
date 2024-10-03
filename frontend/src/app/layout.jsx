@@ -1,13 +1,34 @@
 import "./globals.css";
 
-export const metadata = {
-  title: "SoundEi - Your Ultimate Sound Library",
-  description:
-    "SoundEi is a sound platform where users can upload, browse, and download high-quality audio clips and sound effects for creative projects. Join us today!",
-  keywords:
-    "Sound downloads, audio clips, sound effects, royalty-free sounds, music for content creators, downloadable audio, sound library, SoundEi",
-  author: "James Prince",
-};
+export async function generateMetadata() {
+  const title = "SoundEi - Your Ultimate Sound Library";
+  const description =
+    "SoundEi is a sound platform where users can upload, browse, and download high-quality audio clips and sound effects for creative projects. Join us today!";
+  const image = "/app-logo.png"; // Replace with your image URL
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [
+        {
+          url: image,
+          width: 1200,
+          height: 630,
+          alt: "soundei Logo",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+    },
+  };
+}
 
 export default function RootLayout({ children }) {
   return (
