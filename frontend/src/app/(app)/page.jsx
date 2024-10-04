@@ -47,10 +47,7 @@ export default async function Home({ searchParams }) {
       <>
         <SearchInput />
         <Advertise />
-        <CategoryBox
-          categoryList={categoryList?.category}
-          categoryParams={categoryParams}
-        />
+        <CategoryBox categoryList={category} categoryParams={categoryParams} />
 
         <main className="custom-container">
           <h3>{error.message || "Something Went Wrong 😭!"}</h3>

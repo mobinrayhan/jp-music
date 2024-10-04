@@ -39,7 +39,7 @@ function MusicTableList({ category: categoryList, audios }) {
             key={item._id.toString()}
             className="group flex max-h-16 items-center justify-between overflow-hidden"
           >
-            <TableCell>
+            <TableCell className="testing">
               <div
                 className="grid grid-cols-[max-content_1fr] gap-2"
                 onClick={audioDrawerCtx.handleActiveDrawer.bind(
