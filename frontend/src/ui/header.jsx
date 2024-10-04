@@ -10,17 +10,10 @@ import { usePathname } from "next/navigation";
 
 export const menuOptions = [
   {
-    href: "/",
-    label: "Home",
-  },
-  {
     href: "/newest",
     label: "Newest",
   },
-  {
-    href: "/all-sfx",
-    label: "All SFX",
-  },
+
   {
     href: "/my-library",
     label: "My Library",
@@ -36,8 +29,8 @@ export default function Header() {
 
   return (
     <>
-      <Link href={"/"} className="flex items-center gap-1">
-        <div href="/" className="relative block aspect-video h-10">
+      <Link href={"/category/all"} className="flex items-center gap-1">
+        <div className="relative block aspect-video h-10">
           <Image
             src={"/soundei-logo.png"}
             fill
@@ -52,7 +45,7 @@ export default function Header() {
         {menuOptions.map(({ href, label }) => (
           <li
             key={label}
-            className={`hidden sm:${label === "Home" || label === "Newest" ? "block" : "hidden"} md:block`}
+            className={`hidden sm:${label === "Newest" || label === "Newest" ? "block" : "hidden"} md:block`}
           >
             <Button
               asChild

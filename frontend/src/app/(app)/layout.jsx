@@ -1,4 +1,5 @@
 import Footer from "@/components/footer/footer";
+import FooterMain from "@/components/footer/footer-main";
 import AudioDrawerCtxProvider from "@/context/audio-drawer-ctx";
 import Header from "@/ui/header";
 
@@ -47,8 +48,8 @@ export async function generateMetadata() {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="dark">
-      <body className={`bg-[#131418]`}>
+    <html lang="en">
+      <body>
         <AudioDrawerCtxProvider>
           <header className="custom-container flex items-center justify-between">
             <Header />
@@ -56,6 +57,7 @@ export default function RootLayout({ children }) {
 
           {children}
 
+          <FooterMain />
           <Footer />
         </AudioDrawerCtxProvider>
       </body>

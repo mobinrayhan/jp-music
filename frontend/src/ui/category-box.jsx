@@ -1,32 +1,22 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 const apiUrl = process.env.API_URL;
 
 export default function CategoryBox({ categoryList, categoryParams }) {
   return (
     <section className="custom-container pb-8 pt-4">
-      <ul className="grid grid-cols-3 gap-4 cSm:grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
+      <ul className="grid auto-cols-min grid-flow-col justify-center">
         {categoryList?.map((catItem) => (
           <li
             key={catItem._id.toString()}
-            className={`cursor-pointer shadow-inner hover:shadow-[0_0_0_2px_green] ${catItem.category === categoryParams ? "!shadow-[0_0_0_2px_green]" : ""}`}
+            className="border [&:not(:last-child)]:border-r-0"
           >
-            <Link href={`/?category=${catItem.category}`}>
-              <div className="relative">
-                <Image
-                  src={catItem.image ? apiUrl + catItem.image : "/no-image.jpg"}
-                  width={200}
-                  height={200}
-                  alt={catItem.category}
-                  priority
-                />
-
-                <h3 className="absolute bottom-[10%] left-2 font-semibold capitalize tracking-widest text-gray-900">
-                  {catItem.category}
-                </h3>
-              </div>
+            <Link
+              href={`/category/${catItem.category}`}
+              className={`block ${catItem.category === categoryParams ? "bg-gray-200" : ""} border-gray-300 p-2 hover:bg-gray-200`}
+            >
+              <p className="capitalize tracking-widest">{catItem.category}</p>
             </Link>
           </li>
         ))}

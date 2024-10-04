@@ -1,10 +1,12 @@
 export default function SearchInput() {
   return (
-    <section className="custom-container py-4">
-      <input
-        placeholder="Search For Sound Effects "
-        className="block w-full border-none bg-[#292C33] px-3 py-2 text-gray-200 outline-none"
-      />
+    <section className="my-4 bg-gray-200">
+      <div className="custom-container">
+        <input
+          placeholder="Search your sound effects"
+          className="w-full border-none bg-gray-200 px-3 py-2 outline-none"
+        />
+      </div>
     </section>
   );
 }
