@@ -8,7 +8,7 @@ import DropdownNavbar from "@/components/header/dropdown-navbar";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 
-const menuOptions = [
+export const menuOptions = [
   {
     href: "/",
     label: "Home",
@@ -38,14 +38,22 @@ export default function Header() {
     <>
       <Link href={"/"} className="flex items-center gap-1">
         <div href="/" className="relative block aspect-video h-10">
-          <Image src={"/soundei-logo.png"} fill alt="Soundei Logo" />
+          <Image
+            src={"/soundei-logo.png"}
+            fill
+            alt="Soundei Logo"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
         </div>
         <h3 className="md:text-2xl">Soundei</h3>
       </Link>
 
       <ul className="flex align-middle">
         {menuOptions.map(({ href, label }) => (
-          <li key={label}>
+          <li
+            key={label}
+            className={`hidden sm:${label === "Home" || label === "Newest" ? "block" : "hidden"} md:block`}
+          >
             <Button
               asChild
               variant={`${activePath === href ? "secondary" : "ghost"}`}
@@ -56,7 +64,7 @@ export default function Header() {
         ))}
       </ul>
 
-      <DropdownNavbar />
+      <DropdownNavbar menuOptions={menuOptions} />
     </>
   );
 }

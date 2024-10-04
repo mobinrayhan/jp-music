@@ -50,9 +50,9 @@ export default function RootLayout({ children }) {
     <html lang="en" className="dark">
       <body className={`bg-[#131418]`}>
         <AudioDrawerCtxProvider>
-          {/* <header className="custom-container flex items-center justify-between">
+          <header className="custom-container flex items-center justify-between">
             <Header />
-          </header> */}
+          </header>
 
           {children}
 

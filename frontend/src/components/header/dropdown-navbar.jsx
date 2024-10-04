@@ -9,7 +9,18 @@ import {
 import { useRouter } from "next/navigation";
 import { IoMenuSharp } from "react-icons/io5";
 
-export default function DropdownNavbar() {
+const dropdownMenuOptions = [
+  {
+    href: "/account",
+    label: "Account",
+  },
+  {
+    href: "/contact-us",
+    label: "Contact Us",
+  },
+];
+
+export default function DropdownNavbar({ menuOptions }) {
   const { push } = useRouter();
 
   return (
@@ -19,20 +30,15 @@ export default function DropdownNavbar() {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="mr-4 p-2">
-        <DropdownMenuItem className="flex cursor-pointer items-center gap-2">
-          {" "}
-          <button onClick={() => push("/account")}>Account</button>
-        </DropdownMenuItem>
-        <DropdownMenuItem className="flex cursor-pointer items-center gap-2">
-          {" "}
-          <button onClick={() => push("/")}>Home</button>
-        </DropdownMenuItem>
-        <DropdownMenuItem className="flex cursor-pointer items-center gap-2">
-          <button onClick={() => push("/library")}>Library</button>
-        </DropdownMenuItem>
-        <DropdownMenuItem className="flex cursor-pointer items-center gap-2">
-          <button onClick={() => push("/contact-us")}>Contact Us</button>
-        </DropdownMenuItem>
+        {[...menuOptions, ...dropdownMenuOptions].map(({ href, label }, i) => (
+          <DropdownMenuItem
+            key={href}
+            className={`flex cursor-pointer items-center gap-2 sm:${label === "Home" || label === "Newest" ? "!hidden" : "flex"} md:${menuOptions[i]?.label === label ? "hidden" : "flex"}`}
+          >
+            {" "}
+            <button onClick={() => push(href)}>{label}</button>
+          </DropdownMenuItem>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );
