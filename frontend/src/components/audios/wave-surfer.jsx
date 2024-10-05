@@ -14,7 +14,7 @@ const WaveSurferComponent = ({ audioUrl }) => {
   useEffect(() => {
     waveSurferRef.current = WaveSurfer.create({
       container: waveformContainerRef.current,
-      waveColor: "#FFFFFF",
+      waveColor: "#020817",
       progressColor: "#374151",
       cursorColor: "transparent",
       height: 150,

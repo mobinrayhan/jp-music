@@ -25,7 +25,10 @@ export default function DropdownNavbar({ menuOptions }) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="bottom-16 border border-gray-500">
+      <DropdownMenuTrigger
+        className="bottom-16 border border-gray-500"
+        aria-label={`Menu Buttons`}
+      >
         <IoMenuSharp size={32} />
       </DropdownMenuTrigger>
 
@@ -36,7 +39,9 @@ export default function DropdownNavbar({ menuOptions }) {
             className={`flex cursor-pointer items-center gap-2 sm:${label === "Newest" ? "!hidden" : "flex"} md:${menuOptions[i]?.label === label ? "hidden" : "flex"}`}
           >
             {" "}
-            <button onClick={() => push(href)}>{label}</button>
+            <button aria-label={label + " links"} onClick={() => push(href)}>
+              {label}
+            </button>
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

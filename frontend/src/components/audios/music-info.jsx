@@ -1,11 +1,8 @@
 "use client";
 
 import { FaPlay } from "react-icons/fa6";
-import { MdOutlineFileDownload } from "react-icons/md";
 
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-
-import Image from "next/image";
 
 import DropDownMenuLIst from "@/components/audios/dropdown-menulist";
 import ExpandAction from "@/components/audios/expand-action";
@@ -39,45 +36,34 @@ function MusicTableList({ category: categoryList, audios }) {
             key={item._id.toString()}
             className="group flex max-h-16 items-center justify-between overflow-hidden"
           >
-            <TableCell className="testing">
-              <div
-                className="grid grid-cols-[max-content_1fr] gap-2"
+            <TableCell className="basis-64 overflow-hidden">
+              <button
+                aria-label="Start audio  button"
+                className="grid grid-cols-[max-content_1fr] items-center gap-x-3"
                 onClick={audioDrawerCtx.handleActiveDrawer.bind(
                   null,
                   `${apiUrl}/audio-files/preview/${item.category}/${item.name}.${item.type}`,
                 )}
               >
-                <div className="relative col-span-1 row-span-2 cursor-pointer">
-                  <Image
-                    width={30}
-                    height={30}
-                    src={imageUrl(categoryList, item)}
-                    alt={item.name}
-                    className="h-12 w-12 object-cover"
-                  />
-
-                  <span
-                    className={`absolute left-0 top-0 hidden h-full w-full items-center justify-center bg-gray-700 text-lg group-hover:flex ${audioDrawerCtx.songFromImage === `${apiUrl}/audio-files/${item.category}/${item.name}.${item.type}` ? "!flex" : ""}`}
-                  >
+                <div className="col-span-1 row-span-2 cursor-pointer">
+                  <span>
                     {audioDrawerCtx.songFromImage ===
                     `${apiUrl}/audio-files/preview/${item.category}/${item.name}.${item.type}` ? (
-                      <FaPause />
+                      <FaPause size={18} />
                     ) : (
-                      <FaPlay />
+                      <FaPlay size={18} />
                     )}
                   </span>
                 </div>
 
-                <div className="col-span-1 flex flex-col">
-                  <span className="font-medium">{item.name}</span>
-                </div>
+                <h3 className="col-span-1 flex flex-col text-left font-medium tracking-widest">
+                  PLACEHOLDER
+                </h3>
 
-                <div className="col-[2_/_span_1]">
-                  {item.isDownloaded && (
-                    <MdOutlineFileDownload className="text-green-500" />
-                  )}
-                </div>
-              </div>
+                <p className="col-[2_/_span_1] text-xs tracking-wide text-gray-500">
+                  Placeholder Category
+                </p>
+              </button>
             </TableCell>
 
             <TableCell className="hidden min-w-[10rem] lg:block">
@@ -86,7 +72,7 @@ function MusicTableList({ category: categoryList, audios }) {
               />
             </TableCell>
 
-            <TableCell className="hidden sm:block">
+            <TableCell className="hidden basis-24 justify-start sm:flex">
               <span>{item.category}</span>
             </TableCell>
 

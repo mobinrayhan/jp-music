@@ -30,12 +30,13 @@ export default function Header() {
   return (
     <>
       <Link href={"/category/all"} className="flex items-center gap-1">
-        <div className="relative block aspect-video h-10">
+        <div>
           <Image
-            src={"/soundei-logo.png"}
-            fill
+            src="/soundei-logo.png"
             alt="Soundei Logo"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            width={60}
+            height={30}
+            layout="intrinsic"
           />
         </div>
         <h3 className="md:text-2xl">Soundei</h3>
@@ -48,6 +49,7 @@ export default function Header() {
             className={`hidden sm:${label === "Newest" || label === "Newest" ? "block" : "hidden"} md:block`}
           >
             <Button
+              arialLabel={`${label} links`}
               asChild
               variant={`${activePath === href ? "secondary" : "ghost"}`}
             >

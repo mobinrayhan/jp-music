@@ -10,27 +10,30 @@ import { Suspense } from "react";
 //     cache: "no-store",
 //   });
 
-//   const hasCategory = category.find((cat) => cat.category === params.category);
+//   const hasCategory = category.find((cat) => cat.category === paramsCategory);
 
-//   if (!hasCategory && params.category !== "all") {
+//   if (!hasCategory && paramsCategory !== "all") {
 //     return notFound();
 //   }
 
 //   return (
-//     <CategoryBox categoryList={category} categoryParams={params.category} />
+//     <CategoryBox categoryList={category} categoryParams={paramsCategory} />
 //   );
 // }
 
-export default async function Category({ params }) {
+export default async function Category({ params, searchParams }) {
   // const { category = [] } = await fetchWithApiKey("/category", {
   //   cache: "no-store",
   // });
 
+  const paramsCategory = params.category;
+  console.log(searchParams);
+
   const hasCategory = categoryList.find(
-    (cat) => cat.category === params.category,
+    (cat) => cat.category === paramsCategory,
   );
 
-  if (!hasCategory && params.category !== "all") {
+  if (!hasCategory && paramsCategory !== "all") {
     return notFound();
   }
 
@@ -50,12 +53,12 @@ export default async function Category({ params }) {
 
       <CategoryBox
         categoryList={categoryList}
-        categoryParams={params.category}
+        categoryParams={paramsCategory}
       />
 
       <main className="custom-container">
         <Suspense fallback={<AudioSkeleton />}>
-          <SoundEffects categoryParams={params.category} />
+          <SoundEffects categoryParams={paramsCategory} />
         </Suspense>
       </main>
     </>
