@@ -26,16 +26,25 @@ export default async function Category({ params, searchParams }) {
   //   cache: "no-store",
   // });
 
-  const paramsCategory = params.category;
-  console.log(searchParams);
+  const categoryParams = params.category;
 
   const hasCategory = categoryList.find(
-    (cat) => cat.category === paramsCategory,
+    (cat) => cat.category === categoryParams,
   );
 
-  if (!hasCategory && paramsCategory !== "all") {
+  if (!hasCategory && categoryParams !== "all") {
     return notFound();
   }
+
+  const fetcherEndPoint =
+    categoryParams === "all"
+      ? "/audios/all"
+      : `/audios/category/${categoryParams}`;
+
+  const sortByDownloadCount = (audios) => {
+    const sortAudios = audios.sort((a, b) => b.downloadCount - a.downloadCount);
+    return sortAudios;
+  };
 
   return (
     <>
@@ -53,12 +62,15 @@ export default async function Category({ params, searchParams }) {
 
       <CategoryBox
         categoryList={categoryList}
-        categoryParams={paramsCategory}
+        categoryParams={categoryParams}
       />
 
       <main className="custom-container">
         <Suspense fallback={<AudioSkeleton />}>
-          <SoundEffects categoryParams={paramsCategory} />
+          <SoundEffects
+            fetcherEndPoint={fetcherEndPoint}
+            sortedAudiosCB={sortByDownloadCount}
+          />
         </Suspense>
       </main>
     </>

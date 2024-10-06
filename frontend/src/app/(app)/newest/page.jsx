@@ -1,3 +1,5 @@
-export default function Newest() {
-  return <div>Newest</div>;
+import Newest from "@/components/newest/newest";
+
+export default function NewestPage() {
+  return <Newest />;
 }
