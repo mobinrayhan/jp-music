@@ -21,15 +21,11 @@ const helpAndSupport = [
   },
   {
     role: "Join Our Team",
-    href: "/join-our-team",
+    email: "join@soundei.com",
   },
   {
     role: "Tech Support",
-    href: "/tech-support",
-  },
-  {
-    role: "Affiliate Program",
-    href: "/affiliate-program",
+    email: "support@soundei.com",
   },
 ];
 
@@ -59,10 +55,10 @@ export default function FooterMain() {
         </h3>
 
         <ul className="flex flex-col gap-2">
-          {helpAndSupport.map(({ href, role }) => (
+          {helpAndSupport.map(({ email, href, role }) => (
             <li key={role}>
               <Link
-                href={href}
+                href={email ? `mailto:${email}` : href}
                 className="text-sm tracking-wide transition-all duration-100 hover:tracking-wider"
               >
                 {role}

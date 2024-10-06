@@ -1,60 +1,38 @@
-"use client";
+import { CiHeart } from "react-icons/ci";
+import { FaLink, FaPlus } from "react-icons/fa6";
+import { MdOutlineFileDownload } from "react-icons/md";
+import { Button } from "../ui/button";
 
-import { useEffect, useRef, useState } from "react";
-import WaveSurfer from "wavesurfer.js";
-
-let activeWaveSurfer = null;
-
-const WaveSurferComponent = ({ audioUrl }) => {
-  const waveSurferRef = useRef(null);
-  const waveformContainerRef = useRef(null);
-
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  useEffect(() => {
-    waveSurferRef.current = WaveSurfer.create({
-      container: waveformContainerRef.current,
-      waveColor: "#020817",
-      progressColor: "#374151",
-      cursorColor: "transparent",
-      height: 150,
-      url: audioUrl,
-    });
-
-    waveSurferRef.current.on("click", handlePlayPause);
-
-    return () => {
-      if (waveSurferRef.current) {
-        waveSurferRef.current.destroy();
-      }
-    };
-  }, [audioUrl]);
-
-  const handlePlayPause = () => {
-    if (activeWaveSurfer && activeWaveSurfer !== waveSurferRef.current) {
-      activeWaveSurfer.pause();
-      setIsPlaying(false);
-    }
-
-    if (!isPlaying) {
-      waveSurferRef.current.play();
-      setIsPlaying(true);
-      activeWaveSurfer = waveSurferRef.current;
-    } else {
-      waveSurferRef.current.pause();
-      setIsPlaying(false);
-      activeWaveSurfer = null;
-    }
-  };
-
+export default function ExpandAction() {
   return (
-    <div>
-      <div
-        ref={waveformContainerRef}
-        style={{ width: "100%", height: "100%", cursor: "pointer" }}
-      ></div>
-    </div>
-  );
-};
+    <>
+      <Button variant="ghost" aria-label="Download button">
+        <MdOutlineFileDownload className="text-lg" />
+      </Button>
 
-export default WaveSurferComponent;
+      <Button
+        variant="ghost"
+        className="hidden md:block"
+        aria-label="Added to the playlist button"
+      >
+        <FaPlus className="text-lg" />
+      </Button>
+
+      <Button
+        className="hidden md:block"
+        variant="ghost"
+        aria-label="Like button"
+      >
+        <CiHeart className="text-lg font-extrabold" />
+      </Button>
+
+      <Button
+        variant="ghost"
+        className="hidden md:block"
+        aria-label="Copy Link button"
+      >
+        <FaLink className="text-lg" />
+      </Button>
+    </>
+  );
+}

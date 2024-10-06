@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-const apiUrl = process.env.API_URL;
 
 export default function CategoryBox({ categoryList, categoryParams }) {
   return (
@@ -14,7 +13,7 @@ export default function CategoryBox({ categoryList, categoryParams }) {
           >
             <Link
               href={`/category/${catItem.category}`}
-              className={`block p-2 px-4 text-center hover:bg-gray-200`}
+              className={`block p-2 px-4 text-center text-sm hover:bg-gray-200`}
             >
               <p className="capitalize tracking-widest">{catItem.category}</p>
             </Link>

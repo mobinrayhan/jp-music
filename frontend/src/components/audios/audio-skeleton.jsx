@@ -1,15 +1,8 @@
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-} from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 
 export default function AudioSkeleton() {
-  return Array.apply(null, Array(5)).map(function (_, i) {
+  return Array.apply(null, Array(10)).map(function (_, i) {
     return (
       <Table key={i}>
         <TableBody>
@@ -17,7 +10,7 @@ export default function AudioSkeleton() {
             <TableCell>
               <Skeleton className="h-8 w-full" />
             </TableCell>
-            <TableCell>
+            {/* <TableCell>
               <Skeleton className="h-8 w-full" />
             </TableCell>
             <TableCell className="hidden lg:table-cell">
@@ -25,7 +18,7 @@ export default function AudioSkeleton() {
             </TableCell>
             <TableCell className="hidden md:table-cell">
               <Skeleton className="h-8 w-full" />
-            </TableCell>
+            </TableCell> */}
           </TableRow>
         </TableBody>
       </Table>
