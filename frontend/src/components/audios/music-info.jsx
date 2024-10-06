@@ -67,9 +67,7 @@ function MusicTableList({ category: categoryList, audios }) {
             </TableCell>
 
             <TableCell className="hidden min-w-[10rem] lg:block">
-              <WaveSurferComponent
-                audioUrl={`${apiUrl}/audio-files/preview/${item.category}/${item.name}.${item.type}`}
-              />
+              <WaveSurferComponent audioUrl={`${apiUrl}/${item.previewURL}`} />
             </TableCell>
 
             <TableCell className="hidden basis-24 justify-start sm:flex">

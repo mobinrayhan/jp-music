@@ -49,7 +49,7 @@ export default function Header() {
             className={`hidden sm:${label === "Newest" || label === "Newest" ? "block" : "hidden"} md:block`}
           >
             <Button
-              arialLabel={`${label} links`}
+              aria-label={`${label} links`}
               asChild
               variant={`${activePath === href ? "secondary" : "ghost"}`}
             >
