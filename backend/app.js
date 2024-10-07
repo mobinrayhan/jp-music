@@ -42,7 +42,7 @@ app.use(
 );
 
 // Serve audio files with proper CORS and resource policy headers
-app.get('/audio-files/preview/:category/:name', (req, res) => {
+app.get('/all-audios/preview/:category/:name', (req, res) => {
   const { category, name } = req.params;
   const audioFilePath = path.join(
     __dirname,
