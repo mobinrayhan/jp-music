@@ -18,6 +18,10 @@ const dropdownMenuOptions = [
     href: "/contact-us",
     label: "Contact Us",
   },
+  {
+    href: "/login",
+    label: "Login",
+  },
 ];
 
 export default function DropdownNavbar({ menuOptions }) {

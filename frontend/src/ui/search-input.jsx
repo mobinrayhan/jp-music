@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import React, { useState, useCallback, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 function useDebounce(value, delay) {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -22,23 +22,20 @@ function useDebounce(value, delay) {
 export default function SearchInput() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const initialSearchTerm = searchParams.get("q") || "";
-
+  const initialSearchTerm = searchParams.get('querySearch') || '';
+  
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const debouncedSearchTerm = useDebounce(searchTerm, 300); // 300ms delay
 
-  const updateQueryParam = useCallback(
-    (value) => {
-      const params = new URLSearchParams(searchParams);
-      if (value) {
-        params.set("querySearch", value);
-      } else {
-        params.delete("querySearch");
-      }
-      router.push(`?${params.toString()}`, { scroll: false });
-    },
-    [router, searchParams],
-  );
+  const updateQueryParam = useCallback((value) => {
+    const params = new URLSearchParams(searchParams);
+    if (value) {
+      params.set('querySearch', value);
+    } else {
+      params.delete('querySearch');
+    }
+    router.push(`?${params.toString()}`, { scroll: false });
+  }, [router, searchParams]);
 
   useEffect(() => {
     updateQueryParam(debouncedSearchTerm);
