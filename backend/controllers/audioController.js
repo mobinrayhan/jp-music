@@ -7,8 +7,6 @@ exports.getAllAudios = async function (req, res, next) {
 
 exports.getAudiosByCategory = async (req, res, next) => {
   const { category } = req.params;
-
-  console.log(category);
   try {
     const categoryAudios = await audioModels.getAudioByCategoryName(category);
 

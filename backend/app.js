@@ -13,16 +13,17 @@ const { connectToDatabase } = require('./models/db');
 
 const categoryRouter = require('./routes/category');
 const audioRouter = require('./routes/audio');
+const authRouter = require('./routes/auth');
 
 // const limiter = rateLimit({
 //   windowMs: 15 * 60 * 1000, // 15 minutes
 //   max: 100, // Limit each IP to 100 requests per windowMs
 // });
 
+app.use(express.json());
 // app.use(limiter);
 // app.use(morgan('combined'));
 app.use(helmet());
-
 app.use(
   cors({
     origin: ['http://localhost:3000', 'https://jp-music.vercel.app/'],
@@ -123,6 +124,7 @@ const apiKeyMiddleware = (req, res, next) => {
 };
 app.use(apiKeyMiddleware);
 
+app.use('/auth', authRouter);
 app.use('/audios', audioRouter);
 app.use('/category', categoryRouter);
 
