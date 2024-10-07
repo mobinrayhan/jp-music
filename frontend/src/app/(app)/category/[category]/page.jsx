@@ -5,27 +5,8 @@ import SearchInput from "@/ui/search-input";
 import { categoryList } from "@/utils/category-list";
 import { Suspense } from "react";
 
-// async function CategoryBoxLoad({ params }) {
-//   const { category = [] } = await fetchWithApiKey("/category", {
-//     cache: "no-store",
-//   });
-
-//   const hasCategory = category.find((cat) => cat.category === paramsCategory);
-
-//   if (!hasCategory && paramsCategory !== "all") {
-//     return notFound();
-//   }
-
-//   return (
-//     <CategoryBox categoryList={category} categoryParams={paramsCategory} />
-//   );
-// }
-
 export default async function Category({ params, searchParams }) {
-  // const { category = [] } = await fetchWithApiKey("/category", {
-  //   cache: "no-store",
-  // });
-
+  const searchValue = searchParams.querySearch || "";
   const categoryParams = params.category;
 
   const hasCategory = categoryList.find(
@@ -36,10 +17,12 @@ export default async function Category({ params, searchParams }) {
     return notFound();
   }
 
-  const fetcherEndPoint =
-    categoryParams === "all"
-      ? "/audios/all"
-      : `/audios/category/${categoryParams}`;
+  console.log(categoryParams);
+  const fetcherEndPoint = searchValue
+    ? `/audios/search/${categoryParams}?query=${searchValue}`
+    : categoryParams && categoryParams !== "all"
+      ? `/audios/category/${categoryParams}`
+      : "/audios/all";
 
   const sortByDownloadCount = (audios) => {
     const sortAudios = audios.sort((a, b) => b.downloadCount - a.downloadCount);
@@ -50,23 +33,13 @@ export default async function Category({ params, searchParams }) {
     <>
       <SearchInput />
 
-      {/* <Suspense
-        fallback={
-          <section className="custom-container pb-8 pt-4">
-            <h1>Loading</h1>
-          </section>
-        }
-      >
-        <CategoryBoxLoad params={params} />
-      </Suspense> */}
-
       <CategoryBox
         categoryList={categoryList}
         categoryParams={categoryParams}
       />
 
       <main className="custom-container">
-        <Suspense fallback={<AudioSkeleton />}>
+        <Suspense fallback={<AudioSkeleton />} key={searchValue}>
           <SoundEffects
             fetcherEndPoint={fetcherEndPoint}
             sortedAudiosCB={sortByDownloadCount}

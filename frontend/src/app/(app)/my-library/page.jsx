@@ -1,3 +1,5 @@
-export default function MyLibrary() {
-  return <div>MyLibrary</div>;
+import { redirect } from "next/navigation";
+
+export default function MyLibraryPage() {
+  return redirect("/my-library/favorites");
 }

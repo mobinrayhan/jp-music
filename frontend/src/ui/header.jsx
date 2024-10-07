@@ -15,7 +15,7 @@ export const menuOptions = [
   },
 
   {
-    href: "/my-library",
+    href: "/my-library/favorites",
     label: "My Library",
   },
 ];
@@ -23,9 +23,7 @@ export const menuOptions = [
 export default function Header() {
   const pathName = usePathname();
 
-  const activePath = pathName.split("/")[1]
-    ? "/" + pathName.split("/")[1]
-    : "/";
+  const activePath = pathName.split("/")[1] ? pathName.split("/")[1] : "/";
 
   return (
     <>
@@ -44,14 +42,11 @@ export default function Header() {
 
       <ul className="flex align-middle">
         {menuOptions.map(({ href, label }) => (
-          <li
-            key={label}
-            className={`hidden sm:${label === "Newest" || label === "Newest" ? "block" : "hidden"} md:block`}
-          >
+          <li key={label} className={`hidden md:block`}>
             <Button
               aria-label={`${label} links`}
               asChild
-              variant={`${activePath === href ? "secondary" : "ghost"}`}
+              variant={`${activePath === href?.split("/")?.[1] ? "secondary" : "ghost"}`}
             >
               <Link href={href}>{label}</Link>
             </Button>
