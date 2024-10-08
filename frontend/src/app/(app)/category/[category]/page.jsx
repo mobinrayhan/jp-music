@@ -4,6 +4,7 @@ import CategoryBox from "@/ui/category-box";
 import SearchInput from "@/ui/search-input";
 import { categoryList } from "@/utils/category-list";
 import { Suspense } from "react";
+const apiUrl = process.env.API_URL;
 
 export default async function Category({ params, searchParams }) {
   const searchValue = searchParams.querySearch || "";
@@ -17,7 +18,6 @@ export default async function Category({ params, searchParams }) {
     return notFound();
   }
 
-  console.log(categoryParams);
   const fetcherEndPoint = searchValue
     ? `/audios/search/${categoryParams}?query=${searchValue}`
     : categoryParams && categoryParams !== "all"
@@ -25,7 +25,14 @@ export default async function Category({ params, searchParams }) {
       : "/audios/all";
 
   const sortByDownloadCount = (audios) => {
-    const sortAudios = audios.sort((a, b) => b.downloadCount - a.downloadCount);
+    const sortAudios = audios
+      .sort((a, b) => b.downloadCount - a.downloadCount)
+      .map((audio) => {
+        return {
+          ...audio,
+          previewURL: `${apiUrl}/${audio.previewURL}`,
+        };
+      });
     return sortAudios;
   };
 

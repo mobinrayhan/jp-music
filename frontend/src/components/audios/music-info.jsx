@@ -1,83 +1,55 @@
 "use client";
 
-import { FaPlay } from "react-icons/fa6";
+import { useCallback, useState } from "react";
 
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import AudioPlayer from "./audio-player";
+import MusicTableList from "./music-table-list";
 
-import DropDownMenuLIst from "@/components/audios/dropdown-menulist";
-import ExpandAction from "@/components/audios/expand-action";
-import WaveSurferComponent from "@/components/audios/wave-surfer";
-import { useAudioDrawerCtx } from "@/context/audio-drawer-ctx";
-import { Suspense } from "react";
-import { FaPause } from "react-icons/fa6";
+export default function AudioTable({ audios }) {
+  const [currentTrack, setCurrentTrack] = useState(null);
+  const [trackProgress, setTrackProgress] = useState({});
 
-const apiUrl = process.env.API_URL;
+  const handleProgressChange = useCallback((trackId, progress) => {
+    setTrackProgress((prev) => ({ ...prev, [trackId]: progress }));
+  }, []);
 
-function MusicTableList({ category: categoryList, audios }) {
-  const audioDrawerCtx = useAudioDrawerCtx();
+  const handleNext = useCallback(() => {
+    if (currentTrack) {
+      const currentIndex = audios.findIndex(
+        (track) => track._id === currentTrack._id,
+      );
+      const nextIndex = (currentIndex + 1) % audios.length;
+      setCurrentTrack(audios[nextIndex]);
+    }
+  }, [currentTrack]);
+
+  const handlePrevious = useCallback(() => {
+    if (currentTrack) {
+      const currentIndex = audios.findIndex(
+        (track) => track._id === currentTrack._id,
+      );
+      const previousIndex = (currentIndex - 1 + audios.length) % audios.length;
+      setCurrentTrack(audios[previousIndex]);
+    }
+  }, [currentTrack]);
+
   return (
-    <Table>
-      <TableBody>
-        {audios?.map((audio) => (
-          <TableRow
-            key={audio._id.toString()}
-            className="group flex max-h-16 items-center justify-between overflow-hidden"
-          >
-            <TableCell className="basis-64 overflow-hidden">
-              <button
-                aria-label="Start audio  button"
-                className="grid grid-cols-[max-content_1fr] items-center gap-x-3"
-                onClick={audioDrawerCtx.handleActiveDrawer.bind(
-                  null,
-                  `${apiUrl}/${audio.previewURL}`,
-                )}
-              >
-                <div className="col-span-1 row-span-2 cursor-pointer">
-                  <span>
-                    {audioDrawerCtx.songFromImage ===
-                    `${apiUrl}/${audio.previewURL}` ? (
-                      <FaPause size={18} />
-                    ) : (
-                      <FaPlay size={18} />
-                    )}
-                  </span>
-                </div>
+    <>
+      <MusicTableList
+        setCurrentTrack={setCurrentTrack}
+        currentTrack={currentTrack}
+        trackProgress={trackProgress}
+        audios={audios}
+      />
 
-                <h3 className="col-span-1 flex max-w-52 flex-col overflow-hidden text-nowrap text-left font-medium tracking-widest">
-                  {audio.name}
-                </h3>
-
-                <p className="col-[2_/_span_1] text-start text-xs tracking-wide text-gray-500">
-                  Placeholder Category
-                </p>
-              </button>
-            </TableCell>
-
-            <TableCell className="hidden min-w-[10rem] lg:block">
-              <WaveSurferComponent audioUrl={`${apiUrl}/${audio.previewURL}`} />
-            </TableCell>
-
-            <TableCell className="hidden basis-24 justify-start sm:flex">
-              <span>{audio.category}</span>
-            </TableCell>
-
-            <TableCell className="flex items-center pt-4">
-              <div className="ml-auto flex items-center space-x-2">
-                <ExpandAction />
-                <DropDownMenuLIst />
-              </div>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  );
-}
-
-export default function AudioTable({ category, audios }) {
-  return (
-    <Suspense fallback={<p>Loading</p>}>
-      <MusicTableList category={category} audios={audios} />
-    </Suspense>
+      {currentTrack && (
+        <AudioPlayer
+          track={currentTrack}
+          onProgressChange={handleProgressChange}
+          onNext={handleNext}
+          onPrevious={handlePrevious}
+        />
+      )}
+    </>
   );
 }
