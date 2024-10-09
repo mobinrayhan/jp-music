@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { FaPlay } from "react-icons/fa6";
+import { FaPlay, FaPause } from "react-icons/fa6";
 
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 
 import DropDownMenuLIst from "@/components/audios/dropdown-menulist";
 import ExpandAction from "@/components/audios/expand-action";
-import { FaPause } from "react-icons/fa6";
 import WaveSurfer from "wavesurfer.js";
 
 export default function MusicTableList({
@@ -19,50 +18,52 @@ export default function MusicTableList({
 
   useEffect(() => {
     audios.forEach((track) => {
-      const wavesurfer = WaveSurfer.create({
-        container: `#waveform-${track._id}`,
-        waveColor: "#020817",
-        progressColor: "#9ca3af",
-        cursorColor: "transparent",
-        barWidth: 2,
-        barRadius: 3,
-        responsive: true,
-        height: 120,
-        interact: true,
-      });
+      if (!wavesurferInstances.current[track._id]) {
+        const wavesurfer = WaveSurfer.create({
+          container: `#waveform-${track._id}`,
+          waveColor: "#020817",
+          progressColor: "#9ca3af",
+          cursorColor: "transparent",
+          barWidth: 2,
+          barRadius: 3,
+          responsive: true,
+          height: 120,
+          interact: true,
+        });
 
-      wavesurfer.load(track.previewURL);
-      wavesurferInstances.current[track._id] = wavesurfer;
+        wavesurfer.load(track.previewURL);
+        wavesurferInstances.current[track._id] = wavesurfer;
 
-      wavesurfer.on("click", (e) => {
-        const clickPosition =
-          wavesurfer.getCurrentTime() / wavesurfer.getDuration();
-        handleTrackClick(track, clickPosition);
-      });
+        wavesurfer.on("click", (e) => {
+          const clickPosition = wavesurfer.getCurrentTime() / wavesurfer.getDuration();
+          handleTrackClick(track, clickPosition);
+        });
+      }
     });
 
     return () => {
-      Object.values(wavesurferInstances.current).forEach((wavesurfer) => {
-        if (wavesurfer && typeof wavesurfer.destroy === "function") {
-          try {
-            wavesurfer.destroy();
-          } catch (error) {
-            console.error("Error destroying WaveSurfer instance:", error);
-          }
+      Object.entries(wavesurferInstances.current).forEach(([id, wavesurfer]) => {
+        if (!audios.some(audio => audio._id === id)) {
+          wavesurfer.destroy();
+          delete wavesurferInstances.current[id];
         }
       });
     };
-  }, []);
+  }, [audios]);
 
   useEffect(() => {
     if (currentTrack) {
       setPlayingId(currentTrack._id);
+      const wavesurfer = wavesurferInstances.current[currentTrack._id];
+      if (wavesurfer) {
+        wavesurfer.seekTo(currentTrack.startPosition || 0);
+      }
     }
   }, [currentTrack]);
 
   useEffect(() => {
     Object.entries(trackProgress).forEach(([id, progress]) => {
-      const wavesurfer = wavesurferInstances.current[id]; // Remove parseInt
+      const wavesurfer = wavesurferInstances.current[id];
       if (wavesurfer) {
         wavesurfer.seekTo(progress);
       }
@@ -72,6 +73,10 @@ export default function MusicTableList({
   const handleTrackClick = (track, startPosition) => {
     setCurrentTrack({ ...track, startPosition });
     setPlayingId(track._id);
+    const wavesurfer = wavesurferInstances.current[track._id];
+    if (wavesurfer) {
+      wavesurfer.seekTo(startPosition);
+    }
   };
 
   return (
@@ -84,7 +89,7 @@ export default function MusicTableList({
           >
             <TableCell className="basis-64 overflow-hidden">
               <button
-                aria-label="Start audio  button"
+                aria-label="Start audio button"
                 className="grid grid-cols-[max-content_1fr] items-center gap-x-3"
                 onClick={() => handleTrackClick(audio, 0)}
               >
