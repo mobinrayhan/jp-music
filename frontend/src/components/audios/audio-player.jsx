@@ -61,7 +61,7 @@ export default function AudioPlayer() {
         wavesurfer.current.destroy();
       }
     };
-  }, [currentTrack, isPlaying, togglePlay, updateTrackProgress]);
+  }, [currentTrack, updateTrackProgress]);
 
   useEffect(() => {
     if (wavesurfer.current) {
@@ -72,6 +72,17 @@ export default function AudioPlayer() {
       }
     }
   }, [isPlaying]);
+
+  const handlePlayPause = () => {
+    if (wavesurfer.current) {
+      if (isPlaying) {
+        wavesurfer.current.pause();
+      } else {
+        wavesurfer.current.play();
+      }
+      togglePlay();
+    }
+  };
 
   const handleVolumeChange = (e) => {
     const newVolume = parseFloat(e.target.value);
@@ -103,7 +114,7 @@ export default function AudioPlayer() {
               <ImPrevious2 size={28} />
             </button>
             <button
-              onClick={togglePlay}
+              onClick={handlePlayPause}
               className="rounded-full transition-colors"
             >
               {isPlaying ? <FaPause size={28} /> : <IoIosPlay size={28} />}
