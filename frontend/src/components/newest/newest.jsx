@@ -9,6 +9,19 @@ export default function Newest({ searchParams }) {
   const searchValue = searchParams?.querySearch;
   const maxAudios = searchParams?.maxAudios || MAX_AUDIO_PER_PAGE;
 
+  const fetcherEndPoint = `/audios/newest?querySearch=${searchValue}&maxAudios=${maxAudios}`;
+
+  const sortByDateDesc = (audios) => {
+    return audios
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .map((audio) => {
+        return {
+          ...audio,
+          previewURL: `${apiUrl}/${audio.previewURL}`,
+        };
+      });
+  };
+
   return (
     <>
       <SearchInput />
