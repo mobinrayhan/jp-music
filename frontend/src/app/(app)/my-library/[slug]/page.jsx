@@ -4,6 +4,7 @@ import SearchInput from "@/ui/search-input";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+const apiUrl = process.env.API_URL;
 
 const tabs = [
   {
@@ -29,25 +30,18 @@ export default function MyLibrarySlug({ params, searchParams }) {
     return notFound();
   }
 
-  // TESTING DATA
-  // const fetcherEndPoint =
-  //   activePath === "downloads" ? `/audios/category/object` : "/audios/all";
   const fetcherEndPoint =
     searchParams.searchValue === "downloads"
       ? `/audios/category/object`
       : "/audios/all";
 
-  console.log(searchParams, fetcherEndPoint);
-
   const sortedAndSearchResult = (audios) => {
-    return searchParams.searchValue
-      ? audios.filter(
-          (audio) =>
-            audio.name.includes(searchParams.searchValue.toLowerCase()) ||
-            audio.name.startsWith(searchParams.searchValue.toLowerCase()) ||
-            audio.name.endsWith(searchParams.searchValue.toLowerCase()),
-        )
-      : audios;
+    return audios.map((audio) => {
+      return {
+        ...audio,
+        previewURL: `${apiUrl}/${audio.previewURL}`,
+      };
+    });
   };
 
   return (

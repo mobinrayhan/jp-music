@@ -1,14 +1,20 @@
-import { useEffect, useRef } from "react";
-import { FaPlay, FaPause } from "react-icons/fa6";
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import DropDownMenuLIst from "@/components/audios/dropdown-menulist";
 import ExpandAction from "@/components/audios/expand-action";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { useEffect, useRef } from "react";
+import { FaPause, FaPlay } from "react-icons/fa6";
 import WaveSurfer from "wavesurfer.js";
-import { useAudioPlayer } from "./AudioPlayerContext";
+import { useAudioPlayer } from "./audio-player-context";
 
 export default function MusicTableList({ audios }) {
   const waveformRefs = useRef({});
-  const { currentTrack, isPlaying, trackProgress, playTrack, updateTrackProgress } = useAudioPlayer();
+  const {
+    currentTrack,
+    isPlaying,
+    trackProgress,
+    playTrack,
+    updateTrackProgress,
+  } = useAudioPlayer();
 
   useEffect(() => {
     audios.forEach((audio) => {
@@ -29,7 +35,8 @@ export default function MusicTableList({ audios }) {
         waveformRefs.current[audio._id] = wavesurfer;
 
         wavesurfer.on("click", (e) => {
-          const clickPosition = wavesurfer.getCurrentTime() / wavesurfer.getDuration();
+          const clickPosition =
+            wavesurfer.getCurrentTime() / wavesurfer.getDuration();
           handleTrackClick(audio, clickPosition);
         });
       }
@@ -37,7 +44,7 @@ export default function MusicTableList({ audios }) {
 
     return () => {
       Object.entries(waveformRefs.current).forEach(([id, wavesurfer]) => {
-        if (!audios.some(audio => audio._id === id)) {
+        if (!audios.some((audio) => audio._id === id)) {
           wavesurfer.destroy();
           delete waveformRefs.current[id];
         }
@@ -48,7 +55,11 @@ export default function MusicTableList({ audios }) {
   useEffect(() => {
     if (currentTrack) {
       const wavesurfer = waveformRefs.current[currentTrack._id];
-      if (wavesurfer && typeof currentTrack.startPosition === 'number' && isFinite(currentTrack.startPosition)) {
+      if (
+        wavesurfer &&
+        typeof currentTrack.startPosition === "number" &&
+        isFinite(currentTrack.startPosition)
+      ) {
         wavesurfer.seekTo(currentTrack.startPosition);
       }
     }
@@ -57,14 +68,14 @@ export default function MusicTableList({ audios }) {
   useEffect(() => {
     Object.entries(trackProgress).forEach(([id, progress]) => {
       const wavesurfer = waveformRefs.current[id];
-      if (wavesurfer && typeof progress === 'number' && isFinite(progress)) {
+      if (wavesurfer && typeof progress === "number" && isFinite(progress)) {
         wavesurfer.seekTo(progress);
       }
     });
   }, [trackProgress]);
 
   const handleTrackClick = (track, startPosition) => {
-    if (typeof startPosition === 'number' && isFinite(startPosition)) {
+    if (typeof startPosition === "number" && isFinite(startPosition)) {
       playTrack({ ...track, startPosition });
       const wavesurfer = waveformRefs.current[track._id];
       if (wavesurfer) {

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useCallback } from 'react';
+import { createContext, useCallback, useContext, useState } from "react";
 
 const AudioPlayerContext = createContext();
 
@@ -14,18 +14,20 @@ export const AudioPlayerProvider = ({ children }) => {
   }, []);
 
   const togglePlay = useCallback(() => {
-    setIsPlaying(prev => !prev);
+    setIsPlaying((prev) => !prev);
   }, []);
 
   const updateTrackProgress = useCallback((trackId, progress) => {
-    if (typeof progress === 'number' && isFinite(progress)) {
-      setTrackProgress(prev => ({ ...prev, [trackId]: progress }));
+    if (typeof progress === "number" && isFinite(progress)) {
+      setTrackProgress((prev) => ({ ...prev, [trackId]: progress }));
     }
   }, []);
 
   const playNext = useCallback(() => {
     if (playlist.length > 0 && currentTrack) {
-      const currentIndex = playlist.findIndex(track => track._id === currentTrack._id);
+      const currentIndex = playlist.findIndex(
+        (track) => track._id === currentTrack._id,
+      );
       const nextIndex = (currentIndex + 1) % playlist.length;
       playTrack(playlist[nextIndex]);
     }
@@ -33,8 +35,11 @@ export const AudioPlayerProvider = ({ children }) => {
 
   const playPrevious = useCallback(() => {
     if (playlist.length > 0 && currentTrack) {
-      const currentIndex = playlist.findIndex(track => track._id === currentTrack._id);
-      const previousIndex = (currentIndex - 1 + playlist.length) % playlist.length;
+      const currentIndex = playlist.findIndex(
+        (track) => track._id === currentTrack._id,
+      );
+      const previousIndex =
+        (currentIndex - 1 + playlist.length) % playlist.length;
       playTrack(playlist[previousIndex]);
     }
   }, [playlist, currentTrack, playTrack]);
@@ -44,18 +49,18 @@ export const AudioPlayerProvider = ({ children }) => {
   }, []);
 
   return (
-    <AudioPlayerContext.Provider 
-      value={{ 
-        currentTrack, 
-        isPlaying, 
-        trackProgress, 
+    <AudioPlayerContext.Provider
+      value={{
+        currentTrack,
+        isPlaying,
+        trackProgress,
         playlist,
-        playTrack, 
-        togglePlay, 
+        playTrack,
+        togglePlay,
         updateTrackProgress,
         playNext,
         playPrevious,
-        setAudioPlaylist
+        setAudioPlaylist,
       }}
     >
       {children}

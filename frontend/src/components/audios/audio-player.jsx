@@ -6,15 +6,22 @@ import { ImNext2, ImPrevious2 } from "react-icons/im";
 import { IoIosPlay } from "react-icons/io";
 
 import WaveSurfer from "wavesurfer.js";
+import { useAudioPlayer } from "./audio-player-context";
 import ExpandAction from "./expand-action";
-import { useAudioPlayer } from "./AudioPlayerContext";
 
 export default function AudioPlayer() {
   const waveformRef = useRef(null);
   const wavesurfer = useRef(null);
   const [volume, setVolume] = useState(1);
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
-  const { currentTrack, isPlaying, togglePlay, updateTrackProgress, playNext, playPrevious } = useAudioPlayer();
+  const {
+    currentTrack,
+    isPlaying,
+    togglePlay,
+    updateTrackProgress,
+    playNext,
+    playPrevious,
+  } = useAudioPlayer();
 
   useEffect(() => {
     if (waveformRef.current && currentTrack) {
