@@ -26,7 +26,7 @@ exports.categoryAudiosWithSearch = async function ({
         $facet: {
           totalCount: [{ $count: 'total' }], // Count the total audios
           audios: [
-            { $sort: { createdAt: -1 } }, // Sort the results
+            { $sort: { downloadCount: -1 } }, // Sort the results
             { $limit: maxAudio }, // Limit the number of audios
           ],
         },
@@ -47,8 +47,6 @@ exports.categoryAudiosWithSearch = async function ({
 exports.newestAudiosWithSearch = async function ({ querySearch, maxAudio }) {
   const db = await connectToDatabase();
   const collection = await db.collection('audios');
-
-  console.log(typeof querySearch, maxAudio);
 
   const result = await collection
     .aggregate([
