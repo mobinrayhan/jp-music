@@ -1,9 +1,6 @@
-import AudioSkeleton from "@/components/audios/audio-skeleton";
-import SoundEffects from "@/components/home/sound-effects";
 import SearchInput from "@/ui/search-input";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 const apiUrl = process.env.API_URL;
 
 const tabs = [
@@ -63,14 +60,14 @@ export default function MyLibrarySlug({ params, searchParams }) {
         </ul>
       </section>
 
-      <main className="custom-container">
+      {/* <main className="custom-container">
         <Suspense fallback={<AudioSkeleton />}>
           <SoundEffects
             fetcherEndPoint={fetcherEndPoint}
             sortedAudiosCB={sortedAndSearchResult}
           />
         </Suspense>
-      </main>
+      </main> */}
     </>
   );
 }
