@@ -1,38 +1,90 @@
 const { dirname, join } = require('path');
-const fs = require('fs');
 const { connectToDatabase } = require('./db');
 
-exports.getAllAudios = async function () {
-  const db = await connectToDatabase();
-  const collection = await db.collection('audios');
-  return await collection.find({}).toArray();
-};
-
-exports.getAudioByCategoryName = async function (catName) {
-  const db = await connectToDatabase();
-  const collection = await db.collection('audios');
-  return await collection.find({ category: catName }).toArray();
-};
-
-exports.getAudioBySearch = async function (search, category) {
+exports.categoryAudiosWithSearch = async function ({
+  querySearch,
+  category,
+  maxAudio,
+}) {
   const db = await connectToDatabase();
   const collection = await db.collection('audios');
 
-  return await collection
+  // USING CHATGPT FOR BEST POSSIBLE QUERY
+  const result = await collection
     .aggregate([
       {
         $match: {
           ...(category !== 'all' ? { category: category } : {}),
           $or: [
-            { name: { $regex: `^${search}`, $options: 'i' } }, // Starts with
-            { name: { $regex: `${search}$`, $options: 'i' } }, // Ends with
-            { name: { $regex: `${search}`, $options: 'i' } }, // Includes
+            { name: { $regex: `^${querySearch}`, $options: 'i' } }, // Starts with
+            { name: { $regex: `${querySearch}$`, $options: 'i' } }, // Ends with
+            { name: { $regex: `${querySearch}`, $options: 'i' } }, // Includes
           ],
         },
       },
       {
-        $sort: { createdAt: -1 },
+        $facet: {
+          totalCount: [{ $count: 'total' }], // Count the total audios
+          audios: [
+            { $sort: { createdAt: -1 } }, // Sort the results
+            { $limit: maxAudio }, // Limit the number of audios
+          ],
+        },
       },
     ])
     .toArray();
+
+  const totalAudios =
+    result[0].totalCount.length > 0 ? result[0].totalCount[0].total : 0;
+  const audios = result[0].audios;
+
+  return {
+    totalAudios,
+    audios,
+  };
+};
+
+exports.newestAudiosWithSearch = async function ({ querySearch, maxAudio }) {
+  const db = await connectToDatabase();
+  const collection = await db.collection('audios');
+
+  console.log(typeof querySearch, maxAudio);
+
+  const result = await collection
+    .aggregate([
+      {
+        $match: {
+          // Check if querySearch exists and is not an empty string
+          ...(querySearch !== 'undefined' && querySearch.trim()
+            ? {
+                $or: [
+                  { name: { $regex: `^${querySearch}`, $options: 'i' } }, // Starts with
+                  { name: { $regex: `${querySearch}$`, $options: 'i' } }, // Ends with
+                  { name: { $regex: `${querySearch}`, $options: 'i' } }, // Includes
+                ],
+              }
+            : {}), // Match all documents if querySearch is not provided or is empty
+        },
+      },
+      {
+        $facet: {
+          totalCount: [{ $count: 'total' }], // Count the total audios
+          audios: [
+            { $sort: { createdAt: -1 } }, // Sort the results
+            { $limit: maxAudio }, // Limit the number of audios
+          ],
+        },
+      },
+    ])
+    .toArray();
+
+  // Return the result
+  const totalAudios =
+    result[0].totalCount.length > 0 ? result[0].totalCount[0].total : 0;
+  const audios = result[0].audios;
+
+  return {
+    totalAudios,
+    audios,
+  };
 };
