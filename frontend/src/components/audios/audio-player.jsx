@@ -7,21 +7,21 @@ import { IoIosPlay } from "react-icons/io";
 
 import WaveSurfer from "wavesurfer.js";
 import ExpandAction from "./expand-action";
+import { useAudioPlayer } from "./AudioPlayerContext";
 
-export default function AudioPlayer({
-  track,
-  onProgressChange,
-  onNext,
-  onPrevious,
-}) {
+export default function AudioPlayer() {
   const waveformRef = useRef(null);
   const wavesurfer = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
+  const { currentTrack, isPlaying, togglePlay, updateTrackProgress, playNext, playPrevious } = useAudioPlayer();
 
   useEffect(() => {
-    if (waveformRef.current && track) {
+    if (waveformRef.current && currentTrack) {
+      if (wavesurfer.current) {
+        wavesurfer.current.destroy();
+      }
+
       wavesurfer.current = WaveSurfer.create({
         container: waveformRef.current,
         waveColor: "#020817",
@@ -33,39 +33,45 @@ export default function AudioPlayer({
         height: 70,
       });
 
-      wavesurfer.current.load(track.previewURL);
+      wavesurfer.current.load(currentTrack.previewURL);
 
       wavesurfer.current.on("ready", () => {
-        if (track.startPosition !== undefined) {
-          wavesurfer.current.seekTo(track.startPosition);
+        if (currentTrack.startPosition !== undefined) {
+          wavesurfer.current.seekTo(currentTrack.startPosition);
         }
-        wavesurfer.current.play();
-        setIsPlaying(true);
+        if (isPlaying) {
+          wavesurfer.current.play();
+        }
       });
 
       wavesurfer.current.on("finish", () => {
-        setIsPlaying(false);
+        togglePlay();
       });
 
       wavesurfer.current.on("audioprocess", () => {
         const progress =
           wavesurfer.current.getCurrentTime() /
           wavesurfer.current.getDuration();
-        onProgressChange(track._id, progress); // Change track.id to track._id
+        updateTrackProgress(currentTrack._id, progress);
       });
+    }
 
-      return () => {
+    return () => {
+      if (wavesurfer.current) {
         wavesurfer.current.destroy();
-      };
-    }
-  }, [track, onProgressChange]);
+      }
+    };
+  }, [currentTrack, isPlaying, togglePlay, updateTrackProgress]);
 
-  const handlePlayPause = () => {
+  useEffect(() => {
     if (wavesurfer.current) {
-      wavesurfer.current.playPause();
-      setIsPlaying(!isPlaying);
+      if (isPlaying) {
+        wavesurfer.current.play();
+      } else {
+        wavesurfer.current.pause();
+      }
     }
-  };
+  }, [isPlaying]);
 
   const handleVolumeChange = (e) => {
     const newVolume = parseFloat(e.target.value);
@@ -79,45 +85,31 @@ export default function AudioPlayer({
     setShowVolumeSlider(!showVolumeSlider);
   };
 
-  const handleNext = () => {
-    if (onNext) {
-      onNext();
-    }
-  };
-
-  const handlePrevious = () => {
-    if (onPrevious) {
-      onPrevious();
-    }
-  };
-
-  if (!track) return null;
+  if (!currentTrack) return null;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-10 mt-20 border-t bg-white shadow-lg">
       <div className="custom-container grid w-full grid-cols-1 items-center justify-center md:grid-cols-8 md:gap-4">
         <h3 className="text-center text-lg font-semibold md:col-span-8 md:text-left">
-          {track.name}
+          {currentTrack.name}
         </h3>
-        <div className="h-20 md:col-[4_/_span_3]">
-          <div ref={waveformRef} />
-        </div>
+        <div className="h-20 md:col-[4_/_span_3]" ref={waveformRef} />
         <div className="flex items-center justify-center space-x-4 pb-4 sm:justify-evenly md:col-[1_/_span_3] md:row-start-2 md:justify-start">
           <div className="flex gap-8">
             <button
-              onClick={handlePrevious}
+              onClick={playPrevious}
               className="rounded-full transition-colors"
             >
               <ImPrevious2 size={28} />
             </button>
             <button
-              onClick={handlePlayPause}
+              onClick={togglePlay}
               className="rounded-full transition-colors"
             >
               {isPlaying ? <FaPause size={28} /> : <IoIosPlay size={28} />}
             </button>
             <button
-              onClick={handleNext}
+              onClick={playNext}
               className="rounded-full transition-colors"
             >
               <ImNext2 size={28} />

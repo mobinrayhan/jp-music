@@ -1,26 +1,20 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { FaPlay, FaPause } from "react-icons/fa6";
-
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-
 import DropDownMenuLIst from "@/components/audios/dropdown-menulist";
 import ExpandAction from "@/components/audios/expand-action";
 import WaveSurfer from "wavesurfer.js";
+import { useAudioPlayer } from "./AudioPlayerContext";
 
-export default function MusicTableList({
-  setCurrentTrack,
-  currentTrack,
-  trackProgress,
-  audios,
-}) {
-  const [playingId, setPlayingId] = useState(null);
-  const wavesurferInstances = useRef({});
+export default function MusicTableList({ audios }) {
+  const waveformRefs = useRef({});
+  const { currentTrack, isPlaying, trackProgress, playTrack, updateTrackProgress } = useAudioPlayer();
 
   useEffect(() => {
-    audios.forEach((track) => {
-      if (!wavesurferInstances.current[track._id]) {
+    audios.forEach((audio) => {
+      if (!waveformRefs.current[audio._id]) {
         const wavesurfer = WaveSurfer.create({
-          container: `#waveform-${track._id}`,
+          container: `#waveform-${audio._id}`,
           waveColor: "#020817",
           progressColor: "#9ca3af",
           cursorColor: "transparent",
@@ -31,21 +25,21 @@ export default function MusicTableList({
           interact: true,
         });
 
-        wavesurfer.load(track.previewURL);
-        wavesurferInstances.current[track._id] = wavesurfer;
+        wavesurfer.load(audio.previewURL);
+        waveformRefs.current[audio._id] = wavesurfer;
 
         wavesurfer.on("click", (e) => {
           const clickPosition = wavesurfer.getCurrentTime() / wavesurfer.getDuration();
-          handleTrackClick(track, clickPosition);
+          handleTrackClick(audio, clickPosition);
         });
       }
     });
 
     return () => {
-      Object.entries(wavesurferInstances.current).forEach(([id, wavesurfer]) => {
+      Object.entries(waveformRefs.current).forEach(([id, wavesurfer]) => {
         if (!audios.some(audio => audio._id === id)) {
           wavesurfer.destroy();
-          delete wavesurferInstances.current[id];
+          delete waveformRefs.current[id];
         }
       });
     };
@@ -53,29 +47,31 @@ export default function MusicTableList({
 
   useEffect(() => {
     if (currentTrack) {
-      setPlayingId(currentTrack._id);
-      const wavesurfer = wavesurferInstances.current[currentTrack._id];
-      if (wavesurfer) {
-        wavesurfer.seekTo(currentTrack.startPosition || 0);
+      const wavesurfer = waveformRefs.current[currentTrack._id];
+      if (wavesurfer && typeof currentTrack.startPosition === 'number' && isFinite(currentTrack.startPosition)) {
+        wavesurfer.seekTo(currentTrack.startPosition);
       }
     }
   }, [currentTrack]);
 
   useEffect(() => {
     Object.entries(trackProgress).forEach(([id, progress]) => {
-      const wavesurfer = wavesurferInstances.current[id];
-      if (wavesurfer) {
+      const wavesurfer = waveformRefs.current[id];
+      if (wavesurfer && typeof progress === 'number' && isFinite(progress)) {
         wavesurfer.seekTo(progress);
       }
     });
   }, [trackProgress]);
 
   const handleTrackClick = (track, startPosition) => {
-    setCurrentTrack({ ...track, startPosition });
-    setPlayingId(track._id);
-    const wavesurfer = wavesurferInstances.current[track._id];
-    if (wavesurfer) {
-      wavesurfer.seekTo(startPosition);
+    if (typeof startPosition === 'number' && isFinite(startPosition)) {
+      playTrack({ ...track, startPosition });
+      const wavesurfer = waveformRefs.current[track._id];
+      if (wavesurfer) {
+        wavesurfer.seekTo(startPosition);
+      }
+    } else {
+      playTrack(track);
     }
   };
 
@@ -95,7 +91,7 @@ export default function MusicTableList({
               >
                 <div className="col-span-1 row-span-2 cursor-pointer">
                   <span>
-                    {playingId === audio._id ? (
+                    {currentTrack?._id === audio._id && isPlaying ? (
                       <FaPause size={18} />
                     ) : (
                       <FaPlay size={18} />
