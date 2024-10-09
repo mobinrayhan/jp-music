@@ -1,14 +1,13 @@
+import { MAX_AUDIO_PER_PAGE } from "@/app/(app)/category/[category]/page";
 import SearchInput from "@/ui/search-input";
 import { Suspense } from "react";
 import AudioSkeleton from "../audios/audio-skeleton";
 import SoundEffects from "../home/sound-effects";
+const apiUrl = process.env.API_URL;
 
-export default function Newest() {
-  const fetcherEndPoint = "/audios/all";
-
-  const sortByDateDesc = (audios) => {
-    return audios.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-  };
+export default function Newest({ searchParams }) {
+  const searchValue = searchParams?.querySearch;
+  const maxAudios = searchParams?.maxAudios || MAX_AUDIO_PER_PAGE;
 
   return (
     <>
@@ -17,7 +16,7 @@ export default function Newest() {
         <Suspense fallback={<AudioSkeleton />}>
           <SoundEffects
             fetcherEndPoint={fetcherEndPoint}
-            sortedAudiosCB={sortByDateDesc}
+            finalAudioCB={sortByDateDesc}
           />
         </Suspense>
       </main>

@@ -3,11 +3,15 @@ import SoundEffects from "@/components/home/sound-effects";
 import CategoryBox from "@/ui/category-box";
 import SearchInput from "@/ui/search-input";
 import { categoryList } from "@/utils/category-list";
+import { notFound } from "next/navigation";
 import { Suspense } from "react";
 const apiUrl = process.env.API_URL;
 
+export const MAX_AUDIO_PER_PAGE = 20;
+
 export default async function Category({ params, searchParams }) {
   const searchValue = searchParams.querySearch || "";
+  const maxAudios = searchParams.maxAudios || MAX_AUDIO_PER_PAGE;
   const categoryParams = params.category;
 
   const hasCategory = categoryList.find(
@@ -18,11 +22,7 @@ export default async function Category({ params, searchParams }) {
     return notFound();
   }
 
-  const fetcherEndPoint = searchValue
-    ? `/audios/search/${categoryParams}?query=${searchValue}`
-    : categoryParams && categoryParams !== "all"
-      ? `/audios/category/${categoryParams}`
-      : "/audios/all";
+  const fetcherEndPoint = `/audios/search/${categoryParams}?querySearch=${searchValue}&maxAudios=${maxAudios}`;
 
   const sortByDownloadCount = (audios) => {
     const sortAudios = audios
@@ -46,10 +46,11 @@ export default async function Category({ params, searchParams }) {
       />
 
       <main className="custom-container">
-        <Suspense fallback={<AudioSkeleton />} key={searchValue}>
+        <Suspense fallback={<AudioSkeleton />}>
           <SoundEffects
             fetcherEndPoint={fetcherEndPoint}
-            sortedAudiosCB={sortByDownloadCount}
+            finalAudioCB={sortByDownloadCount}
+            maxAudios={maxAudios}
           />
         </Suspense>
       </main>

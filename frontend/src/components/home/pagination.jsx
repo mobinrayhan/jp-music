@@ -1,18 +1,21 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { MAX_AUDIO_PER_PAGE } from "@/app/(app)/category/[category]/page";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export default function Pagination({ category }) {
+export default function Pagination() {
+  const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const currentTotalAudios = parseInt(searchParams.get("maxAudios")) || 10;
+  const currentMaxAudios =
+    parseInt(searchParams.get("maxAudios")) || MAX_AUDIO_PER_PAGE;
 
   const handleClick = () => {
-    const updatedTotalAudios = currentTotalAudios + 10;
+    const updatedTotalAudios = currentMaxAudios + MAX_AUDIO_PER_PAGE;
     const params = new URLSearchParams(searchParams);
 
-    params.set("totalAudios", updatedTotalAudios);
-    router.replace(`/category/${category}?${params.toString()}`);
+    params.set("maxAudios", updatedTotalAudios);
+    router.replace(`${pathname}?${params.toString()}`);
   };
 
   return (

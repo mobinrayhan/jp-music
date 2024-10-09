@@ -4,23 +4,26 @@ import Pagination from "./pagination";
 
 export default async function SoundEffects({
   fetcherEndPoint,
-  sortedAudiosCB,
+  finalAudioCB,
+  maxAudios,
 }) {
   try {
     const { category = [] } = await fetchWithApiKey("/category", {
       cache: "no-store",
     });
-    const { audios } = await fetchWithApiKey(fetcherEndPoint, {
+    const { audios, totalAudios } = await fetchWithApiKey(fetcherEndPoint, {
       cache: "no-store",
     });
-    const sortAudios = sortedAudiosCB ? sortedAudiosCB(audios.slice()) : audios;
+    const finalAudio = finalAudioCB ? finalAudioCB(audios?.slice()) : audios;
 
     return (
       <>
-        <AudioTable category={category} audios={sortAudios} />
-        <section className="mt-12">
-          <Pagination />
-        </section>
+        <AudioTable category={category} audios={finalAudio} />
+        {maxAudios < totalAudios && (
+          <section className="mt-12">
+            <Pagination />
+          </section>
+        )}
       </>
     );
   } catch (error) {
