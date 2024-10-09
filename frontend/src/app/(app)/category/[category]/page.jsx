@@ -24,15 +24,13 @@ export default async function Category({ params, searchParams }) {
 
   const fetcherEndPoint = `/audios/search/${categoryParams}?querySearch=${searchValue}&maxAudios=${maxAudios}`;
 
-  const sortByDownloadCount = (audios) => {
-    const sortAudios = audios
-      .sort((a, b) => b.downloadCount - a.downloadCount)
-      .map((audio) => {
-        return {
-          ...audio,
-          previewURL: `${apiUrl}/${audio.previewURL}`,
-        };
-      });
+  const addedApiUrl = (audios) => {
+    const sortAudios = audios.map((audio) => {
+      return {
+        ...audio,
+        previewURL: `${apiUrl}/${audio.previewURL}`,
+      };
+    });
     return sortAudios;
   };
 
@@ -49,7 +47,7 @@ export default async function Category({ params, searchParams }) {
         <Suspense fallback={<AudioSkeleton />}>
           <SoundEffects
             fetcherEndPoint={fetcherEndPoint}
-            finalAudioCB={sortByDownloadCount}
+            finalAudioCB={addedApiUrl}
             maxAudios={maxAudios}
           />
         </Suspense>
