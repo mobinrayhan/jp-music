@@ -32,13 +32,14 @@ exports.getCategoryAudiosWithSearch = async (req, res, next) => {
   const { maxAudios } = req.query;
 
   try {
-    const searchResultAudios = await audioModels.categoryAudiosWithSearch({
-      querySearch,
+    const catWithSearchResult = await audioModels.categoryAudiosWithSearch({
+      querySearch: querySearch.trim(),
       category,
       maxAudio: Number(maxAudios),
     });
 
-    if (!searchResultAudios.totalAudios) {
+    console.log(catWithSearchResult);
+    if (!catWithSearchResult.totalAudios) {
       const error = new Error('No Audios Found of this category!');
       error.statusCode = 404;
       throw error;
@@ -46,7 +47,7 @@ exports.getCategoryAudiosWithSearch = async (req, res, next) => {
 
     return res.json({
       message: 'Get Category Audios Successfully',
-      ...searchResultAudios,
+      ...catWithSearchResult,
     });
   } catch (err) {
     err.statusCode = 404;
@@ -59,14 +60,14 @@ exports.getNewestAudiosWithSearch = async (req, res, next) => {
   const { maxAudios } = req.query;
 
   try {
-    const searchResultAudios = await audioModels.newestAudiosWithSearch({
+    const newesAudioWithSearch = await audioModels.newestAudiosWithSearch({
       querySearch,
       maxAudio: Number(maxAudios),
     });
 
-    console.log(searchResultAudios);
+    console.log(newesAudioWithSearch);
 
-    if (!searchResultAudios.totalAudios) {
+    if (!newesAudioWithSearch.totalAudios) {
       const error = new Error('No Audios Found for this page!');
       error.statusCode = 404;
       throw error;
@@ -74,7 +75,7 @@ exports.getNewestAudiosWithSearch = async (req, res, next) => {
 
     return res.json({
       message: 'Get Audios Successfully',
-      ...searchResultAudios,
+      ...newesAudioWithSearch,
     });
   } catch (err) {
     err.statusCode = 404;

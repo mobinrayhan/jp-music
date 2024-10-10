@@ -19,6 +19,8 @@ exports.categoryAudiosWithSearch = async function ({
             { name: { $regex: `^${querySearch}`, $options: 'i' } }, // Starts with
             { name: { $regex: `${querySearch}$`, $options: 'i' } }, // Ends with
             { name: { $regex: `${querySearch}`, $options: 'i' } }, // Includes
+
+            { keywords: { $regex: `${querySearch}`, $options: 'i' } }, // Search in keywords array
           ],
         },
       },
@@ -59,6 +61,7 @@ exports.newestAudiosWithSearch = async function ({ querySearch, maxAudio }) {
                   { name: { $regex: `^${querySearch}`, $options: 'i' } }, // Starts with
                   { name: { $regex: `${querySearch}$`, $options: 'i' } }, // Ends with
                   { name: { $regex: `${querySearch}`, $options: 'i' } }, // Includes
+                  { keywords: { $regex: `${querySearch}`, $options: 'i' } }, // Search in keywords array
                 ],
               }
             : {}), // Match all documents if querySearch is not provided or is empty
