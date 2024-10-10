@@ -1,8 +1,11 @@
 "use client";
 
+import {
+  AudioPlayerProvider,
+  useAudioPlayer,
+} from "@/context/audio-player-context";
 import { useEffect } from "react";
 import AudioPlayer from "./audio-player";
-import { AudioPlayerProvider, useAudioPlayer } from "./audio-player-context";
 import MusicTableList from "./music-table-list";
 
 function AudioTableContent({ audios }) {

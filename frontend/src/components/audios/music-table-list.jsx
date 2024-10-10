@@ -1,10 +1,10 @@
 import DropDownMenuLIst from "@/components/audios/dropdown-menulist";
 import ExpandAction from "@/components/audios/expand-action";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { useAudioPlayer } from "@/context/audio-player-context";
 import { useEffect, useRef } from "react";
 import { FaPause, FaPlay } from "react-icons/fa6";
 import WaveSurfer from "wavesurfer.js";
-import { useAudioPlayer } from "./audio-player-context";
 
 export default function MusicTableList({ audios }) {
   const waveformRefs = useRef({});

@@ -6,7 +6,7 @@ import { ImNext2, ImPrevious2 } from "react-icons/im";
 import { IoIosPlay } from "react-icons/io";
 
 import WaveSurfer from "wavesurfer.js";
-import { useAudioPlayer } from "./audio-player-context";
+import { useAudioPlayer } from "@/context/audio-player-context";
 import ExpandAction from "./expand-action";
 
 export default function AudioPlayer() {
