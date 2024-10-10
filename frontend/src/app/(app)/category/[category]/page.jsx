@@ -25,13 +25,15 @@ export default async function Category({ params, searchParams }) {
   const fetcherEndPoint = `/audios/search/${categoryParams}?querySearch=${searchValue}&maxAudios=${maxAudios}`;
 
   const addedApiUrl = (audios) => {
-    const sortAudios = audios.map((audio) => {
+    const finalAudios = audios.map((audio) => {
       return {
         ...audio,
         previewURL: `${apiUrl}/${audio.previewURL}`,
       };
     });
-    return sortAudios;
+
+    console.log(finalAudios);
+    return finalAudios;
   };
 
   return (

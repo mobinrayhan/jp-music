@@ -114,8 +114,12 @@ export default function MusicTableList({ audios }) {
                   {audio.name}
                 </h3>
 
-                <p className="col-[2_/_span_1] text-start text-xs tracking-wide text-gray-500">
-                  Placeholder Category
+                <p className="col-[2_/_span_1] text-nowrap text-start text-xs tracking-wide text-gray-500">
+                  {audio.keywords.map((keyword) => (
+                    <span key={keyword} className="pr-2">
+                      {keyword + ","}
+                    </span>
+                  ))}
                 </p>
               </button>
             </TableCell>
