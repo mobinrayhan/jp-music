@@ -27,11 +27,11 @@ const Signup = () => {
       return;
     }
 
-    const username = formData.get("name");
-    const email = formData.get("email");
-    const password = formData.get("password");
+    const username = formData.get("name").trim();
+    const email = formData.get("email").trim();
+    const password = formData.get("password").trim();
 
-    const signupData = { username, email, password };
+    const signupData = { username, email, password, role: "user" };
 
     console.log(signupData);
 

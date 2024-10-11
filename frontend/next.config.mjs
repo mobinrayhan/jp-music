@@ -6,6 +6,7 @@ const config = (phase) => {
       env: {
         API_KEY: "9c035862-3350-4204-9c87-0a65d5c7c85f",
         API_URL: "http://192.168.0.105:4000",
+        JWT_SECRET: "jamesPrinceSoundei@147570",
         // API_URL: "https://dev-api.soundei.com",
       },
 
@@ -46,8 +47,9 @@ const config = (phase) => {
   return {
     env: {
       API_KEY: "9c035862-3350-4204-9c87-0a65d5c7c85f",
-      // API_URL: "https://dev-api.soundei.com",
-      API_URL: "http://192.168.0.105:4000",
+      API_URL: "https://dev-api.soundei.com",
+      JWT_SECRET: "jamesPrinceSoundei@147570",
+      // API_URL: "http://192.168.0.105:4000",
     },
 
     webpack(config) {

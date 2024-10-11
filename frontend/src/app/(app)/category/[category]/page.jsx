@@ -32,7 +32,7 @@ export default async function Category({ params, searchParams }) {
       };
     });
 
-    console.log(finalAudios);
+    // console.log(finalAudios);
     return finalAudios;
   };
 

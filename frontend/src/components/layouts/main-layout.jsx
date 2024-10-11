@@ -20,9 +20,7 @@ function MainLayoutContent({ children }) {
       <FooterMain />
       <Footer />
 
-      {currentTrack && (
-        <div className=":p-16 p-20 sm:p-[5.4rem] md:p-[4.2rem]" />
-      )}
+      {currentTrack && <div className="p-20 sm:p-[5.4rem] md:p-[4.2rem]" />}
     </body>
   );
 }

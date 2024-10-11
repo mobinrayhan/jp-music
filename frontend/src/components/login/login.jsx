@@ -1,11 +1,13 @@
 "use client";
 import { validLoginFields } from "@/lib/valid-login";
-import { fetchWithApiKey } from "@/utils/api";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 
 const Login = () => {
+  const { push } = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
@@ -26,23 +28,36 @@ const Login = () => {
       return;
     }
 
-    const email = formData.get("email");
-    const password = formData.get("password");
-    const loginData = { email, password };
+    const email = formData.get("email").trim();
+    const password = formData.get("password").trim();
+    // const loginData = { email, password };
 
-    try {
-      const updatedData = await fetchWithApiKey(`/auth/login`, {
-        method: "POST",
-        body: JSON.stringify(loginData),
-      });
+    const res = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
 
-      console.log(updatedData);
-    } catch (err) {
-      console.log(err);
-      setError(err.message || "Network error");
-    } finally {
-      setLoading(false);
+    if (res?.ok) {
+      push("/my-library/favorites"); // Redirect after successful login
+    } else {
+      console.log(res);
+      alert("Invalid email or password");
     }
+
+    // try {
+    //   const updatedData = await fetchWithApiKey(`/auth/login`, {
+    //     method: "POST",
+    //     body: JSON.stringify(loginData),
+    //   });
+
+    //   console.log(updatedData);
+    // } catch (err) {
+    //   console.log(err);
+    //   setError(err.message || "Network error");
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   return (

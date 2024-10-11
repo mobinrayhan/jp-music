@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useCallback, useContext, useState, useEffect } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 const AudioPlayerContext = createContext();
 
@@ -12,7 +18,7 @@ export const AudioPlayerProvider = ({ children }) => {
 
   useEffect(() => {
     // Load state from sessionStorage on initial render
-    const storedTrack = sessionStorage.getItem('currentTrack');
+    const storedTrack = sessionStorage.getItem("currentTrack");
     if (storedTrack) {
       setCurrentTrack(JSON.parse(storedTrack));
     }
@@ -22,7 +28,7 @@ export const AudioPlayerProvider = ({ children }) => {
     setCurrentTrack(track);
     setIsPlaying(true);
     // Save to sessionStorage
-    sessionStorage.setItem('currentTrack', JSON.stringify(track));
+    sessionStorage.setItem("currentTrack", JSON.stringify(track));
   }, []);
 
   const togglePlay = useCallback(() => {
