@@ -1,4 +1,5 @@
 const audioModels = require('../models/audioModel');
+const path = require('node:path');
 
 // exports.getAllAudios = async function (req, res, next) {
 //   const allAudios = await audioModels.getAllAudios();
@@ -79,6 +80,41 @@ exports.getNewestAudiosWithSearch = async (req, res, next) => {
     });
   } catch (err) {
     err.statusCode = 404;
+    next(err);
+  }
+};
+
+exports.postDownloadAudio = async (req, res, next) => {
+  const audioId = req.query.id;
+  const user = req.user;
+
+  try {
+    const audio = await audioModels.downloadAudio(audioId);
+    if (!audio) {
+      const error = new Error('No Audios Found!');
+      error.statusCode = 404;
+      throw error;
+    }
+
+    const filePath = path.join(
+      path.dirname(require.main.filename),
+      audio.previewURL
+    );
+    res.download(filePath, audio.name, (err) => {
+      if (err) {
+        console.log(err);
+        const error = new Error('Error downloading the file!');
+        error.statusCode = 404;
+        next(error);
+      }
+    });
+
+    console.log(
+      req.user,
+      audio,
+      path.join(path.dirname(require.main.filename), audio.previewURL)
+    );
+  } catch (err) {
     next(err);
   }
 };

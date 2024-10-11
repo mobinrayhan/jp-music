@@ -1,5 +1,6 @@
 const { dirname, join } = require('path');
 const { connectToDatabase } = require('./db');
+const { ObjectId } = require('mongodb');
 
 exports.categoryAudiosWithSearch = async function ({
   querySearch,
@@ -88,4 +89,10 @@ exports.newestAudiosWithSearch = async function ({ querySearch, maxAudio }) {
     totalAudios,
     audios,
   };
+};
+
+exports.downloadAudio = async function (audioId) {
+  const db = await connectToDatabase();
+  const collection = await db.collection('audios');
+  return collection.findOne({ _id: new ObjectId(audioId) });
 };

@@ -12,12 +12,12 @@ const user = {
       audios: ['auddioId1', 'audioIsdd2', 'audioId10'],
     },
   ],
-  downloads: ['audioId1', 'audioId2', 'audioId10'],
+  downloads: [{date, 'audioId1'}, {date, 'audioId2'}, {date, 'audioId10'}],
   favorites: ['audioId1', 'audioId2', 'audioId10'],
 };
 */
 
-exports.createNewUser = async function (username, password, email) {
+exports.createNewUser = async function ({ username, password, email, role }) {
   const db = await connectToDatabase();
   const collection = await db.collection('users');
 
@@ -25,18 +25,17 @@ exports.createNewUser = async function (username, password, email) {
     username,
     password,
     email,
+    role,
     playlists: [],
     downloads: [],
     favorites: [],
   };
-  console.log(user);
 
-  // return database.collection('users').insertOne(user);
+  return collection.insertOne(user);
 };
 
 exports.findUser = async function (email) {
   const db = await connectToDatabase();
   const collection = await db.collection('users');
-
-  console.log(email);
+  return await collection.findOne({ email });
 };

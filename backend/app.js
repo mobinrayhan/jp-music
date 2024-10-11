@@ -20,13 +20,23 @@ const authRouter = require('./routes/auth');
 //   max: 100, // Limit each IP to 100 requests per windowMs
 // });
 
+const allowedOrigins = [
+  'https://jp-music.vercel.app',
+  'http://localhost:3000',
+  'https://soundei.com',
+  'http://192.168.0.105:3000',
+  'https://soundei.netlify.app',
+  'https://soundei.com',
+  'https://dev-front.soundei.com',
+  'https://dev-admin.soundei.com',
+];
 app.use(express.json());
 // app.use(limiter);
 // app.use(morgan('combined'));
 app.use(helmet());
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'https://jp-music.vercel.app/'],
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key'],
   })
@@ -47,7 +57,7 @@ app.get('/all-audios/preview/:category/:name', (req, res) => {
   const { category, name } = req.params;
   const audioFilePath = path.join(
     __dirname,
-    'audio-files',
+    'all-audios',
     'preview',
     category,
     name
@@ -63,15 +73,6 @@ app.get('/all-audios/preview/:category/:name', (req, res) => {
 
   res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
 
-  const allowedOrigins = [
-    'https://jp-music.vercel.app',
-    'http://localhost:3000',
-    'https://soundei.com',
-    'https://soundei.netlify.app',
-    'https://soundei.com',
-    'https://dev-front.soundei.com',
-    'https://dev-admin.soundei.com',
-  ];
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
