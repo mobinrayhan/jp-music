@@ -5,8 +5,8 @@ import { FaPause } from "react-icons/fa6";
 import { ImNext2, ImPrevious2 } from "react-icons/im";
 import { IoIosPlay } from "react-icons/io";
 
-import WaveSurfer from "wavesurfer.js";
 import { useAudioPlayer } from "@/context/audio-player-context";
+import WaveSurfer from "wavesurfer.js";
 import ExpandAction from "./expand-action";
 
 export default function AudioPlayer() {
@@ -103,6 +103,7 @@ export default function AudioPlayer() {
     setShowVolumeSlider(!showVolumeSlider);
   };
 
+  console.log(currentTrack);
   if (!currentTrack) return null;
 
   return (
@@ -179,7 +180,7 @@ export default function AudioPlayer() {
             "hidden justify-end md:col-[7_/_span_2] md:row-start-2 md:flex"
           }
         >
-          <ExpandAction />
+          <ExpandAction audioId={currentTrack._id} />
         </div>
       </div>
     </div>

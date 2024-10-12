@@ -134,7 +134,7 @@ export default function MusicTableList({ audios }) {
 
             <TableCell className="flex items-center pt-4">
               <div className="ml-auto flex items-center gap-2">
-                <ExpandAction />
+                <ExpandAction audioId={audio._id} />
                 <DropDownMenuLIst />
               </div>
             </TableCell>
