@@ -91,7 +91,8 @@ exports.newestAudiosWithSearch = async function ({ querySearch, maxAudio }) {
   };
 };
 
-exports.downloadAudio = async function (audioId) {
+exports.geAudioInfoById = async function (audioId) {
+  console.log(audioId, 'hello');
   const db = await connectToDatabase();
   const collection = await db.collection('audios');
   return collection.findOne({ _id: new ObjectId(audioId) });

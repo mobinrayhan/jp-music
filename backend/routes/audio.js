@@ -7,5 +7,6 @@ const isAuth = require('../middleware/is-auth');
 router.get('/search/:category', audioController.getCategoryAudiosWithSearch);
 router.get('/newest', audioController.getNewestAudiosWithSearch);
 router.post('/download', isAuth, audioController.postDownloadAudio);
+router.get('/:id', audioController.getAudioById);
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const audioModels = require('../models/audioModel');
 const path = require('node:path');
+const fs = require('node:fs');
 
 // exports.getAllAudios = async function (req, res, next) {
 //   const allAudios = await audioModels.getAllAudios();
@@ -39,7 +40,6 @@ exports.getCategoryAudiosWithSearch = async (req, res, next) => {
       maxAudio: Number(maxAudios),
     });
 
-    console.log(catWithSearchResult);
     if (!catWithSearchResult.totalAudios) {
       const error = new Error('No Audios Found of this category!');
       error.statusCode = 404;
@@ -61,14 +61,12 @@ exports.getNewestAudiosWithSearch = async (req, res, next) => {
   const { maxAudios } = req.query;
 
   try {
-    const newesAudioWithSearch = await audioModels.newestAudiosWithSearch({
+    const newestAudioWithSearch = await audioModels.newestAudiosWithSearch({
       querySearch,
       maxAudio: Number(maxAudios),
     });
 
-    console.log(newesAudioWithSearch);
-
-    if (!newesAudioWithSearch.totalAudios) {
+    if (!newestAudioWithSearch.totalAudios) {
       const error = new Error('No Audios Found for this page!');
       error.statusCode = 404;
       throw error;
@@ -76,7 +74,7 @@ exports.getNewestAudiosWithSearch = async (req, res, next) => {
 
     return res.json({
       message: 'Get Audios Successfully',
-      ...newesAudioWithSearch,
+      ...newestAudioWithSearch,
     });
   } catch (err) {
     err.statusCode = 404;
@@ -88,8 +86,10 @@ exports.postDownloadAudio = async (req, res, next) => {
   const audioId = req.query.id;
   const user = req.user;
 
+  console.log(audioId, user);
+
   try {
-    const audio = await audioModels.downloadAudio(audioId);
+    const audio = await audioModels.geAudioInfoById(audioId);
     if (!audio) {
       const error = new Error('No Audios Found!');
       error.statusCode = 404;
@@ -100,21 +100,31 @@ exports.postDownloadAudio = async (req, res, next) => {
       path.dirname(require.main.filename),
       audio.previewURL
     );
+
+    if (!fs.existsSync(filePath)) {
+      const error = new Error('File not found on the server!');
+      error.statusCode = 404;
+      throw error;
+    }
+
     res.download(filePath, audio.name, (err) => {
       if (err) {
-        console.log(err);
         const error = new Error('Error downloading the file!');
         error.statusCode = 404;
         next(error);
       }
     });
-
-    console.log(
-      req.user,
-      audio,
-      path.join(path.dirname(require.main.filename), audio.previewURL)
-    );
   } catch (err) {
     next(err);
+  }
+};
+
+exports.getAudioById = async (req, res, next) => {
+  try {
+    const audioId = req.params.id;
+    const audio = await audioModels.geAudioInfoById(audioId);
+    return res.json({ message: 'Get Audio by ID Successfully', audio });
+  } catch (e) {
+    next(e);
   }
 };
