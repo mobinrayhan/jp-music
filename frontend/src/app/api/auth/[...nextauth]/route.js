@@ -31,36 +31,39 @@ export const authOptions = {
             method: "POST",
             body: JSON.stringify(loginData),
           });
-
           if (user) {
             return user;
           } else {
             return null;
           }
         } catch (error) {
-          console.error("Login failed:", error);
           return null;
         }
       },
     }),
   ],
+  secret: process.env.NEXTAUTH_SECRET,
+
   session: {
     strategy: "jwt",
+    maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
   },
   jwt: {
     secret: process.env.JWT_SECRET,
+    maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
   },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
-        token.email = user.email;
+        token.id = user.userId;
+        token.jwt = user.token;
+        token.iat = Math.floor(Date.now() / 1000); // Set issued at
       }
       return token;
     },
     async session({ session, token }) {
       session.user.id = token.id;
-      session.user.email = token.email;
+      session.jwt = token.jwt;
       return session;
     },
   },

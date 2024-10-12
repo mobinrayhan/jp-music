@@ -10,17 +10,14 @@ const Login = () => {
   const { push } = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    setSuccess(false);
 
     const formData = new FormData(e.target);
     const errors = validLoginFields(formData);
-    console.log(errors);
 
     if (errors.length > 0) {
       setError(errors[0]);
@@ -30,7 +27,6 @@ const Login = () => {
 
     const email = formData.get("email").trim();
     const password = formData.get("password").trim();
-    // const loginData = { email, password };
 
     const res = await signIn("credentials", {
       email,
@@ -39,25 +35,11 @@ const Login = () => {
     });
 
     if (res?.ok) {
-      push("/my-library/favorites"); // Redirect after successful login
+      push("/my-library/favorites");
     } else {
-      console.log(res);
-      alert("Invalid email or password");
+      setLoading(false);
+      setError("Invalid Credentials! Check Your Email And Password!");
     }
-
-    // try {
-    //   const updatedData = await fetchWithApiKey(`/auth/login`, {
-    //     method: "POST",
-    //     body: JSON.stringify(loginData),
-    //   });
-
-    //   console.log(updatedData);
-    // } catch (err) {
-    //   console.log(err);
-    //   setError(err.message || "Network error");
-    // } finally {
-    //   setLoading(false);
-    // }
   };
 
   return (
@@ -101,7 +83,8 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="w-full rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 focus:outline-none"
+            disabled={loading}
+            className="w-full rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 focus:outline-none disabled:cursor-not-allowed"
           >
             {loading ? "Login..." : "Login"}
           </button>
@@ -125,7 +108,11 @@ const Login = () => {
         </div>
         <p className="mt-4 text-center text-gray-600">
           Don&apos;t have an account?{" "}
-          <Link href="/signup" className="text-blue-600 hover:underline">
+          <Link
+            href="/signup"
+            className={`text-blue-600 hover:underline ${loading && "cursor-not-allowed"}`}
+            disabled={loading}
+          >
             {" "}
             Sign up
           </Link>
