@@ -2,12 +2,16 @@
 import { validLoginFields } from "@/lib/valid-login";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 
 const Login = () => {
-  const { push } = useRouter();
+  const searchParams = useSearchParams();
+  const ref = searchParams.get("ref");
+  const router = useRouter();
+  const decodedRef = ref ? decodeURIComponent(ref) : "/newest";
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -35,7 +39,8 @@ const Login = () => {
     });
 
     if (res?.ok) {
-      push("/my-library/favorites");
+      console.log(decodedRef);
+      router.push(decodedRef);
     } else {
       setLoading(false);
       setError("Invalid Credentials! Check Your Email And Password!");
