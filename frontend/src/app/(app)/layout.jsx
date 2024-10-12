@@ -6,9 +6,9 @@ const baseUrl =
     : "http://localhost:3000";
 
 export async function generateMetadata() {
-  const title = "SoundEi - Your Ultimate Sound Library";
+  const title = "Soundei | Discover, Stream, and Share Your Favorite Music";
   const description =
-    "SoundEi is a sound platform where users can upload, browse, and download high-quality audio clips and sound effects for creative projects. Join us today!";
+    "Welcome to Soundei, your ultimate music destination! Explore a vast library of songs, create personalized playlists, and connect with fellow music lovers. Stream your favorite tracks, discover new genres, and enjoy a seamless listening experience. Join Soundei today and elevate your music journey!";
   const keywords =
     "Sound downloads, audio clips, sound effects, royalty-free sounds, music for content creators, downloadable audio, sound library, SoundEi";
   const author = "James Prince";

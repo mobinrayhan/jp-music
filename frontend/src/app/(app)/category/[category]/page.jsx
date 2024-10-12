@@ -5,8 +5,8 @@ import SearchInput from "@/ui/search-input";
 import { categoryList } from "@/utils/category-list";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-const apiUrl = process.env.API_URL;
 
+const apiUrl = process.env.API_URL;
 export const MAX_AUDIO_PER_PAGE = 20;
 
 export default async function Category({ params, searchParams }) {
@@ -31,8 +31,6 @@ export default async function Category({ params, searchParams }) {
         previewURL: `${apiUrl}/${audio.previewURL}`,
       };
     });
-
-    // console.log(finalAudios);
     return finalAudios;
   };
 
