@@ -1,3 +1,4 @@
+import NextAuthProvider from "@/ui/nextauth-provider";
 import "./globals.css";
 
 const baseUrl =
@@ -47,7 +48,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="light">
       <body>
-        <>{children}</>
+        <NextAuthProvider>{children}</NextAuthProvider>
       </body>
     </html>
   );

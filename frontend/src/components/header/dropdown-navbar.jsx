@@ -6,6 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { IoMenuSharp } from "react-icons/io5";
 
@@ -25,7 +26,10 @@ const dropdownMenuOptions = [
 ];
 
 export default function DropdownNavbar({ menuOptions }) {
+  const { data: session } = useSession();
   const { push } = useRouter();
+
+  console.log(session);
 
   return (
     <DropdownMenu>
@@ -37,21 +41,23 @@ export default function DropdownNavbar({ menuOptions }) {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="mr-4 p-2">
-        {[...menuOptions, ...dropdownMenuOptions].map(({ href, label }, i) => (
-          <DropdownMenuItem
-            key={href}
-            className={`flex cursor-pointer items-center gap-2 sm:${label === "Newest" ? "!hidden" : "flex"} md:${menuOptions[i]?.label === label ? "hidden" : "flex"}`}
-          >
-            {" "}
-            <button
-              aria-label={label + " links"}
-              onClick={() => push(href)}
-              className="block w-full text-left"
+        {[...menuOptions, ...dropdownMenuOptions].map(({ href, label }, i) =>
+          session && label === "Login" ? null : (
+            <DropdownMenuItem
+              key={href}
+              className={`flex cursor-pointer items-center gap-2 sm:${label === "Newest" ? "!hidden" : "flex"} md:${menuOptions[i]?.label === label ? "hidden" : "flex"}`}
             >
-              {label}
-            </button>
-          </DropdownMenuItem>
-        ))}
+              {" "}
+              <button
+                aria-label={label + " links"}
+                onClick={() => push(href)}
+                className="block w-full text-left"
+              >
+                {label}
+              </button>
+            </DropdownMenuItem>
+          ),
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
