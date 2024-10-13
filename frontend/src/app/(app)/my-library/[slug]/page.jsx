@@ -1,6 +1,9 @@
+import AudioSkeleton from "@/components/audios/audio-skeleton";
+import DownloadCategory from "@/components/my-library/download-category";
 import SearchInput from "@/ui/search-input";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 const apiUrl = process.env.API_URL;
 
 const tabs = [
@@ -43,7 +46,8 @@ export async function generateMetadata({ params }) {
   }
 }
 
-export default function MyLibrarySlug({ params, searchParams }) {
+export const dynamic = "force-dynamic";
+export default async function MyLibrarySlug({ params }) {
   const activePath = params.slug;
   const isExistSlug = tabs.find(
     (tab) => tab.link === `/my-library/${activePath}`,
@@ -52,20 +56,6 @@ export default function MyLibrarySlug({ params, searchParams }) {
   if (!isExistSlug) {
     return notFound();
   }
-
-  // const fetcherEndPoint =
-  //   searchParams.searchValue === "downloads"
-  //     ? `/audios/category/object`
-  //     : "/audios/all";
-
-  // const sortedAndSearchResult = (audios) => {
-  //   return audios.map((audio) => {
-  //     return {
-  //       ...audio,
-  //       previewURL: `${apiUrl}/${audio.previewURL}`,
-  //     };
-  //   });
-  // };
 
   return (
     <>
@@ -86,14 +76,13 @@ export default function MyLibrarySlug({ params, searchParams }) {
         </ul>
       </section>
 
-      {/* <main className="custom-container">
-        <Suspense fallback={<AudioSkeleton />}>
-          <SoundEffects
-            fetcherEndPoint={fetcherEndPoint}
-            sortedAudiosCB={sortedAndSearchResult}
-          />
-        </Suspense>
-      </main> */}
+      {activePath === "downloads" && (
+        <main className="custom-container">
+          <Suspense fallback={<AudioSkeleton />}>
+            <DownloadCategory activePath={activePath} />
+          </Suspense>
+        </main>
+      )}
     </>
   );
 }

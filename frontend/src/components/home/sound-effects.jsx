@@ -2,6 +2,8 @@ import { fetchWithApiKey } from "@/utils/api";
 import AudioTable from "../audios/music-info";
 import Pagination from "./pagination";
 
+export const fetchCache = "force-no-store";
+
 export default async function SoundEffects({
   fetcherEndPoint,
   finalAudioCB,
@@ -9,10 +11,10 @@ export default async function SoundEffects({
 }) {
   try {
     const { category = [] } = await fetchWithApiKey("/category", {
-      cache: "no-store",
+      next: { cache: "no-store" },
     });
     const { audios, totalAudios } = await fetchWithApiKey(fetcherEndPoint, {
-      cache: "no-store",
+      next: { cache: "no-store" },
     });
     const finalAudio = finalAudioCB ? finalAudioCB(audios?.slice()) : audios;
 

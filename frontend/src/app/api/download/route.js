@@ -1,5 +1,6 @@
 import { fetchWithApiKey } from "@/utils/api";
 import { getServerSession } from "next-auth";
+import { revalidatePath } from "next/cache";
 import { authOptions } from "../auth/[...nextauth]/route";
 
 export async function POST(req) {
@@ -16,8 +17,6 @@ export async function POST(req) {
         },
       });
     }
-
-    console.log(session);
 
     const audioInfo = await fetchWithApiKey(`/audios/${id}`);
 
@@ -43,6 +42,8 @@ export async function POST(req) {
 
     const fileName = `${audioInfo.audio.name}.${audioInfo.audio.type}`;
     const fileBuffer = await downloadRes.arrayBuffer();
+
+    revalidatePath("/my-library/downloads");
 
     return new Response(fileBuffer, {
       headers: {
