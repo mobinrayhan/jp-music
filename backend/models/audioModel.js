@@ -2,6 +2,12 @@ const { dirname, join } = require('path');
 const { connectToDatabase } = require('./db');
 const { ObjectId } = require('mongodb');
 
+exports.geAudioInfoById = async function (audioId) {
+  const db = await connectToDatabase();
+  const audioColl = await db.collection('audios');
+  return audioColl.findOne({ _id: new ObjectId(audioId) });
+};
+
 exports.categoryAudiosWithSearch = async function ({
   querySearch,
   category,
@@ -91,9 +97,24 @@ exports.newestAudiosWithSearch = async function ({ querySearch, maxAudio }) {
   };
 };
 
-exports.geAudioInfoById = async function (audioId) {
-  console.log(audioId, 'hello');
+exports.postDownloadAudio = async function (audioId, userId) {
   const db = await connectToDatabase();
-  const collection = await db.collection('audios');
-  return collection.findOne({ _id: new ObjectId(audioId) });
+  const audioColl = await db.collection('audios');
+  const userColl = await db.collection('users');
+
+  await userColl.updateOne(
+    { _id: new ObjectId(userId) },
+    {
+      $push: {
+        downloads: { audioId: new ObjectId(audioId), time: new Date() },
+      },
+    }
+  );
+
+  await audioColl.updateOne(
+    { _id: new ObjectId(audioId) },
+    { $inc: { downloadCount: 1 } }
+  );
+
+  return audioColl.findOne({ _id: new ObjectId(audioId) });
 };

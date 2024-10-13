@@ -87,9 +87,9 @@ exports.postDownloadAudio = async (req, res, next) => {
   const user = req.user;
 
   console.log(audioId, user);
-
   try {
-    const audio = await audioModels.geAudioInfoById(audioId);
+    // const
+    const audio = await audioModels.postDownloadAudio(audioId, user.id);
     if (!audio) {
       const error = new Error('No Audios Found!');
       error.statusCode = 404;
@@ -115,6 +115,7 @@ exports.postDownloadAudio = async (req, res, next) => {
       }
     });
   } catch (err) {
+    console.log(err);
     next(err);
   }
 };
