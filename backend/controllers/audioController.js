@@ -86,7 +86,6 @@ exports.postDownloadAudio = async (req, res, next) => {
   const audioId = req.query.id;
   const user = req.user;
 
-  console.log(audioId, user);
   try {
     // const
     const audio = await audioModels.postDownloadAudio(audioId, user.id);

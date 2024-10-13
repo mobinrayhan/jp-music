@@ -14,6 +14,7 @@ const { connectToDatabase } = require('./models/db');
 const categoryRouter = require('./routes/category');
 const audioRouter = require('./routes/audio');
 const authRouter = require('./routes/auth');
+const userRouter = require('./routes/user');
 
 // const limiter = rateLimit({
 //   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -126,6 +127,7 @@ const apiKeyMiddleware = (req, res, next) => {
 app.use(apiKeyMiddleware);
 
 app.use('/auth', authRouter);
+app.use('/users', userRouter);
 app.use('/audios', audioRouter);
 app.use('/category', categoryRouter);
 

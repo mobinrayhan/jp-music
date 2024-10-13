@@ -5,7 +5,6 @@ module.exports = isAuth = (req, res, next) => {
   if (!header) {
     return res.json({ message: 'Authorization header is missing' });
   }
-  console.log(header);
   const token = header && header.split(' ')[1];
 
   if (!token) {

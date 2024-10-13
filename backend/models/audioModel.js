@@ -103,10 +103,34 @@ exports.postDownloadAudio = async function (audioId, userId) {
   const userColl = await db.collection('users');
 
   await userColl.updateOne(
-    { _id: new ObjectId(userId) },
+    {
+      _id: new ObjectId(userId),
+      'downloads.audioId': new ObjectId(audioId), // Check if the audioId exists
+    },
+    {
+      $set: {
+        'downloads.$.date': new Date(), // Update the date if audioId exists
+      },
+      $inc: {
+        'downloads.$.count': 1, // Increment the count if audioId exists
+      },
+    },
+    {
+      upsert: false, // Ensure this doesn't create a new document
+    }
+  );
+  await userColl.updateOne(
+    {
+      _id: new ObjectId(userId),
+      'downloads.audioId': { $ne: new ObjectId(audioId) }, // Only push if audioId doesn't exist
+    },
     {
       $push: {
-        downloads: { audioId: new ObjectId(audioId), time: new Date() },
+        downloads: {
+          audioId: new ObjectId(audioId),
+          date: new Date(),
+          count: 1,
+        },
       },
     }
   );
