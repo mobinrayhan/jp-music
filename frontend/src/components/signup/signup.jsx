@@ -33,17 +33,12 @@ const Signup = () => {
 
     const signupData = { username, email, password, role: "user" };
 
-    console.log(signupData);
-
     try {
       const updatedData = await fetchWithApiKey(`/auth/signup`, {
         method: "POST",
         body: JSON.stringify(signupData),
       });
-
-      console.log(updatedData);
     } catch (err) {
-      console.log(err);
       setError(err.message || "Network error");
     } finally {
       setLoading(false);

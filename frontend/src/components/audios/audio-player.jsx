@@ -103,7 +103,6 @@ export default function AudioPlayer() {
     setShowVolumeSlider(!showVolumeSlider);
   };
 
-  console.log(currentTrack);
   if (!currentTrack) return null;
 
   return (

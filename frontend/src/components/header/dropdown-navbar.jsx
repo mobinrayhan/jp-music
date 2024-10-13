@@ -29,8 +29,6 @@ export default function DropdownNavbar({ menuOptions }) {
   const { data: session } = useSession();
   const { push } = useRouter();
 
-  console.log(session);
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger

@@ -39,7 +39,6 @@ const Login = () => {
     });
 
     if (res?.ok) {
-      console.log(decodedRef);
       router.push(decodedRef);
     } else {
       setLoading(false);

@@ -17,6 +17,8 @@ export async function POST(req) {
       });
     }
 
+    console.log(session);
+
     const audioInfo = await fetchWithApiKey(`/audios/${id}`);
 
     const downloadRes = await fetch(
