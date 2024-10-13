@@ -43,7 +43,11 @@ export default function DropdownNavbar({ menuOptions }) {
             className={`flex cursor-pointer items-center gap-2 sm:${label === "Newest" ? "!hidden" : "flex"} md:${menuOptions[i]?.label === label ? "hidden" : "flex"}`}
           >
             {" "}
-            <button aria-label={label + " links"} onClick={() => push(href)}>
+            <button
+              aria-label={label + " links"}
+              onClick={() => push(href)}
+              className="block w-full text-left"
+            >
               {label}
             </button>
           </DropdownMenuItem>
