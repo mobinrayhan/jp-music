@@ -4,6 +4,7 @@ import SearchInput from "@/ui/search-input";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { MAX_AUDIO_PER_PAGE } from "../../category/[category]/page";
 const apiUrl = process.env.API_URL;
 
 const tabs = [
@@ -45,10 +46,13 @@ export async function generateMetadata({ params }) {
       break;
   }
 }
-
 export const dynamic = "force-dynamic";
-export default async function MyLibrarySlug({ params }) {
+
+export default async function MyLibrarySlug({ params, searchParams }) {
+  const searchValue = searchParams.querySearch || "";
+  const maxAudios = searchParams.maxAudios || MAX_AUDIO_PER_PAGE;
   const activePath = params.slug;
+
   const isExistSlug = tabs.find(
     (tab) => tab.link === `/my-library/${activePath}`,
   );
@@ -79,7 +83,7 @@ export default async function MyLibrarySlug({ params }) {
       {activePath === "downloads" && (
         <main className="custom-container">
           <Suspense fallback={<AudioSkeleton />}>
-            <DownloadCategory activePath={activePath} />
+            <DownloadCategory searchValue={searchValue} maxAudios={maxAudios} />
           </Suspense>
         </main>
       )}

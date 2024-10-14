@@ -6,17 +6,19 @@ import AudioTable from "../audios/music-info";
 import Pagination from "../home/pagination";
 const apiUrl = process.env.API_URL;
 
-export default async function DownloadCategory({ activePath }) {
-  console.log(activePath);
+export default async function DownloadCategory({ searchValue, maxAudios }) {
   try {
     const { category = [] } = await fetchWithApiKey("/category", {
       next: { cache: "no-store" },
     });
 
     const authSession = await getServerSession(authOptions);
-    const fetcherEndPoint = `/users/${activePath}/${authSession.user.id}`;
+    const fetcherEndPoint = `/users/downloads/${authSession.user.id}?querySearch=${searchValue}&maxAudios=${maxAudios}`;
 
-    const { audios } = await fetchWithApiKey(fetcherEndPoint, {
+    const { audios, totalAudios } = await fetchWithApiKey(fetcherEndPoint, {
+      headers: {
+        Authorization: `Bearer ${authSession.jwt}`,
+      },
       next: { cache: "no-store" },
     });
 
@@ -68,9 +70,11 @@ export default async function DownloadCategory({ activePath }) {
           </>
         )}
 
-        <section className="mt-12">
-          <Pagination />
-        </section>
+        {totalAudios > maxAudios && (
+          <section className="mt-12">
+            <Pagination />
+          </section>
+        )}
       </>
     );
   } catch (error) {
