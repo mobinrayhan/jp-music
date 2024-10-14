@@ -7,7 +7,7 @@ exports.getUserById = async (id) => {
   return collection.findOne({ _id: new ObjectId(id) });
 };
 
-exports.getDownloadsById = async (userId) => {
+exports.getDownloadsById = async ({ userId, querySearch = '', maxAudios }) => {
   const db = await connectToDatabase();
   const userColl = await db.collection('users');
 
@@ -15,46 +15,56 @@ exports.getDownloadsById = async (userId) => {
   return userColl
     .aggregate([
       {
-        $match: { _id: new ObjectId(userId) },
+        $match: { _id: new ObjectId(userId) }, // Match the user by ID
       },
       {
-        // Unwind the downloads array so each element becomes a separate document
-        $unwind: '$downloads',
+        $unwind: '$downloads', // Unwind downloads array
       },
       {
-        // Perform a $lookup to join with the audios collection
         $lookup: {
-          from: 'audios', // Name of the audios collection
-          localField: 'downloads.audioId', // Field in user collection to match
-          foreignField: '_id', // Field in audios collection to match
-          as: 'audio', // Name of the new field where the joined audio data will be stored
+          from: 'audios',
+          localField: 'downloads.audioId',
+          foreignField: '_id',
+          as: 'audio',
         },
       },
       {
-        // Unwind the audio array to flatten the joined audio data
-        $unwind: '$audio',
+        $unwind: '$audio', // Unwind joined audio data
       },
       {
-        // Merge the downloads data into the corresponding audio document as downloadInfo
+        // Add the search query here
+        $match: {
+          $or: [
+            { 'audio.name': { $regex: `^${querySearch}`, $options: 'i' } }, // Starts with
+            { 'audio.name': { $regex: `${querySearch}$`, $options: 'i' } }, // Ends with
+            { 'audio.name': { $regex: `${querySearch}`, $options: 'i' } }, // Includes
+            { 'audio.keywords': { $regex: `${querySearch}`, $options: 'i' } }, // Search in keywords array
+          ],
+        },
+      },
+      {
         $addFields: {
-          'audio.downloadInfo': '$downloads', // Insert the download object into the audio document as downloadInfo
+          'audio.downloadInfo': '$downloads',
         },
       },
       {
-        // Project to output the audio object directly with downloadInfo
+        $replaceRoot: { newRoot: '$audio' }, // Replace root with audio document
+      },
+      {
+        $sort: { 'downloadInfo.date': -1 }, // Sort by downloadInfo.date
+      },
+      {
+        $facet: {
+          totalCount: [{ $count: 'total' }], // Calculate total audios count
+          limitedAudios: [{ $limit: maxAudios }], // Limit the number of audios returned
+        },
+      },
+      {
         $project: {
-          _id: 0, // Omit user _id
-          audio: 1, // Keep the audio document with downloadInfo
+          totalAudios: { $arrayElemAt: ['$totalCount.total', 0] }, // Extract total audios count
+          audios: '$limitedAudios', // Return the limited audios
         },
-      },
-      {
-        // Replace root to output plain object without the 'audio' key
-        $replaceRoot: { newRoot: '$audio' },
-      },
-      {
-        // Sort the result by downloadInfo.date in descending order
-        $sort: { 'downloadInfo.date': -1 },
       },
     ])
-    .toArray();
+    .next(); // Return as an object
 };
