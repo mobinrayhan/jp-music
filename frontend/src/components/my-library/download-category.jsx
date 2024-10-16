@@ -1,9 +1,11 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { AudioPlayerProvider } from "@/context/audio-player-context";
 import { categorizeAudios } from "@/lib/categorizeAudios";
 import { fetchWithApiKey } from "@/utils/api";
 import { getServerSession } from "next-auth";
 import AudioTable from "../audios/music-info";
 import Pagination from "../home/pagination";
+
 const apiUrl = process.env.API_URL;
 
 export default async function DownloadCategory({ searchValue, maxAudios }) {
@@ -24,8 +26,15 @@ export default async function DownloadCategory({ searchValue, maxAudios }) {
 
     const categorizedAudio = categorizeAudios(audios);
 
+    const allAudios = [
+      ...categorizedAudio.today,
+      ...categorizedAudio.lastWeek,
+      ...categorizedAudio.lastMonth,
+      ...categorizedAudio.older,
+    ];
+
     return (
-      <>
+      <AudioPlayerProvider>
         {categorizedAudio.today.length > 0 && (
           <>
             <h1 className="py-3 text-lg tracking-wide">
@@ -34,10 +43,10 @@ export default async function DownloadCategory({ searchValue, maxAudios }) {
             <AudioTable
               category={category}
               audios={URLparsedAudio(categorizedAudio.today)}
+              providedPlaylist={allAudios}
             />
           </>
         )}
-
         {categorizedAudio.lastWeek.length > 0 && (
           <>
             <h1 className="py-3 text-lg tracking-wide">
@@ -46,6 +55,7 @@ export default async function DownloadCategory({ searchValue, maxAudios }) {
             <AudioTable
               category={category}
               audios={URLparsedAudio(categorizedAudio.lastWeek)}
+              providedPlaylist={allAudios}
             />
           </>
         )}
@@ -58,16 +68,17 @@ export default async function DownloadCategory({ searchValue, maxAudios }) {
             <AudioTable
               category={category}
               audios={URLparsedAudio(categorizedAudio.lastMonth)}
+              providedPlaylist={allAudios}
             />
           </>
         )}
-
         {categorizedAudio.older.length > 0 && (
           <>
             <h1 className="py-3 text-lg tracking-wide">Older Downloads</h1>
             <AudioTable
               category={category}
               audios={URLparsedAudio(categorizedAudio.older)}
+              providedPlaylist={allAudios}
             />
           </>
         )}
@@ -77,7 +88,7 @@ export default async function DownloadCategory({ searchValue, maxAudios }) {
             <Pagination />
           </section>
         )}
-      </>
+      </AudioPlayerProvider>
     );
   } catch (error) {
     return (

@@ -1,6 +1,9 @@
 "use client";
 
-import { useAudioPlayer } from "@/context/audio-player-context";
+import {
+  AudioPlayerProvider,
+  useAudioPlayer,
+} from "@/context/audio-player-context";
 import { useEffect } from "react";
 import AudioPlayer from "./audio-player";
 import MusicTableList from "./music-table-list";
@@ -20,6 +23,14 @@ function AudioTableContent({ audios }) {
   );
 }
 
-export default function AudioTable({ audios }) {
-  return <AudioTableContent audios={audios} />;
+export default function AudioTable({ audios, providedPlaylist }) {
+  if (providedPlaylist) {
+    return <AudioTableContent audios={audios} />;
+  }
+
+  return (
+    <AudioPlayerProvider>
+      <AudioTableContent audios={audios} />
+    </AudioPlayerProvider>
+  );
 }
