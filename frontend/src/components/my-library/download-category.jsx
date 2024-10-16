@@ -37,6 +37,7 @@ export default async function DownloadCategory({ searchValue, maxAudios }) {
             />
           </>
         )}
+
         {categorizedAudio.lastWeek.length > 0 && (
           <>
             <h1 className="py-3 text-lg tracking-wide">
@@ -60,6 +61,7 @@ export default async function DownloadCategory({ searchValue, maxAudios }) {
             />
           </>
         )}
+
         {categorizedAudio.older.length > 0 && (
           <>
             <h1 className="py-3 text-lg tracking-wide">Older Downloads</h1>
