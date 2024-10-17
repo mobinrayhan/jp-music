@@ -4,7 +4,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { FaGithub, FaGoogle } from "react-icons/fa";
+import { FaFacebook, FaGoogle } from "react-icons/fa6";
 
 const Login = () => {
   const searchParams = useSearchParams();
@@ -47,10 +47,10 @@ const Login = () => {
   };
 
   return (
-    <div
-      className={`${loading && "opacity-80"} flex min-h-screen items-center justify-center bg-gray-100`}
+    <section
+      className={`${loading && "opacity-80"} mx-2 flex min-h-screen items-center justify-center bg-gray-100`}
     >
-      <div className="w-full max-w-md space-y-4 rounded-lg bg-white p-8 shadow-lg">
+      <div className="w-full max-w-lg space-y-4 rounded-lg bg-white p-8 shadow-lg">
         <h2 className="text-center text-2xl font-bold text-gray-800">Login</h2>
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
@@ -97,17 +97,19 @@ const Login = () => {
         <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-0 sm:space-x-4">
           <button
             disabled={loading}
+            onClick={() => signIn("google")}
             className="flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100 disabled:cursor-not-allowed"
           >
             <FaGoogle className="mr-2" />
-            Sign up with Google
+            Login with Google
           </button>
           <button
             disabled={loading}
+            onClick={() => signIn("facebook")}
             className="flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100 disabled:cursor-not-allowed"
           >
-            <FaGithub className="mr-2" />
-            Sign up with GitHub
+            <FaFacebook className="mr-2" />
+            Login with Facebook
           </button>
         </div>
         <p className="mt-4 text-center text-gray-600">
@@ -122,7 +124,7 @@ const Login = () => {
           </Link>
         </p>
       </div>
-    </div>
+    </section>
   );
 };
 

@@ -1,9 +1,11 @@
 "use client";
 import { validSighupFields } from "@/lib/valid-signup";
 import { fetchWithApiKey } from "@/utils/api";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
-import { FaGithub, FaGoogle } from "react-icons/fa";
+import { FaGoogle } from "react-icons/fa";
+import { FaFacebook } from "react-icons/fa6";
 
 const apiUrl = process.env.API_URL;
 
@@ -49,7 +51,7 @@ const Signup = () => {
     <div
       className={`${loading && "opacity-80"} flex min-h-screen items-center justify-center bg-gray-100`}
     >
-      <div className="w-full max-w-md space-y-4 rounded-lg bg-white p-8 shadow-lg">
+      <div className="w-full max-w-lg space-y-4 rounded-lg bg-white p-8 shadow-lg">
         <h2 className="text-center text-2xl font-bold text-gray-800">
           Sign Up
         </h2>
@@ -115,6 +117,9 @@ const Signup = () => {
         {/* Display error message */}
         <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-0 sm:space-x-4">
           <button
+            onClick={() => {
+              signIn("google");
+            }}
             disabled={loading}
             className={`flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100 ${loading ? "cursor-not-allowed" : ""}`}
           >
@@ -122,11 +127,14 @@ const Signup = () => {
             Sign up with Google
           </button>
           <button
+            onClick={() => {
+              signIn("facebook");
+            }}
             disabled={loading}
             className={`flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100 ${loading ? "cursor-not-allowed" : ""}`}
           >
-            <FaGithub className="mr-2" />
-            Sign up with GitHub
+            <FaFacebook className="mr-2" />
+            Sign up with Facebook
           </button>
         </div>
         <p className="mt-4 text-center text-gray-600">

@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { IoMenuSharp } from "react-icons/io5";
 
@@ -39,13 +39,21 @@ export default function DropdownNavbar({ menuOptions }) {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="mr-4 p-2">
-        {[...menuOptions, ...dropdownMenuOptions].map(({ href, label }, i) =>
-          session && label === "Login" ? null : (
-            <DropdownMenuItem
-              key={href}
-              className={`flex cursor-pointer items-center gap-2 sm:${label === "Newest" ? "!hidden" : "flex"} md:${menuOptions[i]?.label === label ? "hidden" : "flex"}`}
-            >
-              {" "}
+        {[...menuOptions, ...dropdownMenuOptions].map(({ href, label }, i) => (
+          <DropdownMenuItem
+            key={href}
+            className={`flex cursor-pointer items-center gap-2 sm:${label === "Newest" ? "!hidden" : "flex"} md:${menuOptions[i]?.label === label ? "hidden" : "flex"}`}
+          >
+            {" "}
+            {session && label === "Login" ? (
+              <button
+                aria-label={label + " links"}
+                onClick={() => signOut()}
+                className="block w-full text-left"
+              >
+                Logout
+              </button>
+            ) : (
               <button
                 aria-label={label + " links"}
                 onClick={() => push(href)}
@@ -53,9 +61,9 @@ export default function DropdownNavbar({ menuOptions }) {
               >
                 {label}
               </button>
-            </DropdownMenuItem>
-          ),
-        )}
+            )}
+          </DropdownMenuItem>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

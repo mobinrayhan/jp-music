@@ -9,6 +9,8 @@ export async function POST(req) {
     const id = searchParams.get("id");
     const session = await getServerSession(authOptions);
 
+    console.log(session);
+
     if (!session) {
       return new Response(null, {
         status: 401,
