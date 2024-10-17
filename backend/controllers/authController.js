@@ -7,6 +7,14 @@ exports.createNewUser = async function (req, res, next) {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
+    const user = await authModels.findUser(email);
+
+    if (user) {
+      const error = new Error('User already exists!');
+      error.statusCode = 409;
+      throw error;
+    }
+
     await authModels.createNewUser({
       username,
       password: hashedPassword,
@@ -16,6 +24,39 @@ exports.createNewUser = async function (req, res, next) {
     res.status(201).json({ message: 'User registered successfully' });
   } catch (err) {
     err.statusCode = 400;
+    next(err);
+  }
+};
+
+exports.createNewUserByProvider = async function (req, res, next) {
+  const { username, email, role } = req.body;
+
+  try {
+    const user = await authModels.findUser(email);
+
+    if (user) {
+      const token = jwt.sign(
+        { email: user.email, id: user._id.toString() },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: '7d',
+        }
+      );
+
+      return res.status(200).json({
+        message: 'Login successful',
+        token,
+        userId: user._id.toString(),
+      });
+    }
+
+    await authModels.createNewUser({
+      username,
+      email,
+      role,
+    });
+    res.status(201).json({ message: 'User registered successfully' });
+  } catch (err) {
     next(err);
   }
 };

@@ -16,6 +16,8 @@ router.post(
   authController.createNewUser
 );
 
+router.post('/providers', authController.createNewUserByProvider);
+
 router.post(
   '/login',
   body('email').isEmail().withMessage('Email is not valid.').normalizeEmail(),
