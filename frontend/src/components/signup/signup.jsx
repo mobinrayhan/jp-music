@@ -12,13 +12,13 @@ const apiUrl = process.env.API_URL;
 const Signup = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    setSuccess(false);
+    setSuccess(null);
 
     const formData = new FormData(e.target);
     const errors = validSighupFields(formData); // Ensure to use formData
@@ -40,6 +40,7 @@ const Signup = () => {
         method: "POST",
         body: JSON.stringify(signupData),
       });
+      setSuccess(updatedData?.message);
     } catch (err) {
       setError(err.message || "Network error");
     } finally {
@@ -114,6 +115,9 @@ const Signup = () => {
           </button>
         </form>
         {error && <p className="mt-4 text-center text-red-600">{error}</p>}{" "}
+        {success && (
+          <p className="mt-4 text-center text-green-600">{success}</p>
+        )}{" "}
         {/* Display error message */}
         <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-0 sm:space-x-4">
           <button

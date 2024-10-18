@@ -10,7 +10,6 @@ export const authOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
-
     FacebookProvider({
       clientId: process.env.FACEBOOK_CLIENT_ID,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
@@ -38,6 +37,7 @@ export const authOptions = {
             method: "POST",
             body: JSON.stringify(loginData),
           });
+
           if (user) {
             return user;
           } else {
@@ -63,10 +63,8 @@ export const authOptions = {
   },
 
   callbacks: {
-    async jwt({ token, user, account, profile }) {
-      // If user exists (after sign-in)
+    async jwt({ token, user, account }) {
       if (user) {
-        // If the user signed in using Google/Facebook
         if (
           account?.provider === "google" ||
           account?.provider === "facebook"
@@ -82,47 +80,47 @@ export const authOptions = {
             });
 
             if (authUser?.token) {
-              token.jwt = authUser.token; // Set JWT from backend response
-              token.id = authUser.userId; // Set user ID
+              token.jwt = authUser.token;
+              token.id = authUser.userId;
+              token.isActive = authUser.isActive;
             }
           } catch (error) {
             console.error("Error fetching user from providers:", error);
           }
         } else {
-          // In case of manual login (Credentials provider)
-          token.jwt = user.token; // JWT from manual login response
+          token.jwt = user.token;
           token.id = user.userId;
+          token.isActive = user.isActive;
         }
+      }
+
+      try {
+        const activeStatus = await fetchWithApiKey(
+          `/auth/check-active-status/${token.id}`,
+        );
+
+        if (activeStatus?.isActive !== undefined) {
+          token.isActive = activeStatus.isActive;
+        }
+      } catch (error) {
+        console.error("Error checking active status:", error);
+        token.isActive = false;
       }
 
       return token;
     },
 
+    // Handle session updates
     async session({ session, token }) {
-      // Pass the token and user info to session
       session.user.id = token.id;
-      session.jwt = token.jwt; // Attach JWT to session
-      return session;
-    },
+      session.jwt = token.jwt;
+      session.user.isActive = token.isActive;
 
-    async signIn({ user }) {
-      const { email, name } = user;
-
-      try {
-        const authUser = await fetchWithApiKey("/auth/providers", {
-          method: "POST",
-          body: JSON.stringify({ email, username: name, role: "user" }),
-        });
-
-        if (authUser) {
-          return true;
-        } else {
-          return false;
-        }
-      } catch (error) {
-        console.error("Error during sign-in:", error);
-        return false;
+      if (!token.isActive) {
+        return null;
       }
+
+      return session;
     },
   },
 };
