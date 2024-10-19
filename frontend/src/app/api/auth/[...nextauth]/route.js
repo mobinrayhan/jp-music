@@ -102,8 +102,6 @@ export const authOptions = {
           },
         );
 
-        console.log(activeStatus);
-
         if (activeStatus?.isActive !== undefined) {
           token.isActive = activeStatus.isActive;
         }

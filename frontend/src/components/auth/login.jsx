@@ -1,4 +1,5 @@
 "use client";
+
 import { validLoginFields } from "@/lib/valid-login";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
@@ -92,6 +93,14 @@ const Login = () => {
           >
             {loading ? "Login..." : "Login"}
           </button>
+          <p className="mt-4 text-right text-gray-600">
+            <Link
+              href="/forget-password"
+              className="text-blue-600 hover:underline"
+            >
+              Forgotten Password ?
+            </Link>
+          </p>
         </form>
         {error && <p className="mt-4 text-center text-red-600">{error}</p>}{" "}
         <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-0 sm:space-x-4">

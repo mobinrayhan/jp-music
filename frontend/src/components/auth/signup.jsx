@@ -7,8 +7,6 @@ import { useState } from "react";
 import { FaGoogle } from "react-icons/fa";
 import { FaFacebook } from "react-icons/fa6";
 
-const apiUrl = process.env.API_URL;
-
 const Signup = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);

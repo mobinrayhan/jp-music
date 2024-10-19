@@ -92,7 +92,7 @@ export default function Password({ mode = "forget-password" }) {
                 id="password"
                 name="password"
                 className={`mt-2 w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 ${loading ? "cursor-not-allowed" : ""}`}
-                placeholder="New Password"
+                placeholder="Enter New Password"
               />
             </div>
           )}
@@ -109,12 +109,14 @@ export default function Password({ mode = "forget-password" }) {
           <p className="mt-4 text-center text-green-600">{success}</p>
         )}{" "}
         {/* Display error message */}
-        <p className="mt-4 text-center text-gray-600">
-          Don&apos;t have an account?{" "}
-          <Link href="/login" className="text-blue-600 hover:underline">
-            Sign up
-          </Link>
-        </p>
+        {mode === "forget-password" && (
+          <p className="mt-4 text-center text-gray-600">
+            Don&apos;t have an account?{" "}
+            <Link href="/signup" className="text-blue-600 hover:underline">
+              Sign up
+            </Link>
+          </p>
+        )}
       </div>
     </div>
   );
