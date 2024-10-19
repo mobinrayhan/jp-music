@@ -19,6 +19,9 @@ router.post(
 router.post('/providers', authController.createNewUserByProvider);
 router.patch('/verify-email', authController.verifyEmail);
 router.get('/check-active-status/:userId', authController.getActiveStatus);
+router.get('/forget-password', authController.getForgetPassword);
+router.patch('/forget-password', authController.postForgetPassword);
+router.get('/is-valid-token', authController.isValidToken);
 
 router.post(
   '/login',

@@ -169,8 +169,10 @@ exports.getActiveStatus = async (req, res, next) => {
     next(err);
   }
 };
-exports.postForgetPassword = async (req, res, next) => {
-  const { email } = req.body;
+
+exports.getForgetPassword = async (req, res, next) => {
+  const { email } = req.query;
+
   try {
     const transporter = nodemailer.createTransport({
       // service: process.env.EMAIL_SERVICE,
@@ -207,5 +209,49 @@ exports.postForgetPassword = async (req, res, next) => {
     res.status(200).json({ message: 'Verification email sent' });
   } catch (err) {
     next(err);
+  }
+};
+
+exports.isValidToken = async (req, res, next) => {
+  const { token } = req.query;
+  try {
+    const decodedToken = await jwt.verify(token, process.env.JWT_SECRET);
+    const user = await authModels.findUser(decodedToken.email);
+
+    if (!user) {
+      const error = new Error('User Not Found!');
+      error.statusCode = 404;
+      throw error;
+    }
+
+    return res.json({ message: 'User Found!', userId: user._id.toString() });
+  } catch (e) {
+    next(e);
+  }
+};
+
+exports.postForgetPassword = async (req, res, next) => {
+  const { userId, newPassword } = req.body;
+
+  try {
+    const user = userModels.getUserById(userId);
+    if (!user) {
+      const error = new Error('User Not Found!');
+      error.statusCode = 404;
+      throw error;
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const result = await authModels.updatePasswordById(userId, hashedPassword);
+
+    if (!result.modifiedCount) {
+      const error = new Error('Failed to update user! Try Again Later !');
+      error.statusCode = 400;
+      throw error;
+    }
+
+    return res.json({ message: 'Update User Successfully!' });
+  } catch (e) {
+    next(e);
   }
 };

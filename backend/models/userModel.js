@@ -3,7 +3,7 @@ const { ObjectId } = require('mongodb');
 
 exports.getUserById = async (id) => {
   const db = await connectToDatabase();
-  const collection = await db.collection('audios');
+  const collection = await db.collection('users');
   return collection.findOne({ _id: new ObjectId(id) });
 };
 

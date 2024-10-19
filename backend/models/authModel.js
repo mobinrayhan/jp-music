@@ -1,4 +1,5 @@
 const { connectToDatabase } = require('./db');
+const { ObjectId } = require('mongodb');
 /*
 const user = {
   userName: 'mobin',
@@ -44,4 +45,13 @@ exports.updateActiveStatus = async function (email, status) {
   const db = await connectToDatabase();
   const collection = await db.collection('users');
   return collection.updateOne({ email }, { $set: { isActive: status } });
+};
+
+exports.updatePasswordById = async function (userId, newPassword) {
+  const db = await connectToDatabase();
+  const collection = await db.collection('users');
+  return collection.updateOne(
+    { _id: new ObjectId(userId) },
+    { $set: { password: newPassword } }
+  );
 };
