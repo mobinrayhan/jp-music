@@ -97,7 +97,12 @@ export const authOptions = {
       try {
         const activeStatus = await fetchWithApiKey(
           `/auth/check-active-status/${token.id}`,
+          {
+            cache: "no-store",
+          },
         );
+
+        console.log(activeStatus);
 
         if (activeStatus?.isActive !== undefined) {
           token.isActive = activeStatus.isActive;
