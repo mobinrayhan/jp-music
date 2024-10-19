@@ -17,6 +17,8 @@ router.post(
 );
 
 router.post('/providers', authController.createNewUserByProvider);
+router.patch('/verify-email', authController.verifyEmail);
+router.get('/check-active-status/:userId', authController.getActiveStatus);
 
 router.post(
   '/login',

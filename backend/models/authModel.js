@@ -39,3 +39,9 @@ exports.findUser = async function (email) {
   const collection = await db.collection('users');
   return await collection.findOne({ email });
 };
+
+exports.updateActiveStatus = async function (email, status) {
+  const db = await connectToDatabase();
+  const collection = await db.collection('users');
+  return collection.updateOne({ email }, { $set: { isActive: status } });
+};
