@@ -5,7 +5,6 @@ export async function middleware(req) {
   const token = await getToken({ req, secret: process.env.JWT_SECRET });
   const reference = req.nextUrl.pathname;
 
-  console.log(token);
   if (!token || !token.isActive) {
     return NextResponse.redirect(new URL(`/login?ref=${reference}`, req.url));
   }

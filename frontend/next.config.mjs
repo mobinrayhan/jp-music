@@ -5,7 +5,7 @@ const config = (phase) => {
     return {
       env: {
         API_KEY: "9c035862-3350-4204-9c87-0a65d5c7c85f",
-        API_URL: "http://192.168.0.105:4000",
+        API_URL: "http://192.168.0.102:4000",
         GOOGLE_CLIENT_ID:
           "286259968007-4oi5tijqgh3e5cgn5tci69rqpf1o5cah.apps.googleusercontent.com",
         GOOGLE_CLIENT_SECRET: "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",
@@ -44,7 +44,7 @@ const config = (phase) => {
             hostname: "dev-api.soundei.com",
           },
           {
-            hostname: "192.168.0.105",
+            hostname: "192.168.0.102",
           },
         ],
       },
@@ -63,7 +63,7 @@ const config = (phase) => {
       FACEBOOK_CLIENT_ID: "1066993658214517",
       FACEBOOK_CLIENT_SECRET: "fdf19632341e6a759555cfa121c64e9c",
       JWT_SECRET: "jamesPrinceSoundei@147570",
-      API_URL: "http://192.168.0.105:4000",
+      API_URL: "http://192.168.0.102:4000",
     },
 
     webpack(config) {
@@ -93,7 +93,7 @@ const config = (phase) => {
           hostname: "dev-api.soundei.com",
         },
         {
-          hostname: "192.168.0.105",
+          hostname: "192.168.0.102",
         },
       ],
     },

@@ -1,5 +1,5 @@
 "use client";
-import { findAccount, forgetPassword } from "@/actions/forgetAction";
+import { findAccount, forgetPassword } from "@/actions/authAction";
 import Link from "next/link";
 
 import { useFormState, useFormStatus } from "react-dom";
