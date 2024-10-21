@@ -6,15 +6,13 @@ const config = (phase) => {
       env: {
         API_KEY: "9c035862-3350-4204-9c87-0a65d5c7c85f",
         API_URL: "http://192.168.0.101:4000",
+
         GOOGLE_CLIENT_ID:
           "850868314693-ejhssoibt9576bdg5fctt1lbrs3bdi9t.apps.googleusercontent.com",
         GOOGLE_CLIENT_SECRET: "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",
 
-        // FACEBOOK_CLIENT_ID: "1066993658214517",
-        // FACEBOOK_CLIENT_SECRET: "fdf19632341e6a759555cfa121c64e9c",
-
-        FACEBOOK_CLIENT_ID: "535353495947075",
-        FACEBOOK_CLIENT_SECRET: "9926b82d87d3036c1d9c76944f4137a0",
+        FACEBOOK_CLIENT_ID: "920240496669188",
+        FACEBOOK_CLIENT_SECRET: "710cdc53481e8d0420c37fdb4f6e602d",
 
         JWT_SECRET: "jamesPrinceSoundei@147570",
         NEXTAUTH_SECRET:
@@ -65,8 +63,8 @@ const config = (phase) => {
         "850868314693-ejhssoibt9576bdg5fctt1lbrs3bdi9t.apps.googleusercontent.com",
       GOOGLE_CLIENT_SECRET: "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",
 
-      FACEBOOK_CLIENT_ID: "535353495947075",
-      FACEBOOK_CLIENT_SECRET: "9926b82d87d3036c1d9c76944f4137a0",
+      FACEBOOK_CLIENT_ID: "920240496669188",
+      FACEBOOK_CLIENT_SECRET: "710cdc53481e8d0420c37fdb4f6e602d",
 
       JWT_SECRET: "jamesPrinceSoundei@147570",
       API_URL: "http://192.168.0.101:4000",

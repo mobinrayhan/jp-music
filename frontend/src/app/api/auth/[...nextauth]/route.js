@@ -21,7 +21,8 @@ export const authOptions = {
       authorization: {
         params: {
           scope: "email", // Ensure the 'email' scope is included
-          redirect_uri: process.env.NEXTAUTH_URL + "/api/auth/callback/google",
+          redirect_uri:
+            process.env.NEXTAUTH_URL + "/api/auth/callback/facebook",
         },
       },
     }),
@@ -101,8 +102,6 @@ export const authOptions = {
       }
 
       try {
-        console.log(token);
-
         const activeStatus = await fetchWithApiKey(
           `/auth/check-active-status/${token.id}`,
           {
