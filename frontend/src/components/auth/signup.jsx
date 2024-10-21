@@ -1,14 +1,48 @@
 "use client";
 import { signup } from "@/actions/authAction";
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@radix-ui/react-toast";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { FaFacebook, FaGoogle } from "react-icons/fa6";
 
 const Signup = () => {
+  const { toast, dismiss } = useToast();
   const [{ success, error }, action] = useFormState(signup, {
     success: null,
     error: null,
   });
+  // Counter to force re-trigger of useEffect on each form submission
+  const [submitCount, setSubmitCount] = useState(0);
+  const formRef = useRef(null);
+
+  useEffect(() => {
+    // Close any existing toast before showing a new one
+    dismiss();
+
+    if (error) {
+      toast({
+        title: "Uh oh! Something went wrong.",
+        description: error,
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
+    }
+
+    if (success) {
+      toast({
+        title: "Successfully!",
+        description: success,
+      });
+
+      formRef.current.reset();
+    }
+  }, [error, toast, success, submitCount]);
+
+  function handleIncrementSubmitCount() {
+    setSubmitCount(submitCount + 1);
+  }
 
   return (
     <div
@@ -18,8 +52,12 @@ const Signup = () => {
         <h2 className="text-center text-2xl font-bold text-gray-800">
           Sign Up
         </h2>
-        <form className="space-y-4" action={action}>
-          <FormInputs error={error} success={success} />
+        <form className="space-y-4" action={action} ref={formRef}>
+          <FormInputs
+            error={error}
+            success={success}
+            onSubmitCount={handleIncrementSubmitCount}
+          />
         </form>
 
         <p className="mt-4 text-center text-gray-600">
@@ -35,7 +73,7 @@ const Signup = () => {
 
 export default Signup;
 
-function FormInputs({ success, error }) {
+function FormInputs({ onSubmitCount }) {
   const { pending } = useFormStatus();
   return (
     <>
@@ -48,6 +86,7 @@ function FormInputs({ success, error }) {
         </label>
         <input
           disabled={pending}
+          required
           type="text"
           id="name"
           name="name"
@@ -64,6 +103,7 @@ function FormInputs({ success, error }) {
         </label>
         <input
           disabled={pending}
+          required
           type="email"
           id="email"
           name="email"
@@ -80,6 +120,7 @@ function FormInputs({ success, error }) {
         </label>
         <input
           minLength={6}
+          required
           disabled={pending}
           type="password"
           id="password"
@@ -90,14 +131,13 @@ function FormInputs({ success, error }) {
       </div>
       <button
         disabled={pending}
+        onClick={onSubmitCount}
         type="submit"
         className={`w-full rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 focus:outline-none ${pending ? "cursor-not-allowed" : ""}`}
       >
         {pending ? "Signing Up..." : "Sign Up"}
       </button>
-      {/* ERROR & SUCCESS STATE */}
-      {error && <p className="mt-4 text-center text-red-600">{error}</p>}{" "}
-      {success && <p className="mt-4 text-center text-green-600">{success}</p>}{" "}
+
       <p className="mt-4 text-right text-gray-600">
         <Link
           href="/forget-password"

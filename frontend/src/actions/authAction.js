@@ -11,7 +11,12 @@ export async function signup(_, formData) {
   const username = formData.get("name").trim();
   const email = formData.get("email").trim();
   const password = formData.get("password").trim();
-  const signupData = { username, email, password, role: "user" };
+  const signupData = {
+    username,
+    email,
+    password,
+    role: "user",
+  };
 
   const errors = validSighupFields(formData);
   if (errors.length > 0) {
@@ -104,7 +109,7 @@ export async function forgetPassword(_, formData) {
 
   if (!newPassword) {
     return { error: "Password is required", success: null };
-  } else if (password.length < 6) {
+  } else if (newPassword.length < 6) {
     return {
       error: "Password must be at least 6 characters long.",
       success: null,

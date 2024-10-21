@@ -9,6 +9,11 @@ export const authOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      authorization: {
+        params: {
+          redirect_uri: process.env.NEXTAUTH_URL + "/api/auth/callback/google",
+        },
+      },
     }),
     FacebookProvider({
       clientId: process.env.FACEBOOK_CLIENT_ID,
@@ -16,6 +21,7 @@ export const authOptions = {
       authorization: {
         params: {
           scope: "email", // Ensure the 'email' scope is included
+          redirect_uri: process.env.NEXTAUTH_URL + "/api/auth/callback/google",
         },
       },
     }),
@@ -95,6 +101,8 @@ export const authOptions = {
       }
 
       try {
+        console.log(token);
+
         const activeStatus = await fetchWithApiKey(
           `/auth/check-active-status/${token.id}`,
           {

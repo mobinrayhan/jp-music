@@ -1,5 +1,6 @@
 "use client";
 import { findAccount, forgetPassword } from "@/actions/authAction";
+import ClientToast from "@/ui/client-toast";
 import Link from "next/link";
 
 import { useFormState, useFormStatus } from "react-dom";
@@ -25,9 +26,16 @@ export default function Password({ mode = "forget-password", userId }) {
           <FormInputs mode={mode} />
           {userId && <input type="hidden" name="userId" value={userId} />}
         </form>
-        {error && <p className="mt-4 text-center text-red-600">{error}</p>}{" "}
+        {error && (
+          <ClientToast
+            isSuccess={false}
+            redirect={null}
+            message={error}
+            key={Math.random()}
+          />
+        )}{" "}
         {success && (
-          <p className="mt-4 text-center text-green-600">{success}</p>
+          <ClientToast isSuccess={true} message={success} key={Math.random()} />
         )}{" "}
         {/* Display error message */}
         {mode === "forget-password" && (

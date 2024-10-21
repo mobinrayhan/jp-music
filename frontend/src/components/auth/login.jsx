@@ -1,6 +1,8 @@
 "use client";
 
+import { useVerifyEmailCtx } from "@/context/verify-email-context";
 import { validLoginFields } from "@/lib/valid-login";
+import ClientToast from "@/ui/client-toast";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -12,6 +14,9 @@ const Login = () => {
   const ref = searchParams.get("ref");
   const router = useRouter();
   const decodedRef = ref ? decodeURIComponent(ref) : "/newest";
+  const verifyCtx = useVerifyEmailCtx();
+
+  console.log(verifyCtx.verifyState);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -102,7 +107,15 @@ const Login = () => {
             </Link>
           </p>
         </form>
-        {error && <p className="mt-4 text-center text-red-600">{error}</p>}{" "}
+
+        {error && <ClientToast message={error} isSuccess={false} />}
+        {verifyCtx?.verifyState && (
+          <ClientToast
+            message={verifyCtx?.verifyState?.message}
+            isSuccess={verifyCtx?.verifyState?.isSuccess}
+          />
+        )}
+
         <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-0 sm:space-x-4">
           <button
             disabled={loading}

@@ -3,26 +3,40 @@
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@radix-ui/react-toast";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function ClientToast({
-  message,
+  message = "Action completed.",
   isSuccess = true,
   redirect = "/login",
+  duration = 3000,
 }) {
   const { toast } = useToast();
   const { push } = useRouter();
 
-  if (!isSuccess) {
-    toast({
-      title: message || "Uh oh! Something went wrong.",
-      description: "There was a problem with your request.",
-      action: <ToastAction altText="Try again">Try again</ToastAction>,
-    });
-    return push(redirect);
-  } else {
-    toast({
-      title: message || "Uh oh! Something went wrong.",
-    });
-    return push(redirect);
-  }
+  useEffect(() => {
+    if (isSuccess) {
+      console.log(message);
+      toast({
+        title: "Success!",
+        description: message,
+        duration,
+      });
+    } else {
+      toast({
+        title: "Uh oh! Something went wrong.",
+        description: message,
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
+    }
+
+    if (redirect) {
+      const redirectTimeout = setTimeout(() => {
+        push(redirect);
+      }, duration);
+      return () => clearTimeout(redirectTimeout);
+    }
+  }, [isSuccess, message, redirect, toast, push, duration]);
+
+  return null;
 }

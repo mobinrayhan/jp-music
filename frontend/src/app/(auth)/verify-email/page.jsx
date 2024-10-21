@@ -1,4 +1,4 @@
-import ClientToast from "@/ui/client-toast";
+import VerifyEmailClient from "@/components/auth/verify-email-client";
 import { fetchWithApiKey } from "@/utils/api";
 import { notFound } from "next/navigation";
 
@@ -16,9 +16,17 @@ export default async function VerifyEmail({ searchParams }) {
     });
 
     return (
-      <ClientToast message={verify.message || "Success 💘"} isSuccess={true} />
+      <VerifyEmailClient
+        message={verify.message || "Success 💘"}
+        isSuccess={true}
+      />
     );
   } catch (error) {
-    return <ClientToast message={error.message || "Something Went Wrong!"} />;
+    return (
+      <VerifyEmailClient
+        message={error.message || "Something Went Wrong!"}
+        isSuccess={false}
+      />
+    );
   }
 }
