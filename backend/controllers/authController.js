@@ -86,13 +86,27 @@ exports.createNewUserByProvider = async function (req, res, next) {
       }
     }
 
-    await authModels.createNewUser({
+    const createdUser = await authModels.createNewUser({
       username,
       email,
       role,
       isActive: true,
     });
-    res.status(201).json({ message: 'User registered successfully' });
+
+    const token = jwt.sign(
+      { email, id: createdUser.insertedId.toString() },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: '7d',
+      }
+    );
+
+    res.status(201).json({
+      message: 'User registered successfully',
+      token,
+      isActive: true,
+      userId: createdUser.insertedId.toString(),
+    });
   } catch (err) {
     next(err);
   }
@@ -149,7 +163,7 @@ exports.verifyEmail = async (req, res, next) => {
       throw error;
     }
 
-    return res.json({ message: 'Update User Successfully' });
+    return res.json({ message: 'E-mail verified Successfully!' });
   } catch (e) {
     next(e);
   }
@@ -250,7 +264,7 @@ exports.postForgetPassword = async (req, res, next) => {
       throw error;
     }
 
-    return res.json({ message: 'Update User Successfully!' });
+    return res.json({ message: 'Update Password Successfully!' });
   } catch (e) {
     next(e);
   }

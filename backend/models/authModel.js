@@ -18,7 +18,13 @@ const user = {
 };
 */
 
-exports.createNewUser = async function ({ username, password, email, role }) {
+exports.createNewUser = async function ({
+  username,
+  password,
+  email,
+  role,
+  isActive,
+}) {
   const db = await connectToDatabase();
   const collection = await db.collection('users');
 
@@ -27,6 +33,7 @@ exports.createNewUser = async function ({ username, password, email, role }) {
     password,
     email,
     role,
+    isActive,
     playlists: [],
     downloads: [],
     favorites: [],
