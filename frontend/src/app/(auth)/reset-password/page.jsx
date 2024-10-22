@@ -20,7 +20,6 @@ export default async function ResetPassword({ searchParams }) {
 
     return <Password mode="reset-password" userId={result.userId} />;
   } catch (error) {
-    console.log(error);
 
     return (
       <ClientToast

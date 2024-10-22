@@ -16,7 +16,6 @@ export default function ClientToast({
 
   useEffect(() => {
     if (isSuccess) {
-      console.log(message);
       toast({
         title: "Success!",
         description: message,

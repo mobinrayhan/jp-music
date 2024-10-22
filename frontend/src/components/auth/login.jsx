@@ -16,8 +16,6 @@ const Login = () => {
   const decodedRef = ref ? decodeURIComponent(ref) : "/newest";
   const verifyCtx = useVerifyEmailCtx();
 
-  console.log(verifyCtx.verifyState);
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 

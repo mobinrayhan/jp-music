@@ -24,13 +24,7 @@ function AudioTableContent({ audios, providedPlaylist }) {
 }
 
 export default function AudioTable({ audios, providedPlaylist }) {
-  if (providedPlaylist) {
-    return <AudioTableContent audios={audios} providedPlaylist={providedPlaylist} />;
-  }
-
   return (
-    <AudioPlayerProvider>
-      <AudioTableContent audios={audios} />
-    </AudioPlayerProvider>
+    <AudioTableContent audios={audios} providedPlaylist={providedPlaylist} />
   );
 }

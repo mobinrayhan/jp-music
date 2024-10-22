@@ -5,7 +5,7 @@ const config = (phase) => {
     return {
       env: {
         API_KEY: "9c035862-3350-4204-9c87-0a65d5c7c85f",
-        API_URL: "http://192.168.0.101:4000",
+        API_URL: "http://192.168.0.107:4000",
 
         GOOGLE_CLIENT_ID:
           "850868314693-ejhssoibt9576bdg5fctt1lbrs3bdi9t.apps.googleusercontent.com",
@@ -47,7 +47,7 @@ const config = (phase) => {
             hostname: "dev-api.soundei.com",
           },
           {
-            hostname: "192.168.0.101",
+            hostname: "192.168.0.107",
           },
         ],
       },
@@ -67,7 +67,7 @@ const config = (phase) => {
       FACEBOOK_CLIENT_SECRET: "710cdc53481e8d0420c37fdb4f6e602d",
 
       JWT_SECRET: "jamesPrinceSoundei@147570",
-      API_URL: "http://192.168.0.101:4000",
+      API_URL: "http://192.168.0.107:4000",
       NEXTAUTH_URL: "https://vps-front.soundei.com",
     },
 
@@ -98,7 +98,7 @@ const config = (phase) => {
           hostname: "dev-api.soundei.com",
         },
         {
-          hostname: "192.168.0.101",
+          hostname: "192.168.0.107",
         },
       ],
     },
