@@ -8,12 +8,12 @@ import { useEffect } from "react";
 import AudioPlayer from "./audio-player";
 import MusicTableList from "./music-table-list";
 
-function AudioTableContent({ audios }) {
+function AudioTableContent({ audios, providedPlaylist }) {
   const { setAudioPlaylist } = useAudioPlayer();
 
   useEffect(() => {
-    setAudioPlaylist(audios);
-  }, [audios, setAudioPlaylist]);
+    setAudioPlaylist(providedPlaylist || audios);
+  }, [audios, providedPlaylist, setAudioPlaylist]);
 
   return (
     <>
@@ -25,7 +25,7 @@ function AudioTableContent({ audios }) {
 
 export default function AudioTable({ audios, providedPlaylist }) {
   if (providedPlaylist) {
-    return <AudioTableContent audios={audios} />;
+    return <AudioTableContent audios={audios} providedPlaylist={providedPlaylist} />;
   }
 
   return (

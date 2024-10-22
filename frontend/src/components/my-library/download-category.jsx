@@ -33,6 +33,8 @@ export default async function DownloadCategory({ searchValue, maxAudios }) {
       ...categorizedAudio.older,
     ];
 
+    const parsedAllAudios = URLparsedAudio(allAudios);
+
     return (
       <AudioPlayerProvider>
         {categorizedAudio.today.length > 0 && (
@@ -43,7 +45,7 @@ export default async function DownloadCategory({ searchValue, maxAudios }) {
             <AudioTable
               category={category}
               audios={URLparsedAudio(categorizedAudio.today)}
-              providedPlaylist={allAudios}
+              providedPlaylist={parsedAllAudios}
             />
           </>
         )}
@@ -55,11 +57,10 @@ export default async function DownloadCategory({ searchValue, maxAudios }) {
             <AudioTable
               category={category}
               audios={URLparsedAudio(categorizedAudio.lastWeek)}
-              providedPlaylist={allAudios}
+              providedPlaylist={parsedAllAudios}
             />
           </>
         )}
-
         {categorizedAudio.lastMonth.length > 0 && (
           <>
             <h1 className="py-3 text-lg tracking-wide">
@@ -68,7 +69,7 @@ export default async function DownloadCategory({ searchValue, maxAudios }) {
             <AudioTable
               category={category}
               audios={URLparsedAudio(categorizedAudio.lastMonth)}
-              providedPlaylist={allAudios}
+              providedPlaylist={parsedAllAudios}
             />
           </>
         )}
@@ -78,7 +79,7 @@ export default async function DownloadCategory({ searchValue, maxAudios }) {
             <AudioTable
               category={category}
               audios={URLparsedAudio(categorizedAudio.older)}
-              providedPlaylist={allAudios}
+              providedPlaylist={parsedAllAudios}
             />
           </>
         )}
