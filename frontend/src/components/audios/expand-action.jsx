@@ -1,32 +1,36 @@
 "use client";
+
 import { usePathname, useRouter } from "next/navigation";
-import { CiHeart } from "react-icons/ci";
 import { FaLink, FaPlus } from "react-icons/fa6";
 import { MdOutlineFileDownload } from "react-icons/md";
+import HeartButton from "../my-library/favorites/heart-button";
 import { Button } from "../ui/button";
 
 export default function ExpandAction({ audioId }) {
   const pathName = usePathname();
   const { push } = useRouter();
+
   const handleDownload = async () => {
-    const response = await fetch(`/api/download?id=${audioId}`, {
-      method: "POST",
-    });
+    try {
+      const response = await fetch(`/api/download?id=${audioId}`);
 
-    if (response.status === 401) {
-      push(`/login?ref=/${pathName}`);
-    }
+      if (response.status === 401) {
+        push(`/login?ref=/${pathName}`);
+      }
 
-    if (response.ok) {
-      const blob = await response.blob();
-      const fileName = response.headers.get("X-File-Name") || "audio.mp3";
+      if (response.ok) {
+        const blob = await response.blob();
+        const fileName = response.headers.get("X-File-Name") || "audio.mp3";
 
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = fileName;
-      link.click();
-    } else {
-      console.error("Download failed!");
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName;
+        link.click();
+      } else {
+        console.error("Download failed!");
+      }
+    } catch (error) {
+      console.error("Error during download:", error);
     }
   };
 
@@ -35,7 +39,7 @@ export default function ExpandAction({ audioId }) {
       <Button
         variant="ghost"
         aria-label="Download button"
-        onClick={handleDownload.bind(null, audioId)}
+        onClick={handleDownload}
       >
         <MdOutlineFileDownload className="text-lg" />
       </Button>
@@ -48,13 +52,7 @@ export default function ExpandAction({ audioId }) {
         <FaPlus className="text-lg" />
       </Button>
 
-      <Button
-        className="hidden md:block"
-        variant="ghost"
-        aria-label="Like button"
-      >
-        <CiHeart className="text-lg font-extrabold" />
-      </Button>
+      <HeartButton audioId={audioId} />
 
       <Button
         variant="ghost"

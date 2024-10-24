@@ -28,7 +28,9 @@ function MainLayoutContent({ children }) {
 export default function MainLayout({ children }) {
   return (
     <AudioPlayerProvider>
-      <MainLayoutContent>{children}</MainLayoutContent>
+      <MainLayoutContent>
+        <>{children}</>
+      </MainLayoutContent>
     </AudioPlayerProvider>
   );
 }

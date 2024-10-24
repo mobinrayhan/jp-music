@@ -3,7 +3,9 @@ import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { authOptions } from "../auth/[...nextauth]/route";
 
-export async function POST(req) {
+export const dynamic = "force-dynamic"; // Force dynamic route
+
+export async function GET(req) {
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
@@ -43,6 +45,7 @@ export async function POST(req) {
     const fileName = `${audioInfo.audio.name}.${audioInfo.audio.type}`;
     const fileBuffer = await downloadRes.arrayBuffer();
 
+    // Revalidate the path to refresh data if needed
     revalidatePath("/my-library/downloads");
 
     return new Response(fileBuffer, {

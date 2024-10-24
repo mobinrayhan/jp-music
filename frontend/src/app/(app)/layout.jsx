@@ -1,4 +1,5 @@
 import MainLayout from "@/components/layouts/main-layout";
+import { FavoritesContextProvider } from "@/context/favorites-context";
 
 const baseUrl =
   process.env.NODE_ENV === "production"
@@ -46,7 +47,9 @@ export async function generateMetadata() {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <MainLayout>{children}</MainLayout>
+      <FavoritesContextProvider>
+        <MainLayout>{children}</MainLayout>
+      </FavoritesContextProvider>
     </html>
   );
 }

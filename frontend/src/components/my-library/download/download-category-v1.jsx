@@ -3,8 +3,8 @@ import { AudioPlayerProvider } from "@/context/audio-player-context";
 import { categorizeAudios } from "@/lib/categorizeAudios";
 import { fetchWithApiKey } from "@/utils/api";
 import { getServerSession } from "next-auth";
-import AudioTable from "../audios/music-info";
-import Pagination from "../home/pagination";
+import AudioTable from "../../audios/music-info";
+import Pagination from "../../home/pagination";
 
 const apiUrl = process.env.API_URL;
 
@@ -15,12 +15,10 @@ export default async function DownloadCategory({ searchValue, maxAudios }) {
     });
 
     const authSession = await getServerSession(authOptions);
-    const fetcherEndPoint = `/users/downloads/${authSession.user.id}?querySearch=${searchValue}&maxAudios=${maxAudios}`;
+    const fetcherEndPoint = `/users/downloads?querySearch=${searchValue}&maxAudios=${maxAudios}`;
 
     const { audios, totalAudios } = await fetchWithApiKey(fetcherEndPoint, {
-      headers: {
-        Authorization: `Bearer ${authSession.jwt}`,
-      },
+      jwt: authSession.jwt,
       next: { cache: "no-store" },
     });
 

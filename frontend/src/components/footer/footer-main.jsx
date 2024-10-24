@@ -51,7 +51,7 @@ export default function FooterMain() {
       </div>
       <div>
         <h3 className="bold pb-2 text-xl font-semibold tracking-wider sm:text-2xl">
-          Heap & Support
+          Help & Support{" "}
         </h3>
 
         <ul className="flex flex-col gap-2">

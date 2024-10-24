@@ -6,12 +6,31 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useFavorites } from "@/context/favorites-context";
 import { MoreHorizontal } from "lucide-react";
-import { CiHeart } from "react-icons/ci";
-import { FaLink, FaPlus } from "react-icons/fa6";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { FaLink, FaPlus, FaRegHeart } from "react-icons/fa6";
+import { IoHeart } from "react-icons/io5";
 import { Button } from "../ui/button";
 
-export default function DropDownMenuLIst() {
+export default function DropDownMenuLIst({ audioId }) {
+  // @src\components\my-library\favorites\heart-button.jsx
+  //  The same code was using that component for the same behavior
+
+  const { favorites, toggleFavorite } = useFavorites();
+  const session = useSession();
+  const { push } = useRouter();
+  const isFavorited = favorites.includes(audioId);
+
+  const handleClick = () => {
+    if (session.status === "authenticated") {
+      toggleFavorite(audioId);
+    } else if (session.status === "unauthenticated") {
+      return push("/login");
+    }
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="flex md:hidden">
@@ -35,8 +54,14 @@ export default function DropDownMenuLIst() {
         <DropdownMenuItem
           className="flex cursor-pointer items-center gap-2"
           aria-label="Download Button"
+          onClick={handleClick}
         >
-          <CiHeart className="text-lg font-extrabold" />
+          {isFavorited ? (
+            <IoHeart className="text-lg font-extrabold" />
+          ) : (
+            <FaRegHeart className="text-lg font-extrabold" />
+          )}
+
           <span>Favorite</span>
         </DropdownMenuItem>
         <DropdownMenuItem

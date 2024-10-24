@@ -8,6 +8,10 @@ export const fetchWithApiKey = async (endpoint, options = {}) => {
     ...options.headers,
   };
 
+  if (options.jwt) {
+    headers["Authorization"] = `Bearer ${options.jwt}`;
+  }
+
   const response = await fetch(apiUrl + endpoint, {
     ...options,
     headers,

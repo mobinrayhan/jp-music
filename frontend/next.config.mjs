@@ -68,7 +68,8 @@ const config = (phase) => {
 
       JWT_SECRET: "jamesPrinceSoundei@147570",
       API_URL: "http://192.168.0.107:4000",
-      NEXTAUTH_URL: "https://vps-front.soundei.com",
+      // NEXTAUTH_URL: "https://vps-front.soundei.com",
+      NEXTAUTH_URL: "http://localhost:3000",
     },
 
     webpack(config) {
