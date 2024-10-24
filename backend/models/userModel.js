@@ -73,24 +73,28 @@ exports.postToggleFavourites = async ({ userId, audioId }) => {
   const db = await connectToDatabase();
   const userColl = await db.collection('users');
 
-  // Step 1: Remove the object with the matching id if it exists
-  userColl.updateOne(
-    { _id: new ObjectId(userId) },
+  const result = await userColl.updateOne(
+    { _id: new ObjectId(userId), 'favorites.id': new ObjectId(audioId) },
     {
       $pull: { favorites: { id: new ObjectId(audioId) } },
     }
   );
-
-  // Step 2: Only push the new object if it's not already in the array
-  return userColl.updateOne(
-    {
-      _id: new ObjectId(userId),
-      'favorites.id': { $ne: new ObjectId(audioId) },
-    }, // Ensure the id doesn't already exist
-    {
-      $push: { favorites: { id: new ObjectId(audioId), date: new Date() } },
+  if (result.modifiedCount > 0) {
+    return { message: 'Unliked Successfully!' };
+  } else {
+    // If no document was modified, the audioId wasn't found, so push it
+    const pushResult = await userColl.updateOne(
+      { _id: new ObjectId(userId) },
+      {
+        $push: { favorites: { id: new ObjectId(audioId), date: new Date() } }, // Add the audioId to favorites
+      }
+    );
+    if (pushResult.modifiedCount > 0) {
+      return { message: 'Added Favorite Successfully!' };
+    } else {
+      return { success: false, message: 'Failed to add to favorites' };
     }
-  );
+  }
 };
 
 exports.getFavorites = async ({ userId, querySearch = '', maxAudios }) => {

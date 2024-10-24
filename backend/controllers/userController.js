@@ -41,16 +41,12 @@ exports.postToggleFavourites = async function (req, res, next) {
       throw error;
     }
 
-    const toggleFavorite = await userModel.postToggleFavourites({
+    const { message } = await userModel.postToggleFavourites({
       audioId,
       userId,
     });
 
-    if (toggleFavorite.modifiedCount) {
-      return res.json({ message: 'Added Favorite Successfully!' });
-    } else {
-      return res.json({ message: 'Unliked Successfully!' });
-    }
+    return res.json({ message });
   } catch (e) {
     next(e);
   }
@@ -78,7 +74,6 @@ exports.getFavorites = async function (req, res, next) {
       audios: favorites,
     });
   } catch (e) {
-    console.log(e);
     next(e);
   }
 };
