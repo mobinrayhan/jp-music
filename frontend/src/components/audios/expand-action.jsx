@@ -1,5 +1,6 @@
 "use client";
 
+import { revalidateAction } from "@/actions/revalidateAction";
 import { usePathname, useRouter } from "next/navigation";
 import { FaLink, FaPlus } from "react-icons/fa6";
 import { MdOutlineFileDownload } from "react-icons/md";
@@ -36,13 +37,17 @@ export default function ExpandAction({ audioId }) {
 
   return (
     <>
-      <Button
-        variant="ghost"
-        aria-label="Download button"
-        onClick={handleDownload}
-      >
-        <MdOutlineFileDownload className="text-lg" />
-      </Button>
+      <form action={revalidateAction}>
+        <input type="hidden" name="path" value={"/my-library/downloads"} />
+        <Button
+          type="submit"
+          variant="ghost"
+          aria-label="Download button"
+          onClick={handleDownload}
+        >
+          <MdOutlineFileDownload className="text-lg" />
+        </Button>
+      </form>
 
       <Button
         variant="ghost"

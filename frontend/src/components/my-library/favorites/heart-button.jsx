@@ -1,5 +1,6 @@
 "use client";
 
+import { revalidateAction } from "@/actions/revalidateAction";
 import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/context/favorites-context";
 import { useSession } from "next-auth/react";
@@ -22,17 +23,21 @@ export default function HeartButton({ audioId, className }) {
   };
 
   return (
-    <Button
-      className={`${className || "hidden md:block"}`}
-      variant="ghost"
-      onClick={handleClick}
-      aria-label={isFavorited ? "Remove from favorites" : "Add to favorites"}
-    >
-      {isFavorited ? (
-        <IoHeart className="text-lg font-extrabold" />
-      ) : (
-        <FaRegHeart className="text-lg font-extrabold" />
-      )}
-    </Button>
+    <form action={revalidateAction}>
+      <input type="hidden" value={"/my-library/downloads"} name="path" />
+
+      <Button
+        className={`${className || "hidden md:block"}`}
+        variant="ghost"
+        onClick={handleClick}
+        aria-label={isFavorited ? "Remove from favorites" : "Add to favorites"}
+      >
+        {isFavorited ? (
+          <IoHeart className="text-lg font-extrabold" />
+        ) : (
+          <FaRegHeart className="text-lg font-extrabold" />
+        )}
+      </Button>
+    </form>
   );
 }

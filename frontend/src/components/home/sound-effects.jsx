@@ -10,7 +10,7 @@ export default async function SoundEffects({
 }) {
   try {
     const { audios, totalAudios } = await fetchWithApiKey(fetcherEndPoint, {
-      next: { cache: "no-store" },
+      cache: "no-store",
       jwt,
     });
     const finalAudio = finalAudioCB ? finalAudioCB(audios?.slice()) : audios;

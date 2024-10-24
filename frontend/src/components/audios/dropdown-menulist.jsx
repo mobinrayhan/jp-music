@@ -1,5 +1,6 @@
 "use client";
 
+import { revalidateAction } from "@/actions/revalidateAction";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -51,19 +52,27 @@ export default function DropDownMenuLIst({ audioId }) {
           <FaPlus className="text-lg" /> <span>Add To Playlist</span>
         </DropdownMenuItem>
 
-        <DropdownMenuItem
-          className="flex cursor-pointer items-center gap-2"
-          aria-label="Download Button"
-          onClick={handleClick}
-        >
-          {isFavorited ? (
-            <IoHeart className="text-lg font-extrabold" />
-          ) : (
-            <FaRegHeart className="text-lg font-extrabold" />
-          )}
+        <form action={revalidateAction}>
+          <input type="hidden" name="path" value={"/my-library/favorites"} />
 
-          <span>Favorite</span>
-        </DropdownMenuItem>
+          <button type="submit">
+            <DropdownMenuItem
+              as="button"
+              className="flex cursor-pointer items-center gap-2"
+              aria-label="Download Button"
+              onClick={handleClick}
+            >
+              {isFavorited ? (
+                <IoHeart className="text-lg font-extrabold" />
+              ) : (
+                <FaRegHeart className="text-lg font-extrabold" />
+              )}
+
+              <span>Favorite</span>
+            </DropdownMenuItem>
+          </button>
+        </form>
+
         <DropdownMenuItem
           className="flex cursor-pointer items-center gap-2"
           aria-label="Copy Link Button"

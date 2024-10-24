@@ -1,6 +1,5 @@
 import { fetchWithApiKey } from "@/utils/api";
 import { getServerSession } from "next-auth";
-import { revalidatePath } from "next/cache";
 import { authOptions } from "../auth/[...nextauth]/route";
 
 export const dynamic = "force-dynamic"; // Force dynamic route
@@ -44,9 +43,6 @@ export async function GET(req) {
 
     const fileName = `${audioInfo.audio.name}.${audioInfo.audio.type}`;
     const fileBuffer = await downloadRes.arrayBuffer();
-
-    // Revalidate the path to refresh data if needed
-    revalidatePath("/my-library/downloads");
 
     return new Response(fileBuffer, {
       headers: {
