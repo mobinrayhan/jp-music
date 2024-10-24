@@ -68,3 +68,72 @@ exports.getDownloadsById = async ({ userId, querySearch = '', maxAudios }) => {
     ])
     .next(); // Return as an object
 };
+
+exports.postToggleFavourites = async ({ userId, audioId }) => {
+  const db = await connectToDatabase();
+  const userColl = await db.collection('users');
+
+  // Step 1: Remove the object with the matching id if it exists
+  userColl.updateOne(
+    { _id: new ObjectId(userId) },
+    {
+      $pull: { favorites: { id: new ObjectId(audioId) } },
+    }
+  );
+
+  // Step 2: Only push the new object if it's not already in the array
+  return userColl.updateOne(
+    {
+      _id: new ObjectId(userId),
+      'favorites.id': { $ne: new ObjectId(audioId) },
+    }, // Ensure the id doesn't already exist
+    {
+      $push: { favorites: { id: new ObjectId(audioId), date: new Date() } },
+    }
+  );
+};
+
+exports.getFavorites = async ({ userId, querySearch = '', maxAudios }) => {
+  const db = await connectToDatabase();
+  const userColl = await db.collection('users');
+  const audioColl = await db.collection('audios');
+
+  const user = await userColl.findOne({ _id: new ObjectId(userId) });
+  const favoriteIds = user.favorites.map((fav) => fav.id);
+
+  return await audioColl
+    .aggregate([
+      {
+        $match: {
+          _id: { $in: favoriteIds }, // Match audio documents by favorite IDs
+        },
+      },
+      {
+        // Global search for audio name and keywords
+        $match: {
+          $or: [
+            { name: { $regex: `^${querySearch}`, $options: 'i' } }, // Starts with search term
+            { name: { $regex: `${querySearch}$`, $options: 'i' } }, // Ends with search term
+            { name: { $regex: querySearch, $options: 'i' } }, // Includes search term
+            { keywords: { $regex: querySearch, $options: 'i' } }, // Search in keywords array
+          ],
+        },
+      },
+      {
+        $sort: { date: -1 }, // Sort by date, most recent first
+      },
+      {
+        $limit: maxAudios, // Limit the results to the maxAudios
+      },
+    ])
+    .toArray();
+};
+
+exports.getFavoriteIds = async (userId) => {
+  const db = await connectToDatabase();
+  const userColl = await db.collection('users');
+  return await userColl.findOne(
+    { _id: new ObjectId(userId) },
+    { projection: { favorites: 1 } }
+  );
+};

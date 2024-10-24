@@ -14,7 +14,7 @@ const user = {
     },
   ],
   downloads: [{date, 'audioId1'}, {date, 'audioId2'}, {date, 'audioId10'}],
-  favorites: ['audioId1', 'audioId2', 'audioId10'],
+  favorites: ['npm ', 'audioId2', 'audioId10'],
 };
 */
 

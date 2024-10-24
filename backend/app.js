@@ -25,7 +25,7 @@ const allowedOrigins = [
   'https://jp-music.vercel.app',
   'http://localhost:3000',
   'https://soundei.com',
-  'http://192.168.0.105:3000',
+  'http://192.168.0.107:3000',
   'https://soundei.netlify.app',
   'https://soundei.com',
   'https://dev-front.soundei.com',
