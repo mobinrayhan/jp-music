@@ -7,7 +7,7 @@ import { MdOutlineFileDownload } from "react-icons/md";
 import HeartButton from "../my-library/favorites/heart-button";
 import { Button } from "../ui/button";
 
-export default function ExpandAction({ audioId }) {
+export default function ExpandAction({ audioId, onMutate }) {
   const pathName = usePathname();
   const { push } = useRouter();
 
@@ -57,7 +57,7 @@ export default function ExpandAction({ audioId }) {
         <FaPlus className="text-lg" />
       </Button>
 
-      <HeartButton audioId={audioId} />
+      <HeartButton audioId={audioId} onMutate={onMutate} />
 
       <Button
         variant="ghost"

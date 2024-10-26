@@ -24,3 +24,6 @@ export const fetchWithApiKey = async (endpoint, options = {}) => {
 
   return response.json();
 };
+
+export const fetcher = (endpoint, options) =>
+  fetchWithApiKey(endpoint, options);

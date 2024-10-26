@@ -1,6 +1,5 @@
 "use client";
 
-import { revalidateAction } from "@/actions/revalidateAction";
 import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/context/favorites-context";
 import { useSession } from "next-auth/react";
@@ -8,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { FaRegHeart } from "react-icons/fa6";
 import { IoHeart } from "react-icons/io5";
 
-export default function HeartButton({ audioId, className }) {
+export default function HeartButton({ audioId, className, onMutate = null }) {
   const { favorites, toggleFavorite } = useFavorites();
   const session = useSession();
   const { push } = useRouter();
@@ -17,27 +16,34 @@ export default function HeartButton({ audioId, className }) {
   const handleClick = () => {
     if (session.status === "authenticated") {
       toggleFavorite(audioId);
+
+      if (onMutate) {
+        onMutate((prevData) => {
+          const updatedAudios = prevData.audios.filter(
+            (audio) => audio._id !== audioId,
+          );
+          console.log("Updated audios after removal:", updatedAudios);
+
+          return { ...prevData, audios: updatedAudios };
+        }, false);
+      }
     } else if (session.status === "unauthenticated") {
-      return push("/login");
+      push("/login");
     }
   };
 
   return (
-    <form action={revalidateAction}>
-      <input type="hidden" value={"/my-library/downloads"} name="path" />
-
-      <Button
-        className={`${className || "hidden md:block"}`}
-        variant="ghost"
-        onClick={handleClick}
-        aria-label={isFavorited ? "Remove from favorites" : "Add to favorites"}
-      >
-        {isFavorited ? (
-          <IoHeart className="text-lg font-extrabold" />
-        ) : (
-          <FaRegHeart className="text-lg font-extrabold" />
-        )}
-      </Button>
-    </form>
+    <Button
+      className={`${className || "hidden md:block"}`}
+      variant="ghost"
+      onClick={handleClick}
+      aria-label={isFavorited ? "Remove from favorites" : "Add to favorites"}
+    >
+      {isFavorited ? (
+        <IoHeart className="text-lg font-extrabold" />
+      ) : (
+        <FaRegHeart className="text-lg font-extrabold" />
+      )}
+    </Button>
   );
 }

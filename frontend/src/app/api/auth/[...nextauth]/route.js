@@ -101,20 +101,22 @@ export const authOptions = {
         }
       }
 
-      try {
-        const activeStatus = await fetchWithApiKey(
-          `/auth/check-active-status/${token.id}`,
-          {
-            cache: "no-store",
-          },
-        );
+      if (token) {
+        try {
+          const activeStatus = await fetchWithApiKey(
+            `/auth/check-active-status/${token.id}`,
+            {
+              cache: "no-store",
+            },
+          );
 
-        if (activeStatus?.isActive !== undefined) {
-          token.isActive = activeStatus.isActive;
+          if (activeStatus?.isActive !== undefined) {
+            token.isActive = activeStatus.isActive;
+          }
+        } catch (error) {
+          console.error("Error checking active status:", error);
+          token.isActive = false;
         }
-      } catch (error) {
-        console.error("Error checking active status:", error);
-        token.isActive = false;
       }
 
       return token;

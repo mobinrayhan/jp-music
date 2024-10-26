@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 import { FaPause, FaPlay } from "react-icons/fa6";
 import WaveSurfer from "wavesurfer.js";
 
-export default function MusicTableList({ audios }) {
+export default function MusicTableList({ audios, onMutate }) {
   const waveformRefs = useRef({});
   const {
     currentTrack,
@@ -134,7 +134,7 @@ export default function MusicTableList({ audios }) {
 
             <TableCell className="flex items-center pt-4">
               <div className="ml-auto flex items-center gap-2">
-                <ExpandAction audioId={audio._id} />
+                <ExpandAction audioId={audio._id} onMutate={onMutate} />
                 <DropDownMenuLIst audioId={audio._id} />
               </div>
             </TableCell>

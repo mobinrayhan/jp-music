@@ -1,32 +1,42 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+"use client";
+
 import AudioSkeleton from "@/components/audios/audio-skeleton";
-import SoundEffects from "@/components/home/sound-effects";
-import { getServerSession } from "next-auth";
-import { Suspense } from "react";
+import AudioTable from "@/components/audios/music-info";
+import { fetcher } from "@/utils/api";
+import { useSession } from "next-auth/react";
+import useSWR from "swr";
 const apiUrl = process.env.API_URL;
 
-export default async function Favorites({ maxAudios, searchValue }) {
-  const fetcherEndPoint = `/users/favorites?querySearch=${searchValue}&maxAudios=${maxAudios}`;
-  const session = await getServerSession(authOptions);
+export default function Favorites({ maxAudios, searchValue }) {
+  const { data: session, status } = useSession();
 
-  const sortByDateDesc = (audios) => {
-    return audios
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-      .map((audio) => {
-        return {
-          ...audio,
-          previewURL: `${apiUrl}/${audio.previewURL}`,
-        };
-      });
+  const fetcherEndPoint = `/users/favorites?querySearch=${searchValue}&maxAudios=${maxAudios}`;
+  const { data, error, mutate } = useSWR(
+    session?.jwt ? [fetcherEndPoint, { jwt: session.jwt }] : null,
+    ([endpoint, options]) => fetcher(endpoint, options),
+    {
+      revalidateOnFocus: false,
+      revalidateIfStale: false,
+    },
+  );
+
+  if (status === "loading" || !session.jwt || (!data && !error)) {
+    return <AudioSkeleton />;
+  }
+
+  if (error) {
+    if (error) return <p className={"py-6"}>{error.message}</p>;
+  }
+
+  const parsedURLAudio = (audios) => {
+    console.log(audios);
+    return audios.map((audio) => {
+      return {
+        ...audio,
+        previewURL: `${apiUrl}/${audio.previewURL}`,
+      };
+    });
   };
 
-  return (
-    <Suspense fallback={<AudioSkeleton />}>
-      <SoundEffects
-        fetcherEndPoint={fetcherEndPoint}
-        finalAudioCB={sortByDateDesc}
-        jwt={session.jwt}
-      />
-    </Suspense>
-  );
+  return <AudioTable audios={parsedURLAudio(data.audios)} onMutate={mutate} />;
 }

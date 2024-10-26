@@ -15,7 +15,7 @@ import { FaLink, FaPlus, FaRegHeart } from "react-icons/fa6";
 import { IoHeart } from "react-icons/io5";
 import { Button } from "../ui/button";
 
-export default function DropDownMenuLIst({ audioId }) {
+export default function DropDownMenuLIst({ audioId, onMutate }) {
   // @src\components\my-library\favorites\heart-button.jsx
   //  The same code was using that component for the same behavior
 
