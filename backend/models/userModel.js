@@ -73,6 +73,8 @@ exports.postToggleFavourites = async ({ userId, audioId }) => {
   const db = await connectToDatabase();
   const userColl = await db.collection('users');
 
+  console.log(userId, audioId);
+
   const result = await userColl.updateOne(
     { _id: new ObjectId(userId), 'favorites.id': new ObjectId(audioId) },
     {
@@ -82,11 +84,10 @@ exports.postToggleFavourites = async ({ userId, audioId }) => {
   if (result.modifiedCount > 0) {
     return { message: 'Unliked Successfully!' };
   } else {
-    // If no document was modified, the audioId wasn't found, so push it
     const pushResult = await userColl.updateOne(
       { _id: new ObjectId(userId) },
       {
-        $push: { favorites: { id: new ObjectId(audioId), date: new Date() } }, // Add the audioId to favorites
+        $push: { favorites: { id: new ObjectId(audioId), date: new Date() } },
       }
     );
     if (pushResult.modifiedCount > 0) {

@@ -22,14 +22,11 @@ const userRouter = require('./routes/user');
 // });
 
 const allowedOrigins = [
-  'https://jp-music.vercel.app',
+  'http://103.163.246.130:4001',
+  'http://192.168.0.107:3000',
   'http://localhost:3000',
   'https://soundei.com',
-  'http://192.168.0.107:3000',
-  'https://soundei.netlify.app',
-  'https://soundei.com',
-  'https://dev-front.soundei.com',
-  'https://dev-admin.soundei.com',
+  'https://vps-front.soundei.com',
 ];
 app.use(express.json());
 // app.use(limiter);
@@ -72,18 +69,18 @@ app.get('/all-audios/preview/:category/:name', (req, res) => {
   const fileSize = stat.size;
   const range = req.headers.range;
 
-  res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
-
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-
+  res.setHeader(
+    'Access-Control-Allow-Origin',
+    process.env.NODE_ENV === 'production'
+      ? 'https://vps-front.soundei.com'
+      : 'http://192.168.0.107:3000'
+  );
   res.setHeader('Access-Control-Allow-Headers', 'Range');
   res.setHeader(
     'Access-Control-Expose-Headers',
     'Content-Range, Accept-Ranges'
   );
+  res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin'); // Set CORP header
 
   if (range) {
     const parts = range.replace(/bytes=/, '').split('-');

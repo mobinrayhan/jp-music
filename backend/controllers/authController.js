@@ -41,7 +41,11 @@ exports.createNewUser = async function (req, res, next) {
     const token = jwt.sign({ email }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
-    const verificationLink = `http://localhost:3000/verify-email?token=${token}`;
+    const verificationLink = `${
+      process.env.NODE_ENV === 'production'
+        ? 'https://vps-front.soundei.com'
+        : 'http://localhost:3000'
+    }/verify-email?token=${token}`;
 
     // Send verification email
     await transporter.sendMail({
@@ -210,7 +214,11 @@ exports.getForgetPassword = async (req, res, next) => {
     const token = jwt.sign({ email }, process.env.JWT_SECRET, {
       expiresIn: '5m',
     });
-    const resetLink = `http://localhost:3000/reset-password?token=${token}`;
+    const resetLink = `${
+      process.env.NODE_ENV === 'production'
+        ? 'https://vps-front.soundei.com'
+        : 'http://localhost:3000'
+    }/reset-password?token=${token}`;
 
     // Send verification email
     await transporter.sendMail({
