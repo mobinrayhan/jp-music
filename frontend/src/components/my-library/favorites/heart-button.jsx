@@ -15,16 +15,22 @@ export default function HeartButton({ audioId, className, onMutate = null }) {
 
   const handleClick = () => {
     if (session.status === "authenticated") {
+      const wasFavorited = isFavorited;
+
       toggleFavorite(audioId);
 
       if (onMutate) {
         onMutate((prevData) => {
-          const updatedAudios = prevData.audios.filter(
-            (audio) => audio._id !== audioId,
-          );
-          console.log("Updated audios after removal:", updatedAudios);
-
-          return { ...prevData, audios: updatedAudios };
+          let updatedAudios;
+          if (wasFavorited) {
+            updatedAudios = prevData.audios.filter(
+              (audio) => audio._id !== audioId,
+            );
+            console.log("Updated audios after removal:", updatedAudios);
+            return { ...prevData, audios: updatedAudios };
+          } else {
+            return prevData;
+          }
         }, false);
       }
     } else if (session.status === "unauthenticated") {

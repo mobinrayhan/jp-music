@@ -14,10 +14,6 @@ export default function Favorites({ maxAudios, searchValue }) {
   const { data, error, mutate } = useSWR(
     session?.jwt ? [fetcherEndPoint, { jwt: session.jwt }] : null,
     ([endpoint, options]) => fetcher(endpoint, options),
-    {
-      revalidateOnFocus: false,
-      revalidateIfStale: false,
-    },
   );
 
   if (status === "loading" || !session.jwt || (!data && !error)) {

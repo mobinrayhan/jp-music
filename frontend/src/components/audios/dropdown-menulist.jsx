@@ -26,9 +26,25 @@ export default function DropDownMenuLIst({ audioId, onMutate }) {
 
   const handleClick = () => {
     if (session.status === "authenticated") {
+      const wasFavorited = isFavorited;
+
       toggleFavorite(audioId);
+
+      if (onMutate) {
+        onMutate((prevData) => {
+          let updatedAudios;
+          if (wasFavorited) {
+            updatedAudios = prevData.audios.filter(
+              (audio) => audio._id !== audioId,
+            );
+            return { ...prevData, audios: updatedAudios };
+          } else {
+            return prevData;
+          }
+        }, false);
+      }
     } else if (session.status === "unauthenticated") {
-      return push("/login");
+      push("/login");
     }
   };
 
