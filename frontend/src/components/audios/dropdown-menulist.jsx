@@ -15,7 +15,7 @@ import { FaLink, FaPlus, FaRegHeart } from "react-icons/fa6";
 import { IoHeart } from "react-icons/io5";
 import { Button } from "../ui/button";
 
-export default function DropDownMenuLIst({ audioId, onMutate }) {
+export default function DropDownMenuLIst({ audioId, onFavoriteMutate }) {
   // @src\components\my-library\favorites\heart-button.jsx
   //  The same code was using that component for the same behavior
 
@@ -30,8 +30,8 @@ export default function DropDownMenuLIst({ audioId, onMutate }) {
 
       toggleFavorite(audioId);
 
-      if (onMutate) {
-        onMutate((prevData) => {
+      if (onFavoriteMutate) {
+        onFavoriteMutate((prevData) => {
           let updatedAudios;
           if (wasFavorited) {
             updatedAudios = prevData.audios.filter(

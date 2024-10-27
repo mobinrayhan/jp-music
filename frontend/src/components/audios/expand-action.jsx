@@ -1,13 +1,16 @@
 "use client";
 
-import { revalidateAction } from "@/actions/revalidateAction";
 import { usePathname, useRouter } from "next/navigation";
 import { FaLink, FaPlus } from "react-icons/fa6";
 import { MdOutlineFileDownload } from "react-icons/md";
 import HeartButton from "../my-library/favorites/heart-button";
 import { Button } from "../ui/button";
 
-export default function ExpandAction({ audioId, onMutate }) {
+export default function ExpandAction({
+  audioId,
+  onFavoriteMutate,
+  onDownloadMutate = null,
+}) {
   const pathName = usePathname();
   const { push } = useRouter();
 
@@ -25,6 +28,30 @@ export default function ExpandAction({ audioId, onMutate }) {
 
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
+
+        if (onDownloadMutate) {
+          onDownloadMutate((prevData) => {
+            const updatedDownloadList = prevData.audios
+              .map((audio) =>
+                audio._id === audioId
+                  ? {
+                      ...audio,
+                      downloadInfo: {
+                        ...audio.downloadInfo,
+                        date: new Date().toISOString(),
+                      },
+                    }
+                  : audio,
+              )
+              .sort(
+                (a, b) =>
+                  new Date(b.downloadInfo.date) - new Date(a.downloadInfo.date),
+              );
+
+            return { ...prevData, audios: updatedDownloadList };
+          }, false);
+        }
+
         link.download = fileName;
         link.click();
       } else {
@@ -37,17 +64,14 @@ export default function ExpandAction({ audioId, onMutate }) {
 
   return (
     <>
-      <form action={revalidateAction}>
-        <input type="hidden" name="path" value={"/my-library/downloads"} />
-        <Button
-          type="submit"
-          variant="ghost"
-          aria-label="Download button"
-          onClick={handleDownload}
-        >
-          <MdOutlineFileDownload className="text-lg" />
-        </Button>
-      </form>
+      <Button
+        type="submit"
+        variant="ghost"
+        aria-label="Download button"
+        onClick={handleDownload}
+      >
+        <MdOutlineFileDownload className="text-lg" />
+      </Button>
 
       <Button
         variant="ghost"
@@ -57,7 +81,7 @@ export default function ExpandAction({ audioId, onMutate }) {
         <FaPlus className="text-lg" />
       </Button>
 
-      <HeartButton audioId={audioId} onMutate={onMutate} />
+      <HeartButton audioId={audioId} onFavoriteMutate={onFavoriteMutate} />
 
       <Button
         variant="ghost"

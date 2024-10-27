@@ -7,7 +7,11 @@ import { useRouter } from "next/navigation";
 import { FaRegHeart } from "react-icons/fa6";
 import { IoHeart } from "react-icons/io5";
 
-export default function HeartButton({ audioId, className, onMutate = null }) {
+export default function HeartButton({
+  audioId,
+  className,
+  onFavoriteMutate = null,
+}) {
   const { favorites, toggleFavorite } = useFavorites();
   const session = useSession();
   const { push } = useRouter();
@@ -16,17 +20,15 @@ export default function HeartButton({ audioId, className, onMutate = null }) {
   const handleClick = () => {
     if (session.status === "authenticated") {
       const wasFavorited = isFavorited;
-
       toggleFavorite(audioId);
 
-      if (onMutate) {
-        onMutate((prevData) => {
+      if (onFavoriteMutate) {
+        onFavoriteMutate((prevData) => {
           let updatedAudios;
           if (wasFavorited) {
             updatedAudios = prevData.audios.filter(
               (audio) => audio._id !== audioId,
             );
-            console.log("Updated audios after removal:", updatedAudios);
             return { ...prevData, audios: updatedAudios };
           } else {
             return prevData;

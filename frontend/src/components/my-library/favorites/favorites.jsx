@@ -25,7 +25,6 @@ export default function Favorites({ maxAudios, searchValue }) {
   }
 
   const parsedURLAudio = (audios) => {
-    console.log(audios);
     return audios.map((audio) => {
       return {
         ...audio,
@@ -34,5 +33,10 @@ export default function Favorites({ maxAudios, searchValue }) {
     });
   };
 
-  return <AudioTable audios={parsedURLAudio(data.audios)} onMutate={mutate} />;
+  return (
+    <AudioTable
+      audios={parsedURLAudio(data.audios)}
+      onFavoriteMutate={mutate}
+    />
+  );
 }

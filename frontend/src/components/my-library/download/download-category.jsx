@@ -1,69 +1,101 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { AudioPlayerProvider } from "@/context/audio-player-context";
+"use client";
+
+import AudioPlayer from "@/components/audios/audio-player";
+import AudioSkeleton from "@/components/audios/audio-skeleton";
+import AudioTable from "@/components/audios/music-info";
+import Pagination from "@/components/home/pagination";
 import { categorizeAudios } from "@/lib/categorizeAudios";
-import { fetchWithApiKey } from "@/utils/api";
-import { getServerSession } from "next-auth";
-import AudioTable from "../../audios/music-info";
+import { fetcher } from "@/utils/api";
+import { useSession } from "next-auth/react";
+import useSWR from "swr";
 
 const apiUrl = process.env.API_URL;
 
-export default async function DownloadCategory({ searchValue, maxAudios }) {
-  const authSession = await getServerSession(authOptions);
-  // const fetcherEndPoint = `/users/downloads?querySearch=${searchValue}&maxAudios=${maxAudios}`;
-  const fetcherEndPoint = `/users/asdfasdfasdfasdf`;
+export default function DownloadCategory({ searchValue, maxAudios }) {
+  const { data: session, status } = useSession();
+  const fetcherEndPoint = `/users/downloads?querySearch=${searchValue}&maxAudios=${maxAudios}`;
 
-  const { audios, totalAudios } = await fetchWithApiKey(fetcherEndPoint, {
-    jwt: authSession.jwt,
-    next: { cache: "no-store" },
-  });
-
-  const catAudios = categorizeAudios(audios);
-  const allParsedAudios = URLparsedAudio(audios);
-
-  return (
-    <AudioPlayerProvider>
-      {catAudios.today.length > 0 && (
-        <CategorySection
-          title="Today's Downloads"
-          audios={URLparsedAudio(catAudios.today)}
-          allAudios={allParsedAudios}
-        />
-      )}
-      {catAudios.lastWeek.length > 0 && (
-        <CategorySection
-          title="Last Week's Downloads"
-          audios={URLparsedAudio(catAudios.lastWeek)}
-          allAudios={allParsedAudios}
-        />
-      )}
-      {catAudios.lastMonth.length > 0 && (
-        <CategorySection
-          title="Last Month's Downloads"
-          audios={URLparsedAudio(catAudios.lastMonth)}
-          allAudios={allParsedAudios}
-        />
-      )}
-      {catAudios.older.length > 0 && (
-        <CategorySection
-          title="Older Downloads"
-          audios={URLparsedAudio(catAudios.older)}
-          allAudios={allParsedAudios}
-        />
-      )}
-    </AudioPlayerProvider>
+  const { data, error, mutate } = useSWR(
+    session?.jwt ? [fetcherEndPoint, { jwt: session.jwt }] : null,
+    ([endpoint, options]) => fetcher(endpoint, options),
   );
-}
 
-function CategorySection({ title, audios, allAudios }) {
+  if (status === "loading" || !session?.jwt || (!data && !error)) {
+    return <AudioSkeleton />;
+  }
+
+  if (error) {
+    return <p className={"py-6"}>{error.message}</p>;
+  }
+
+  const parsedAudios = parsedURLAudio(data.audios);
+  const catAudios = categorizeAudios(parsedAudios);
+
+  // Combine all audios into a single playlist
+  const allAudios = [
+    ...catAudios.today,
+    ...catAudios.lastWeek,
+    ...catAudios.lastMonth,
+    ...catAudios.older,
+  ];
+
   return (
     <>
-      <h1 className="py-3 text-lg tracking-wide">{title}</h1>
-      <AudioTable audios={audios} providedPlaylist={allAudios} />
+      {catAudios.today.length > 0 && (
+        <>
+          <h1 className="py-3 text-lg tracking-wide">Today&apos;s Downloads</h1>
+          <AudioTable
+            audios={catAudios.today}
+            providedPlaylist={allAudios}
+            onDownloadMutate={mutate}
+          />
+        </>
+      )}
+      {catAudios.lastWeek.length > 0 && (
+        <>
+          <h1 className="py-3 text-lg tracking-wide">
+            Last Week&apos;s Downloads
+          </h1>
+          <AudioTable
+            audios={catAudios.lastWeek}
+            providedPlaylist={allAudios}
+            onDownloadMutate={mutate}
+          />
+        </>
+      )}
+      {catAudios.lastMonth.length > 0 && (
+        <>
+          <h1 className="py-3 text-lg tracking-wide">
+            Last Month&apos;s Downloads
+          </h1>
+          <AudioTable
+            audios={catAudios.lastMonth}
+            providedPlaylist={allAudios}
+            onDownloadMutate={mutate}
+          />
+        </>
+      )}
+      {catAudios.older.length > 0 && (
+        <>
+          <h1 className="py-3 text-lg tracking-wide">Older Downloads</h1>
+          <AudioTable
+            audios={catAudios.older}
+            providedPlaylist={allAudios}
+            onFavoriteMutate={mutate}
+          />
+        </>
+      )}
+      {data.totalAudios > maxAudios && (
+        <section className="mt-12">
+          <Pagination />
+        </section>
+      )}
+      <AudioPlayer />
     </>
   );
 }
 
-function URLparsedAudio(audios) {
+function parsedURLAudio(audios) {
   return audios.map((audio) => ({
     ...audio,
     previewURL: `${apiUrl}/${audio.previewURL}`,

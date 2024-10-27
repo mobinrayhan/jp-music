@@ -5,7 +5,12 @@ import { useEffect } from "react";
 import AudioPlayer from "./audio-player";
 import MusicTableList from "./music-table-list";
 
-function AudioTableContent({ audios, providedPlaylist, onMutate }) {
+function AudioTableContent({
+  audios,
+  providedPlaylist,
+  onFavoriteMutate,
+  onDownloadMutate,
+}) {
   const { setAudioPlaylist } = useAudioPlayer();
 
   useEffect(() => {
@@ -14,18 +19,28 @@ function AudioTableContent({ audios, providedPlaylist, onMutate }) {
 
   return (
     <>
-      <MusicTableList audios={audios} onMutate={onMutate} />
+      <MusicTableList
+        audios={audios}
+        onFavoriteMutate={onFavoriteMutate}
+        onDownloadMutate={onDownloadMutate}
+      />
       <AudioPlayer />
     </>
   );
 }
 
-export default function AudioTable({ audios, providedPlaylist, onMutate }) {
+export default function AudioTable({
+  audios,
+  providedPlaylist,
+  onFavoriteMutate,
+  onDownloadMutate,
+}) {
   return (
     <AudioTableContent
       audios={audios}
       providedPlaylist={providedPlaylist}
-      onMutate={onMutate}
+      onFavoriteMutate={onFavoriteMutate}
+      onDownloadMutate={onDownloadMutate}
     />
   );
 }

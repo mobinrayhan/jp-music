@@ -69,8 +69,8 @@ const config = (phase) => {
       FACEBOOK_CLIENT_SECRET: "710cdc53481e8d0420c37fdb4f6e602d",
 
       JWT_SECRET: "jamesPrinceSoundei@147570",
-      API_URL: "http://localhost:4000",
-      NEXTAUTH_URL: "http://localhost:3000",
+      API_URL: "http://192.168.0.107:4000",
+      NEXTAUTH_URL: "http://192.168.0.107:4000",
       // NEXTAUTH_URL: "https://vps-front.soundei.com",
     },
 

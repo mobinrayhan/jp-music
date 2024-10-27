@@ -1,11 +1,5 @@
-import AudioSkeleton from "@/components/audios/audio-skeleton";
-import { Suspense } from "react";
-import DownloadCategory from "./download-category-v1";
+import DownloadCategory from "./download-category";
 
 export default async function Downloads({ searchValue, maxAudios }) {
-  return (
-    <Suspense fallback={<AudioSkeleton />}>
-      <DownloadCategory searchValue={searchValue} maxAudios={maxAudios} />
-    </Suspense>
-  );
+  return <DownloadCategory searchValue={searchValue} maxAudios={maxAudios} />;
 }
