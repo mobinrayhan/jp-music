@@ -1,6 +1,6 @@
 import Downloads from "@/components/my-library/download/downloads";
 import Favorites from "@/components/my-library/favorites/favorites";
-import Playlists from "@/components/my-library/playlists";
+import Playlists from "@/components/my-library/playlists/playlists";
 import SearchInput from "@/ui/search-input";
 import Link from "next/link";
 import { notFound } from "next/navigation";

@@ -1,6 +1,5 @@
 "use client";
 
-import { revalidateAction } from "@/actions/revalidateAction";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +12,9 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FaLink, FaPlus, FaRegHeart } from "react-icons/fa6";
 import { IoHeart } from "react-icons/io5";
+import { AddToPlaylist } from "../my-library/playlists/add-to-playlist";
 import { Button } from "../ui/button";
+import { Dialog, DialogTrigger } from "../ui/dialog";
 
 export default function DropDownMenuLIst({ audioId, onFavoriteMutate }) {
   // @src\components\my-library\favorites\heart-button.jsx
@@ -60,34 +61,34 @@ export default function DropDownMenuLIst({ audioId, onFavoriteMutate }) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="mr-4 p-2">
-        <DropdownMenuItem
-          className="flex cursor-pointer items-center gap-2"
-          aria-label="Add To Playlist Button"
-        >
-          {" "}
-          <FaPlus className="text-lg" /> <span>Add To Playlist</span>
-        </DropdownMenuItem>
-
-        <form action={revalidateAction}>
-          <input type="hidden" name="path" value={"/my-library/favorites"} />
-
-          <button type="submit">
-            <DropdownMenuItem
-              as="button"
-              className="flex cursor-pointer items-center gap-2"
-              aria-label="Download Button"
-              onClick={handleClick}
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              variant="ghost"
+              className="flex cursor-pointer items-center justify-start gap-2 pl-[0.4rem]"
+              aria-label="Add To Playlist Button"
             >
-              {isFavorited ? (
-                <IoHeart className="text-lg font-extrabold" />
-              ) : (
-                <FaRegHeart className="text-lg font-extrabold" />
-              )}
+              {" "}
+              <FaPlus className="text-lg" /> <span>Add To Playlist</span>
+            </Button>
+          </DialogTrigger>
+          <AddToPlaylist />
+        </Dialog>
 
-              <span>Favorite</span>
-            </DropdownMenuItem>
-          </button>
-        </form>
+        <DropdownMenuItem
+          as="button"
+          className="flex cursor-pointer items-center gap-2"
+          aria-label="Download Button"
+          onClick={handleClick}
+        >
+          {isFavorited ? (
+            <IoHeart className="text-lg font-extrabold" />
+          ) : (
+            <FaRegHeart className="text-lg font-extrabold" />
+          )}
+
+          <span>Favorite</span>
+        </DropdownMenuItem>
 
         <DropdownMenuItem
           className="flex cursor-pointer items-center gap-2"

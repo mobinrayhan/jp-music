@@ -1,18 +1,25 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { FaLink, FaPlus } from "react-icons/fa6";
 import { MdOutlineFileDownload } from "react-icons/md";
 import HeartButton from "../my-library/favorites/heart-button";
+import { AddToPlaylist } from "../my-library/playlists/add-to-playlist";
+import PlaylistLogin from "../my-library/playlists/playlist-login";
 import { Button } from "../ui/button";
+import { Dialog, DialogTrigger } from "../ui/dialog";
 
 export default function ExpandAction({
   audioId,
   onFavoriteMutate,
   onDownloadMutate = null,
 }) {
+  const session = useSession();
   const pathName = usePathname();
   const { push } = useRouter();
+
+  console.log(session);
 
   const handleDownload = async () => {
     try {
@@ -73,13 +80,22 @@ export default function ExpandAction({
         <MdOutlineFileDownload className="text-lg" />
       </Button>
 
-      <Button
-        variant="ghost"
-        className="hidden md:block"
-        aria-label="Added to the playlist button"
-      >
-        <FaPlus className="text-lg" />
-      </Button>
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button
+            variant="ghost"
+            className="hidden md:block"
+            aria-label="Added to the playlist button"
+          >
+            <FaPlus className="text-lg" />
+          </Button>
+        </DialogTrigger>
+        {session.status === "authenticated" ? (
+          <AddToPlaylist />
+        ) : (
+          <PlaylistLogin />
+        )}
+      </Dialog>
 
       <HeartButton audioId={audioId} onFavoriteMutate={onFavoriteMutate} />
 
