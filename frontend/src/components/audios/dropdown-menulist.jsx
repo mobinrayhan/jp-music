@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { FaLink, FaPlus, FaRegHeart } from "react-icons/fa6";
 import { IoHeart } from "react-icons/io5";
 import { AddToPlaylist } from "../my-library/playlists/add-to-playlist";
+import PlaylistLogin from "../my-library/playlists/playlist-login";
 import { Button } from "../ui/button";
 import { Dialog, DialogTrigger } from "../ui/dialog";
 
@@ -72,7 +73,11 @@ export default function DropDownMenuLIst({ audioId, onFavoriteMutate }) {
               <FaPlus className="text-lg" /> <span>Add To Playlist</span>
             </Button>
           </DialogTrigger>
-          <AddToPlaylist />
+          {session.status === "authenticated" ? (
+            <AddToPlaylist />
+          ) : (
+            <PlaylistLogin />
+          )}
         </Dialog>
 
         <DropdownMenuItem
