@@ -1,24 +1,37 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+"use client";
+import { useState } from "react";
+import CreatePlaylist from "./create-playlist";
 import DialogWrapper from "./dialog-wrapper";
+import PlaylistList from "./playlist-list";
 
 export function AddToPlaylist() {
+  const [isActiveNewPlaylist, setIsActiveNewPlaylist] = useState(false);
+
+  function handleNewPlaylist() {
+    setIsActiveNewPlaylist((prev) => !prev);
+  }
+
   return (
-    <DialogWrapper>
-      <div className="grid gap-4 py-4">
-        <div className="grid grid-cols-4 items-center gap-4">
-          <Label htmlFor="name" className="text-right">
-            Name
-          </Label>
-          <Input id="name" value="Pedro Duarte" className="col-span-3" />
-        </div>
-        <div className="grid grid-cols-4 items-center gap-4">
-          <Label htmlFor="username" className="text-right">
-            Username
-          </Label>
-          <Input id="username" value="@peduarte" className="col-span-3" />
-        </div>
-      </div>
+    <DialogWrapper
+      title={isActiveNewPlaylist ? "Create New Playlist" : "Your Playlist"}
+      description={
+        "Easily add, organize, and enjoy all your favorite tracks in one place."
+      }
+    >
+      {!isActiveNewPlaylist && (
+        <input
+          type="text"
+          placeholder="Search your playlist"
+          className="w-full rounded-sm border-none bg-gray-200 px-3 py-2 outline-none"
+        />
+      )}
+
+      {!isActiveNewPlaylist && (
+        <PlaylistList onShowAddPlaylist={handleNewPlaylist} />
+      )}
+      {isActiveNewPlaylist && (
+        <CreatePlaylist onHideAddPlaylist={handleNewPlaylist} />
+      )}
     </DialogWrapper>
   );
 }

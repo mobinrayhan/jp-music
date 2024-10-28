@@ -1,3 +1,4 @@
+import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { IoPlaySharp } from "react-icons/io5";
 import { RiAddLargeFill } from "react-icons/ri";
@@ -36,6 +37,8 @@ export default function Playlists() {
           <span className="text-black">Add a new playlist</span>
         </button>
       </li>
+
+      <Separator />
 
       {listOfPlaylist.map(({ name, slug }) => (
         <li key={slug}>
