@@ -29,6 +29,7 @@ export function AddToPlaylist() {
       {!isActiveNewPlaylist && (
         <PlaylistList onShowAddPlaylist={handleNewPlaylist} />
       )}
+      
       {isActiveNewPlaylist && (
         <CreatePlaylist onHideAddPlaylist={handleNewPlaylist} />
       )}

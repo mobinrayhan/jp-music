@@ -1,7 +1,12 @@
+"use client";
 import { Separator } from "@/components/ui/separator";
+import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import Link from "next/link";
+import { useState } from "react";
 import { IoPlaySharp } from "react-icons/io5";
 import { RiAddLargeFill } from "react-icons/ri";
+import CreatePlaylist from "./create-playlist";
+import DialogWrapper from "./dialog-wrapper";
 
 export const listOfPlaylist = [
   {
@@ -27,17 +32,35 @@ export const listOfPlaylist = [
 ];
 
 export default function Playlists() {
+  const [isActiveNewPlaylist, setIsActiveNewPlaylist] = useState(false);
+
+  function handleNewPlaylist() {
+    setIsActiveNewPlaylist((prev) => !prev);
+  }
+
   return (
     <ul className="space-y-3 md:space-y-4">
-      <li>
-        <button className="flex w-full items-center gap-3 bg-transparent transition duration-75 hover:bg-slate-100 md:gap-4">
-          <div className="flex h-12 w-12 items-center justify-center bg-[#000000] md:h-16 md:w-16">
-            <RiAddLargeFill size={26} className="text-white" />
-          </div>
-          <span className="text-black">Add a new playlist</span>
-        </button>
-      </li>
+      <Dialog open={isActiveNewPlaylist} onOpenChange={setIsActiveNewPlaylist}>
+        <DialogTrigger asChild>
+          <li>
+            <button className="flex w-full items-center gap-3 bg-transparent transition duration-75 hover:bg-slate-100 md:gap-4">
+              <div className="flex h-12 w-12 items-center justify-center bg-[#000000] md:h-16 md:w-16">
+                <RiAddLargeFill size={26} className="text-white" />
+              </div>
+              <span className="text-black">Add a new playlist</span>
+            </button>
+          </li>
+        </DialogTrigger>
 
+        <DialogWrapper
+          title={"Create New Playlist"}
+          description={
+            "Easily add, organize, and enjoy all your favorite tracks in one place."
+          }
+        >
+          <CreatePlaylist onHideAddPlaylist={handleNewPlaylist} />
+        </DialogWrapper>
+      </Dialog>
       <Separator />
 
       {listOfPlaylist.map(({ name, slug }) => (

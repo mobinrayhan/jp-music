@@ -19,8 +19,6 @@ export default function ExpandAction({
   const pathName = usePathname();
   const { push } = useRouter();
 
-  console.log(session);
-
   const handleDownload = async () => {
     try {
       const response = await fetch(`/api/download?id=${audioId}`);
