@@ -133,4 +133,26 @@ exports.postCreatePlaylist = async (req, res, next) => {
   }
 };
 
-exports.getPlaylist = async (req, res, next) => {};
+exports.getPlaylist = async (req, res, next) => {
+  const userId = req.user.id;
+
+  try {
+    const user = await userModel.getUserById(userId);
+    if (!user) {
+      const error = new Error('User Not Found!');
+      error.statusCode = 404;
+      throw error;
+    }
+    const { playlists } = await userModel.getPlaylists(userId);
+
+    if (!playlists.length) {
+      const error = new Error('No Playlist Found!');
+      error.statusCode = 404;
+      throw error;
+    }
+
+    return res.json({ message: 'Get Playlist Successfully!', playlists });
+  } catch (e) {
+    next(e);
+  }
+};

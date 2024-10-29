@@ -150,6 +150,7 @@ exports.getPlaylistBySlug = async (slug) => {
 exports.createPlaylist = async ({ playlistName, slug, userId }) => {
   const db = await connectToDatabase();
   const userColl = await db.collection('users');
+
   return userColl.updateOne(
     { _id: new ObjectId(userId) },
     {
@@ -163,4 +164,18 @@ exports.createPlaylist = async ({ playlistName, slug, userId }) => {
       },
     }
   );
+};
+
+exports.getPlaylists = async (userId) => {
+  const db = await connectToDatabase();
+  const userColl = await db.collection('users');
+
+  const playlists = await userColl
+    .find(
+      { _id: new ObjectId(userId) },
+      { projection: { playlists: 1, _id: 0 } }
+    )
+    .next();
+
+  return playlists;
 };
