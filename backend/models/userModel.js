@@ -73,8 +73,6 @@ exports.postToggleFavourites = async ({ userId, audioId }) => {
   const db = await connectToDatabase();
   const userColl = await db.collection('users');
 
-  console.log(userId, audioId);
-
   const result = await userColl.updateOne(
     { _id: new ObjectId(userId), 'favorites.id': new ObjectId(audioId) },
     {
@@ -140,5 +138,29 @@ exports.getFavoriteIds = async (userId) => {
   return await userColl.findOne(
     { _id: new ObjectId(userId) },
     { projection: { favorites: 1 } }
+  );
+};
+
+exports.getPlaylistBySlug = async (slug) => {
+  const db = await connectToDatabase();
+  const userColl = await db.collection('users');
+  return await userColl.findOne({ 'playlists.slug': slug });
+};
+
+exports.createPlaylist = async ({ playlistName, slug, userId }) => {
+  const db = await connectToDatabase();
+  const userColl = await db.collection('users');
+  return userColl.updateOne(
+    { _id: new ObjectId(userId) },
+    {
+      $push: {
+        playlists: {
+          name: playlistName,
+          slug,
+          updatedAt: new Date(),
+          audioIds: [],
+        },
+      },
+    }
   );
 };
