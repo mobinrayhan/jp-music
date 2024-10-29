@@ -15,28 +15,22 @@ export async function createNewPlaylist(_, formData) {
     };
   }
 
-  console.log(session);
 
   try {
-    fetchWithApiKey("/users/create-playlist", {
+    const result = fetchWithApiKey("/users/create-playlist", {
       method: "POST",
       jwt: session.jwt,
       body: JSON.stringify({ playlistName }),
     });
+
+    return {
+      success: result.message || "Success!",
+      error: null,
+    };
   } catch (error) {
     return {
       error: error.message || "Something went wrong!",
       success: null,
     };
   }
-
-  //   return {
-  //     success: "Hello world success!",
-  //     error: null,
-  //   };
-
-  return {
-    success: null,
-    error: "Hello error",
-  };
 }

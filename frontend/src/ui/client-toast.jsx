@@ -14,8 +14,6 @@ export default function ClientToast({
   const { toast } = useToast();
   const { push } = useRouter();
 
-  console.log(message);
-
   useEffect(() => {
     if (isSuccess) {
       toast({

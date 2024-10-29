@@ -11,13 +11,17 @@ export default function DialogWrapper({
   title,
   description,
   children,
+  isLoading,
   btnText,
   onSubmit,
 }) {
   return (
     <DialogContent
-      className="sm:max-w-[425px]"
+      className={`sm:max-w-[425px] ${isLoading ? "[&>button]:pointer-events-none" : ""}`}
       onOpenAutoFocus={(e) => e.preventDefault()}
+      onInteractOutside={(e) => {
+        isLoading ? e.preventDefault() : null;
+      }}
     >
       <DialogHeader>
         <DialogTitle>{title || "Edit profile"}</DialogTitle>

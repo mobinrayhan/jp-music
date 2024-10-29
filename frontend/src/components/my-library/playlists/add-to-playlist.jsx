@@ -5,14 +5,16 @@ import DialogWrapper from "./dialog-wrapper";
 import PlaylistList from "./playlist-list";
 
 export function AddToPlaylist() {
+  const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
   const [isActiveNewPlaylist, setIsActiveNewPlaylist] = useState(false);
 
-  function handleNewPlaylist() {
-    setIsActiveNewPlaylist((prev) => !prev);
+  function handleCreatingPlaylist(status) {
+    setIsCreatingPlaylist(status);
   }
 
   return (
     <DialogWrapper
+      isLoading={isCreatingPlaylist}
       title={isActiveNewPlaylist ? "Create New Playlist" : "Your Playlist"}
       description={
         "Easily add, organize, and enjoy all your favorite tracks in one place."
@@ -26,12 +28,17 @@ export function AddToPlaylist() {
         />
       )}
 
-      {!isActiveNewPlaylist && (
-        <PlaylistList onShowAddPlaylist={handleNewPlaylist} />
-      )}
-      
       {isActiveNewPlaylist && (
-        <CreatePlaylist onHideAddPlaylist={handleNewPlaylist} />
+        <CreatePlaylist
+          onCreatingPlaylist={handleCreatingPlaylist}
+          onHideAddPlaylist={setIsActiveNewPlaylist.bind(null, false)}
+        />
+      )}
+
+      {!isActiveNewPlaylist && (
+        <PlaylistList
+          onShowAddPlaylist={setIsActiveNewPlaylist.bind(null, true)}
+        />
       )}
     </DialogWrapper>
   );

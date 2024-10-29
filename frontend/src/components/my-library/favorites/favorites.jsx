@@ -20,9 +20,7 @@ export default function Favorites({ maxAudios, searchValue }) {
     return <AudioSkeleton />;
   }
 
-  if (error) {
-    if (error) return <p className={"py-6"}>{error.message}</p>;
-  }
+  if (error) return <p className={"py-6"}>{error.message}</p>;
 
   const parsedURLAudio = (audios) => {
     return audios.map((audio) => {
