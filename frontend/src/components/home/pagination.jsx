@@ -3,18 +3,22 @@
 import { MAX_AUDIO_PER_PAGE } from "@/app/(app)/category/[category]/page";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export default function Pagination() {
+export default function Pagination({
+  queryName = "maxAudios",
+  maxPerPage = null,
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentMaxAudios =
-    parseInt(searchParams.get("maxAudios")) || MAX_AUDIO_PER_PAGE;
+    parseInt(searchParams.get(queryName)) || maxPerPage || MAX_AUDIO_PER_PAGE;
 
   const handleClick = () => {
-    const updatedTotalAudios = currentMaxAudios + MAX_AUDIO_PER_PAGE;
+    const updatedTotalAudios =
+      currentMaxAudios + (maxPerPage || MAX_AUDIO_PER_PAGE);
     const params = new URLSearchParams(searchParams);
 
-    params.set("maxAudios", updatedTotalAudios);
+    params.set(queryName, updatedTotalAudios);
     router.replace(`${pathname}?${params.toString()}`);
   };
 
