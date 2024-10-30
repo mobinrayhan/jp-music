@@ -1,14 +1,46 @@
-import { listOfPlaylist } from "@/components/my-library/playlists/playlists";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { fetchWithApiKey } from "@/utils/api";
+import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
 
-export default function PalyListItem({ params }) {
-  const isExistPlaylist = listOfPlaylist.find(
-    (playlist) => playlist.slug === params.playlistItem,
-  );
+export async function generateMetadata({ params }) {
+  try {
+    const session = await getServerSession(authOptions);
 
-  if (!isExistPlaylist) {
+    const existedPlaylist = await fetchWithApiKey(
+      `/users/get-playlist/${params.playlistItem}`,
+      {
+        jwt: session.jwt,
+      },
+    );
+
+    console.log(existedPlaylist);
+
+    return {
+      title: existedPlaylist.playlist.name,
+    };
+  } catch (error) {
     return notFound();
   }
+}
 
-  return <section className="custom-container">{params.playlistItem}</section>;
+export default async function PalyListItem({ params }) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    const existedPlaylist = await fetchWithApiKey(
+      `/users/get-playlist/${params.playlistItem}`,
+      {
+        jwt: session.jwt,
+      },
+    );
+
+    return (
+      <section className="custom-container">
+        {existedPlaylist.playlist.name}
+      </section>
+    );
+  } catch (error) {
+    return notFound();
+  }
 }
