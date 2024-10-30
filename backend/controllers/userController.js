@@ -133,7 +133,7 @@ exports.postCreatePlaylist = async (req, res, next) => {
   }
 };
 
-exports.getPlaylist = async (req, res, next) => {
+exports.getPlaylists = async (req, res, next) => {
   const userId = req.user.id;
   const { querySearch, maxPlaylist } = req.query;
 
@@ -160,6 +160,35 @@ exports.getPlaylist = async (req, res, next) => {
       message: 'Get Playlist Successfully!',
       playlists,
       totalPlaylists,
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
+exports.getPlaylist = async (req, res, next) => {
+  const userId = req.user.id;
+  const { slug } = req.params;
+
+  try {
+    const user = await userModel.getUserById(userId);
+    if (!user) {
+      const error = new Error('User Not Found!');
+      error.statusCode = 404;
+      throw error;
+    }
+
+    const existedPlaylist = await userModel.getPlaylistBySlug(slug);
+
+    if (!existedPlaylist) {
+      const error = new Error('Playlist not found!');
+      error.statusCode = 404;
+      throw error;
+    }
+
+    return res.json({
+      message: 'Get Playlist Successfully!',
+      playlist: existedPlaylist,
     });
   } catch (e) {
     next(e);

@@ -144,7 +144,33 @@ exports.getFavoriteIds = async (userId) => {
 exports.getPlaylistBySlug = async (slug) => {
   const db = await connectToDatabase();
   const userColl = await db.collection('users');
-  return await userColl.findOne({ 'playlists.slug': slug });
+
+  const result = await userColl
+    .aggregate([
+      {
+        $match: { 'playlists.slug': slug },
+      },
+      {
+        $project: {
+          playlist: {
+            $arrayElemAt: [
+              {
+                $filter: {
+                  input: '$playlists',
+                  as: 'playlist',
+                  cond: { $eq: ['$$playlist.slug', slug] },
+                },
+              },
+              0,
+            ],
+          },
+          _id: 0,
+        },
+      },
+    ])
+    .toArray();
+
+  return result.length && result[0].playlist ? result[0].playlist : null;
 };
 
 exports.createPlaylist = async ({ playlistName, slug, userId }) => {
