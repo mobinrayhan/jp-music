@@ -166,16 +166,64 @@ exports.createPlaylist = async ({ playlistName, slug, userId }) => {
   );
 };
 
-exports.getPlaylists = async (userId) => {
+exports.getPlaylists = async ({ userId, querySearch, maxPlaylist }) => {
   const db = await connectToDatabase();
-  const userColl = await db.collection('users');
+  const userColl = db.collection('users');
 
-  const playlists = await userColl
-    .find(
-      { _id: new ObjectId(userId) },
-      { projection: { playlists: 1, _id: 0 } }
-    )
-    .next();
+  const pipeline = [
+    {
+      $match: { _id: new ObjectId(userId) },
+    },
+    {
+      $unwind: '$playlists',
+    },
+    // Optional search filter based on `querySearch`
+    ...(querySearch
+      ? [
+          {
+            $match: {
+              $or: [
+                {
+                  'playlists.name': {
+                    $regex: `^${querySearch}`,
+                    $options: 'i',
+                  },
+                },
+                {
+                  'playlists.name': {
+                    $regex: `${querySearch}$`,
+                    $options: 'i',
+                  },
+                },
+                {
+                  'playlists.name': {
+                    $regex: `${querySearch}`,
+                    $options: 'i',
+                  },
+                },
+              ],
+            },
+          },
+        ]
+      : []),
+    {
+      $sort: { 'playlists.updatedAt': -1 },
+    },
+    {
+      $group: {
+        _id: null,
+        playlists: { $push: '$playlists' },
+        totalPlaylists: { $sum: 1 },
+      },
+    },
+    {
+      $project: {
+        playlists: { $slice: ['$playlists', maxPlaylist] },
+        totalPlaylists: 1,
+      },
+    },
+  ];
 
-  return playlists;
+  const result = await userColl.aggregate(pipeline).next();
+  return result || { playlists: [], totalPlaylists: 0 };
 };

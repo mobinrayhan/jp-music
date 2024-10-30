@@ -135,6 +135,7 @@ exports.postCreatePlaylist = async (req, res, next) => {
 
 exports.getPlaylist = async (req, res, next) => {
   const userId = req.user.id;
+  const { querySearch, maxPlaylist } = req.query;
 
   try {
     const user = await userModel.getUserById(userId);
@@ -143,7 +144,11 @@ exports.getPlaylist = async (req, res, next) => {
       error.statusCode = 404;
       throw error;
     }
-    const { playlists } = await userModel.getPlaylists(userId);
+    const { playlists, totalPlaylists } = await userModel.getPlaylists({
+      userId,
+      querySearch,
+      maxPlaylist: +maxPlaylist,
+    });
 
     if (!playlists.length) {
       const error = new Error('No Playlist Found!');
@@ -151,7 +156,11 @@ exports.getPlaylist = async (req, res, next) => {
       throw error;
     }
 
-    return res.json({ message: 'Get Playlist Successfully!', playlists });
+    return res.json({
+      message: 'Get Playlist Successfully!',
+      playlists,
+      totalPlaylists,
+    });
   } catch (e) {
     next(e);
   }
