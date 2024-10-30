@@ -89,6 +89,7 @@ export default function Playlists({ searchValue }) {
             <CreatePlaylist
               onHideAddPlaylist={setIsActiveNewPlaylist.bind(null, false)}
               onCreatingPlaylist={handleCreatingPlaylist}
+              onMutatePlaylist={mutate}
             />
           </DialogWrapper>
         </Dialog>

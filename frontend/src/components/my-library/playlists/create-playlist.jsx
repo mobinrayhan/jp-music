@@ -9,6 +9,7 @@ export default function CreatePlaylist({
   onHideAddPlaylist,
   onCreatingPlaylist,
   hasShowBtn = true,
+  onMutatePlaylist,
 }) {
   const [state, action] = useFormState(createNewPlaylist, {
     error: null,
@@ -17,6 +18,7 @@ export default function CreatePlaylist({
 
   if (state?.success) {
     onHideAddPlaylist();
+    if (onMutatePlaylist) onMutatePlaylist(true);
   }
 
   return (
