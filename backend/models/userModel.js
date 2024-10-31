@@ -141,16 +141,18 @@ exports.getFavoriteIds = async (userId) => {
   );
 };
 
-exports.getPlaylistBySlug = async (slug) => {
+exports.getPlaylistBySlug = async ({ slug, userId, querySearch, maxAudio }) => {
   const db = await connectToDatabase();
-  const userColl = await db.collection('users');
+  const userColl = db.collection('users');
 
   const result = await userColl
     .aggregate([
       {
-        $match: { 'playlists.slug': slug },
+        // First, match the user by userId
+        $match: { _id: new ObjectId(userId) },
       },
       {
+        // Filter to get the playlist by slug
         $project: {
           playlist: {
             $arrayElemAt: [
@@ -165,6 +167,13 @@ exports.getPlaylistBySlug = async (slug) => {
             ],
           },
           _id: 0,
+        },
+      },
+
+      {
+        // Exclude audioIds from the playlist
+        $project: {
+          'playlist.audioIds': 0,
         },
       },
     ])
@@ -252,4 +261,118 @@ exports.getPlaylists = async ({ userId, querySearch, maxPlaylist }) => {
 
   const result = await userColl.aggregate(pipeline).next();
   return result || { playlists: [], totalPlaylists: 0 };
+};
+
+exports.postAddAudioToPlaylist = async ({ userId, audioId, slug }) => {
+  const db = await connectToDatabase();
+  const userColl = await db.collection('users');
+  // Step 1: Try updating the `createdAt` field if the audioId already exists in the specified playlist
+  let result = await userColl.updateOne(
+    {
+      _id: new ObjectId(userId),
+      'playlists.slug': slug,
+      'playlists.audioIds.audioId': new ObjectId(audioId), // Check if audioId exists in the specified playlist
+    },
+    {
+      $set: {
+        'playlists.$[playlist].audioIds.$[audio].createdAt': new Date(),
+      },
+    },
+    {
+      arrayFilters: [
+        { 'playlist.slug': slug },
+        { 'audio.audioId': new ObjectId(audioId) },
+      ],
+    }
+  );
+
+  // Step 2: If no modification was made, it means the audioId doesn't exist in the playlist, so push it
+  if (result.modifiedCount === 0) {
+    result = await userColl.updateOne(
+      {
+        _id: new ObjectId(userId),
+        'playlists.slug': slug,
+      },
+      {
+        $push: {
+          'playlists.$.audioIds': {
+            audioId: new ObjectId(audioId),
+            createdAt: new Date(),
+          },
+        },
+      }
+    );
+  }
+
+  return result.modifiedCount > 0;
+};
+
+exports.getAudiosFromPlaylist = async ({
+  userId,
+  playlistSlug,
+  querySearch,
+  maxAudios,
+}) => {
+  const db = await connectToDatabase();
+  const userColl = db.collection('users');
+  const audioColl = db.collection('audios');
+
+  // Step 1: Find the user and get their playlists
+  const user = await userColl.findOne(
+    { _id: new ObjectId(userId) },
+    { projection: { playlists: 1 } }
+  );
+
+  if (!user) {
+    console.log('No user found with this ID.');
+    return { audios: [], totalAudios: 0 };
+  }
+
+  // Step 2: Find the specific playlist by slug
+  const playlist = user.playlists.find((pl) => pl.slug === playlistSlug);
+  if (!playlist) {
+    console.log('No playlist found with this slug.');
+    return { audios: [], totalAudios: 0 };
+  }
+
+  // Step 3: Extract and sort `audioIds` by `createdAt` in descending order
+  const sortedAudioIds = playlist.audioIds
+    .sort((a, b) => b.createdAt - a.createdAt) // Sort descending by `createdAt`
+    .map((item) => item.audioId);
+
+  // Step 4: Limit sorted `audioIds` based on `maxAudio`
+  const limitedAudioIds = sortedAudioIds.slice(0, maxAudios);
+
+  // Step 5: Define search conditions if `querySearch` is provided
+  const searchConditions = querySearch
+    ? {
+        $or: [
+          { name: { $regex: `^${querySearch}`, $options: 'i' } }, // Starts with
+          { name: { $regex: `${querySearch}$`, $options: 'i' } }, // Ends with
+          { name: { $regex: `${querySearch}`, $options: 'i' } }, // Includes
+          { keywords: { $regex: `${querySearch}`, $options: 'i' } }, // Search in keywords
+        ],
+      }
+    : {};
+
+  // Step 6: Count total matching audios
+  const totalAudios = await audioColl.countDocuments({
+    _id: { $in: sortedAudioIds },
+    ...searchConditions,
+  });
+
+  // Step 7: Fetch audios with the limited IDs and search conditions
+  const audiosList = await audioColl
+    .find({
+      _id: { $in: limitedAudioIds },
+      ...searchConditions,
+    })
+    .toArray();
+
+  // Step 8: Order fetched audios based on `limitedAudioIds` order
+  const orderedAudios = limitedAudioIds
+    .map((id) => audiosList.find((audio) => audio._id.equals(id)))
+    .filter((audio) => audio); // Filter out any unmatched audios
+
+  return { audios: orderedAudios, totalAudios };
 };

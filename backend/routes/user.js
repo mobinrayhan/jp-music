@@ -5,7 +5,17 @@ const isAuth = require('../middleware/is-auth');
 router.get('/downloads', isAuth, userController.getDownloads);
 router.get('/favorites', isAuth, userController.getFavorites);
 router.post('/create-playlist', isAuth, userController.postCreatePlaylist);
+router.post(
+  '/add-audio-to-playlist',
+  isAuth,
+  userController.postAddAudioToPlaylist
+);
 router.get('/get-playlist', isAuth, userController.getPlaylists);
+router.get(
+  '/get-playlist-audios/:playlistSlug',
+  isAuth,
+  userController.getPlaylistAudios
+);
 router.get('/get-playlist/:slug', isAuth, userController.getPlaylist);
 router.get('/favorites-ids', isAuth, userController.getFavoriteIds);
 router.post('/toggle-favorites', isAuth, userController.postToggleFavourites);
