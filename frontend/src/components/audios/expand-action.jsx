@@ -89,7 +89,7 @@ export default function ExpandAction({
           </Button>
         </DialogTrigger>
         {session.status === "authenticated" ? (
-          <AddToPlaylist />
+          <AddToPlaylist audioId={audioId} />
         ) : (
           <PlaylistLogin />
         )}

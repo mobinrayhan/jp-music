@@ -74,7 +74,7 @@ export default function DropDownMenuLIst({ audioId, onFavoriteMutate }) {
             </Button>
           </DialogTrigger>
           {session.status === "authenticated" ? (
-            <AddToPlaylist />
+            <AddToPlaylist audioId={audioId} />
           ) : (
             <PlaylistLogin />
           )}

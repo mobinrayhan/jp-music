@@ -1,4 +1,6 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import PlaylistDetail from "@/components/my-library/playlists/playlist-detail";
+import SearchInput from "@/ui/search-input";
 import { fetchWithApiKey } from "@/utils/api";
 import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
@@ -8,13 +10,11 @@ export async function generateMetadata({ params }) {
     const session = await getServerSession(authOptions);
 
     const existedPlaylist = await fetchWithApiKey(
-      `/users/get-playlist/${params.playlistItem}`,
+      `/users/get-playlist/${params.playlistIDetail}`,
       {
         jwt: session.jwt,
       },
     );
-
-    console.log(existedPlaylist);
 
     return {
       title: existedPlaylist.playlist.name,
@@ -24,23 +24,21 @@ export async function generateMetadata({ params }) {
   }
 }
 
-export default async function PalyListItem({ params }) {
-  try {
-    const session = await getServerSession(authOptions);
+export default function PalyListItem({ params, searchParams }) {
+  const playlistSlug = params?.playlistIDetail;
+  const querySearch = searchParams?.querySearch;
+  const maxAudios = searchParams?.maxAudios;
 
-    const existedPlaylist = await fetchWithApiKey(
-      `/users/get-playlist/${params.playlistItem}`,
-      {
-        jwt: session.jwt,
-      },
-    );
-
-    return (
+  return (
+    <>
+      <SearchInput />
       <section className="custom-container">
-        {existedPlaylist.playlist.name}
+        <PlaylistDetail
+          maxAudios={maxAudios}
+          querySearch={querySearch}
+          playlistSlug={playlistSlug}
+        />
       </section>
-    );
-  } catch (error) {
-    return notFound();
-  }
+    </>
+  );
 }

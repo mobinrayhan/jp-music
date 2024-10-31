@@ -15,7 +15,6 @@ export async function createNewPlaylist(_, formData) {
     };
   }
 
-
   try {
     const result = fetchWithApiKey("/users/create-playlist", {
       method: "POST",
@@ -27,6 +26,32 @@ export async function createNewPlaylist(_, formData) {
       success: result.message || "Success!",
       error: null,
     };
+  } catch (error) {
+    return {
+      error: error.message || "Something went wrong!",
+      success: null,
+    };
+  }
+}
+
+export async function addAudioToPlaylist(_, formData) {
+  const audioId = formData.get("audioId");
+  const playlistSlug = formData.get("playlistSlug");
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return {
+      error: "Your Are not authenticated!",
+      success: null,
+    };
+  }
+
+  try {
+    await fetchWithApiKey("/users/add-audio-to-playlist", {
+      method: "POST",
+      jwt: session.jwt,
+      body: JSON.stringify({ audioId, playlistSlug }),
+    });
   } catch (error) {
     return {
       error: error.message || "Something went wrong!",
