@@ -103,7 +103,7 @@ export default function Playlists({ searchValue }) {
           data?.playlists?.map(({ name, slug }) => (
             <li key={slug}>
               <Link
-                href={`/my-library/playlist/${slug}`}
+                href={`/my-library/playlists/${slug}`}
                 className="flex items-center gap-3 transition duration-75 hover:bg-slate-100 md:gap-4"
               >
                 <div className="flex h-12 w-12 items-center justify-center bg-[#000000] md:h-16 md:w-16">

@@ -1,25 +1,9 @@
 import Downloads from "@/components/my-library/download/downloads";
 import Favorites from "@/components/my-library/favorites/favorites";
+import LibraryHeaderTabs from "@/components/my-library/library-header-tabs";
 import Playlists from "@/components/my-library/playlists/playlists";
 import SearchInput from "@/ui/search-input";
-import Link from "next/link";
-import { notFound } from "next/navigation";
 import { MAX_AUDIO_PER_PAGE } from "../../category/[category]/page";
-
-const tabs = [
-  {
-    link: "/my-library/favorites",
-    role: "Favorites",
-  },
-  {
-    link: "/my-library/playlists",
-    role: "Playlists",
-  },
-  {
-    link: "/my-library/downloads",
-    role: "Downloads",
-  },
-];
 
 export async function generateMetadata({ params }) {
   switch (params?.slug) {
@@ -51,33 +35,10 @@ export default function MyLibrarySlug({ params, searchParams }) {
   const maxAudios = searchParams.maxAudios || MAX_AUDIO_PER_PAGE;
   const activePath = params.slug;
 
-  const isExistSlug = tabs.find(
-    (tab) => tab.link === `/my-library/${activePath}`,
-  );
-
-  if (!isExistSlug) {
-    return notFound();
-  }
-
   return (
     <>
       <SearchInput />
-
-      <section className="custom-container">
-        <ul className="flex border-b pt-4">
-          {tabs.map(({ link, role }) => (
-            <li key={role} className="">
-              <Link
-                href={link}
-                className={`block h-full w-full border-x border-x-white p-2 px-4 hover:border-x-gray-200 hover:bg-gray-200 ${activePath === link?.split("/")?.[2] ? "bg-gray-200" : ""}`}
-              >
-                {role}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-
+      <LibraryHeaderTabs params={params} />{" "}
       <main className="custom-container">
         {activePath === "favorites" && (
           <Favorites maxAudios={maxAudios} searchValue={searchValue} />
