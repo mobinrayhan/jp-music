@@ -18,6 +18,10 @@ const config = (phase) => {
         NEXTAUTH_SECRET:
           "ee0925e6c51c42692fb4cc34b166ae13e00a4d5b1355e7d0814900f7af617deas",
         NEXTAUTH_URL: "http://localhost:3000",
+
+        NEXT_PUBLIC_RECAPTCHA_SITE_KEY:
+          "6LeDqHkqAAAAAJZf2kqnMNlkPpdqxYVOdPbp7iun",
+        RECAPTCHA_SECRET_KEY: "6LeDqHkqAAAAAMrFuOz2IsC0t4zTrMWGRlYNLBD-",
       },
 
       webpack(config) {
@@ -70,11 +74,11 @@ const config = (phase) => {
 
       JWT_SECRET: "jamesPrinceSoundei@147570",
 
-      // API_URL: "https://vps-backend.soundei.com",
-      API_URL: "http://192.168.0.107:4000",
+      API_URL: "https://vps-backend.soundei.com",
+      // API_URL: "http://192.168.0.107:4000",
 
-      NEXTAUTH_URL: "http://192.168.0.107:3000",
-      // NEXTAUTH_URL: "https://vps-front.soundei.com",
+      // NEXTAUTH_URL: "http://192.168.0.107:3000",
+      NEXTAUTH_URL: "https://vps-front.soundei.com",
     },
 
     webpack(config) {
