@@ -122,12 +122,6 @@ exports.loginUser = async (req, res, next) => {
   try {
     const user = await authModels.findUser(email);
 
-    if (!user || !user.isActive) {
-      const error = new Error('User not found!');
-      error.statusCode = 404;
-      throw error;
-    }
-
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       const error = new Error('Invalid credentials!');
@@ -236,6 +230,7 @@ exports.getForgetPassword = async (req, res, next) => {
 
 exports.isValidToken = async (req, res, next) => {
   const { token } = req.query;
+
   try {
     const decodedToken = await jwt.verify(token, process.env.JWT_SECRET);
     const user = await authModels.findUser(decodedToken.email);
