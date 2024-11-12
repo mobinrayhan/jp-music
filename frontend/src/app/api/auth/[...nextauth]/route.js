@@ -101,24 +101,6 @@ export const authOptions = {
         }
       }
 
-      if (token) {
-        try {
-          const activeStatus = await fetchWithApiKey(
-            `/auth/check-active-status/${token.id}`,
-            {
-              cache: "no-store",
-            },
-          );
-
-          if (activeStatus?.isActive !== undefined) {
-            token.isActive = activeStatus.isActive;
-          }
-        } catch (error) {
-          console.error("Error checking active status:", error);
-          token.isActive = false;
-        }
-      }
-
       return token;
     },
 
@@ -127,10 +109,6 @@ export const authOptions = {
       session.user.id = token.id;
       session.jwt = token.jwt;
       session.user.isActive = token.isActive;
-
-      if (!token.isActive) {
-        return null;
-      }
 
       return session;
     },

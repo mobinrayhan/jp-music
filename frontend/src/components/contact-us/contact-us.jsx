@@ -54,8 +54,6 @@ function FormInputs() {
     setIsVerified(false);
   }
 
-  console.log(isVerified);
-
   return (
     <>
       <div className="flex flex-col space-y-2">

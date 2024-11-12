@@ -32,9 +32,11 @@ export default function Favorites({ maxAudios, searchValue }) {
   };
 
   return (
-    <AudioTable
-      audios={parsedURLAudio(data.audios)}
-      onFavoriteMutate={mutate}
-    />
+    <>
+      <AudioTable
+        audios={parsedURLAudio(data.audios)}
+        onFavoriteMutate={mutate}
+      />
+    </>
   );
 }
