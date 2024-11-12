@@ -30,9 +30,8 @@ export function FavoritesContextProvider({ children }) {
     };
     fetchFavorites();
   }, [session.status]);
-
   const toggleFavorite = async (audioId) => {
-    // Optimistically update the UI before awaiting the API call
+    // Optimistically update the favorites state
     setFavorites((prevFavorites) => {
       const isFavorited = prevFavorites.includes(audioId);
       return isFavorited
@@ -41,22 +40,29 @@ export function FavoritesContextProvider({ children }) {
     });
 
     try {
-      await fetch(`/api/toggle-favorite`, {
+      const response = await fetch(`/api/toggle-favorite`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ audioId }),
       });
+
+      if (!response.ok) {
+        const { message } = await response.json();
+        throw new Error(message || "Failed to toggle favorite");
+      }
     } catch (error) {
-      console.error("Error toggling favorite:", error);
-      // Optionally roll back the optimistic update in case of error
       setFavorites((prevFavorites) => {
         const isFavorited = prevFavorites.includes(audioId);
+
+        console.log(isFavorited);
+
         return isFavorited
-          ? [...prevFavorites, audioId] // Roll back
-          : prevFavorites.filter((id) => id !== audioId);
+          ? prevFavorites.filter((id) => id !== audioId)
+          : prevFavorites;
       });
+      alert(error.message);
     }
   };
 

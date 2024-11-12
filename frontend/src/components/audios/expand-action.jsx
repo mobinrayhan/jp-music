@@ -60,7 +60,8 @@ export default function ExpandAction({
         link.download = fileName;
         link.click();
       } else {
-        console.error("Download failed!");
+        const { error } = await response.json();
+        alert(error || "Something Went Wrong!");
       }
     } catch (error) {
       console.error("Error during download:", error);

@@ -25,10 +25,12 @@ export default function HeartButton({
       if (onFavoriteMutate) {
         onFavoriteMutate((prevData) => {
           let updatedAudios;
+
           if (wasFavorited) {
             updatedAudios = prevData.audios.filter(
               (audio) => audio._id !== audioId,
             );
+
             return { ...prevData, audios: updatedAudios };
           } else {
             return prevData;

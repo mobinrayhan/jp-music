@@ -33,8 +33,10 @@ export async function GET(req) {
     );
 
     if (!downloadRes.ok) {
+      const { message } = await downloadRes.json();
+
       return new Response(
-        JSON.stringify({ error: "Failed to download the file" }),
+        JSON.stringify({ error: message || "Failed to download the file" }),
         {
           status: downloadRes.status,
         },
