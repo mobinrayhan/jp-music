@@ -1,3 +1,5 @@
+import AppLayout from "./ui/AppLayout";
+
 export default function App() {
-  return <div>App</div>;
+  return <AppLayout />;
 }
