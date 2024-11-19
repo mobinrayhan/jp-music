@@ -14,8 +14,7 @@ export default function Login() {
           </h3>
         </div>
 
-        {/* Login Form */}
-        <form action="#" method="POST">
+        <form>
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-700">
               Email
