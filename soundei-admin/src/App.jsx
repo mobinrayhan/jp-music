@@ -3,6 +3,7 @@ import AllAudios from "./pages/audios/AllAudios.jsx";
 import Categories from "./pages/audios/Categories.jsx";
 import UploadAudios from "./pages/audios/UploadAudios.jsx";
 import Login from "./pages/auth/Login.jsx";
+import NotFound from "./pages/others/NotFound.jsx";
 import General from "./pages/settings/General.jsx";
 import Notification from "./pages/settings/Notification.jsx";
 import Payments from "./pages/settings/Payments.jsx";
@@ -43,6 +44,8 @@ export default function App() {
             <Route path="notifications" element={<Notification />} />
           </Route>
         </Route>
+
+        <Route path="*" element={<NotFound />} />
         <Route path={"/login"} element={<Login />} />
       </Routes>
     </BrowserRouter>
