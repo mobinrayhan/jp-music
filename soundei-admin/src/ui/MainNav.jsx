@@ -1,10 +1,19 @@
+import { Link } from "react-router-dom";
+import { IoIosArrowForward } from "react-icons/io";
+import { MdDashboard } from "react-icons/md";
+import { FiUsers } from "react-icons/fi";
+import { SiAudioboom } from "react-icons/si";
+import { MdOutlineAdminPanelSettings } from "react-icons/md";
+
 const sidebarMenuList = [
   {
     title: "Dashboard",
+    icon: <MdDashboard />,
     items: [{ name: "Overview", path: "/dashboard/overview" }],
   },
   {
     title: "Users",
+    icon: <FiUsers />,
     items: [
       { name: "All Users", path: "/users/all" },
       { name: "Roles & Permissions", path: "/users/roles" },
@@ -13,6 +22,7 @@ const sidebarMenuList = [
   },
   {
     title: "Audio Content",
+    icon: <SiAudioboom />,
     items: [
       { name: "All Audio", path: "/audio/all" },
       { name: "Upload Audio", path: "/audio/upload" },
@@ -22,19 +32,20 @@ const sidebarMenuList = [
   },
   {
     title: "Moderation",
+    icon: <MdOutlineAdminPanelSettings />,
     items: [
       { name: "Pending Approvals", path: "/moderation/pending" },
       { name: "Reported Content", path: "/moderation/reported" },
     ],
   },
-  {
-    title: "Analytics",
-    items: [
-      { name: "Earnings", path: "/analytics/earnings" },
-      { name: "Subscriptions", path: "/analytics/subscriptions" },
-      { name: "Sales Reports", path: "/analytics/sales-reports" },
-    ],
-  },
+  // {
+  //   title: "Analytics",
+  //   items: [
+  //     { name: "Earnings", path: "/analytics/earnings" },
+  //     { name: "Subscriptions", path: "/analytics/subscriptions" },
+  //     { name: "Sales Reports", path: "/analytics/sales-reports" },
+  //   ],
+  // },
   {
     title: "Settings",
     items: [
@@ -46,5 +57,19 @@ const sidebarMenuList = [
 ];
 
 export default function MainNav() {
-  return <>hello main nav</>;
+  return (
+    <div>
+      <ul className={"flex flex-col gap-6 px-6"}>
+        {sidebarMenuList.map(({ title, items }) => (
+          <li
+            key={title}
+            className={"flex cursor-pointer items-center justify-between"}
+          >
+            <span>{title}</span>
+            {items.length ? <IoIosArrowForward /> : ""}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }

@@ -4,7 +4,7 @@ export default function Logo() {
       <img
         src={"/icon.png"}
         alt={"soundei logo"}
-        className={"w-10/12 rounded-full"}
+        className={"w-1/2 rounded-full"}
       />
       <h3 className={"pt-2 text-3xl tracking-wider"}>Soundei</h3>
     </div>

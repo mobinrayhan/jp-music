@@ -3,7 +3,7 @@ import MainNav from "./MainNav.jsx";
 
 export default function Sidebar() {
   return (
-    <div className={"flex flex-col items-center justify-center gap-8"}>
+    <div className={"flex flex-col justify-center gap-8"}>
       <Logo />
       <MainNav />
     </div>
