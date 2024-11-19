@@ -1,9 +1,8 @@
-import { Link } from "react-router-dom";
+import { FiUsers } from "react-icons/fi";
 import { IoIosArrowForward } from "react-icons/io";
 import { MdDashboard } from "react-icons/md";
-import { FiUsers } from "react-icons/fi";
 import { SiAudioboom } from "react-icons/si";
-import { MdOutlineAdminPanelSettings } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 const sidebarMenuList = [
   {
@@ -27,17 +26,17 @@ const sidebarMenuList = [
       { name: "All Audio", path: "/audio/all" },
       { name: "Upload Audio", path: "/audio/upload" },
       { name: "Categories", path: "/audio/categories" },
-      { name: "Genres", path: "/audio/genres" },
+      // { name: "Genres", path: "/audio/genres" },
     ],
   },
-  {
-    title: "Moderation",
-    icon: <MdOutlineAdminPanelSettings />,
-    items: [
-      { name: "Pending Approvals", path: "/moderation/pending" },
-      { name: "Reported Content", path: "/moderation/reported" },
-    ],
-  },
+  // {
+  //   title: "Moderation",
+  //   icon: <MdOutlineAdminPanelSettings />,
+  //   items: [
+  //     { name: "Pending Approvals", path: "/moderation/pending" },
+  //     { name: "Reported Content", path: "/moderation/reported" },
+  //   ],
+  // },
   // {
   //   title: "Analytics",
   //   items: [
@@ -63,10 +62,24 @@ export default function MainNav() {
         {sidebarMenuList.map(({ title, items }) => (
           <li
             key={title}
-            className={"flex cursor-pointer items-center justify-between"}
+            className={
+              "grid cursor-pointer grid-cols-3 items-center justify-between"
+            }
           >
-            <span>{title}</span>
-            {items.length ? <IoIosArrowForward /> : ""}
+            <span className="col-start-1 col-end-3">{title}</span>
+            {items.length ? (
+              <IoIosArrowForward className="justify-self-end" />
+            ) : (
+              ""
+            )}
+
+            <div className="col-start-1 col-end-4 flex flex-col gap-3 px-4 py-3">
+              {items.map((item, i) => (
+                <Link key={i} to={item.path}>
+                  {item.name}
+                </Link>
+              ))}
+            </div>
           </li>
         ))}
       </ul>

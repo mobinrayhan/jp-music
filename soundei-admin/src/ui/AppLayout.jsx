@@ -1,5 +1,6 @@
-import Sidebar from "./Sidebar.jsx";
+import { Outlet } from "react-router-dom";
 import Header from "./Header.jsx";
+import Sidebar from "./Sidebar.jsx";
 
 export default function AppLayout() {
   return (
@@ -12,7 +13,9 @@ export default function AppLayout() {
         <Sidebar />
       </aside>
 
-      <main className="overflow-x-auto p-8">Main</main>
+      <main className="overflow-x-auto p-8">
+        <Outlet />
+      </main>
     </div>
   );
 }
