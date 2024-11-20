@@ -9,6 +9,7 @@ import Notification from "./pages/settings/Notification.jsx";
 import Payments from "./pages/settings/Payments.jsx";
 import AllUsers from "./pages/users/AllUsers.jsx";
 import BlockList from "./pages/users/BlockList.jsx";
+import CreateNewUser from "./pages/users/CreateNewUser.jsx";
 import RolesAndPermission from "./pages/users/RolesAndPermission.jsx";
 import AppLayout from "./ui/AppLayout";
 import ProtectedRoute from "./ui/ProtectedRoute.jsx";
@@ -32,6 +33,7 @@ export default function App() {
             <Route path="all" element={<AllUsers />} />
             <Route path="roles" element={<RolesAndPermission />} />
             <Route path="blocked" element={<BlockList />} />
+            <Route path="new" element={<CreateNewUser />} />
           </Route>{" "}
           <Route path="audio">
             <Route path="all" element={<AllAudios />} />

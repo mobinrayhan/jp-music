@@ -19,6 +19,7 @@ const sidebarMenuList = [
       { name: "All Users", path: "/users/all" },
       { name: "Roles & Permissions", path: "/users/roles" },
       { name: "Blocked Users", path: "/users/blocked" },
+      { name: "Create User", path: "/users/new" },
     ],
   },
   {
