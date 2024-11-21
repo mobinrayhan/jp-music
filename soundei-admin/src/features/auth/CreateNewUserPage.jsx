@@ -1,25 +1,25 @@
 import { useState } from "react";
+import useCreateUser from "./useCreateUser";
 
 export default function CreateNewUserPage() {
   const [errors, setErrors] = useState({}); // State to manage form errors
+  const { isPending, signup } = useCreateUser();
 
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent default form submission behavior
     const formData = new FormData(event.target); // Create a FormData object
 
     const data = {
-      fullName: formData.get("fullName"),
+      username: formData.get("username"),
       email: formData.get("email"),
       password: formData.get("password"),
       repeatPassword: formData.get("repeatPassword"),
       role: formData.get("role"),
     };
 
-    console.log(data);
-
     // Validate the form data
     const validationErrors = {};
-    if (!data?.fullName) validationErrors.fullName = "Full name is required.";
+    if (!data?.username) validationErrors.username = "Full name is required.";
     if (!data?.email) validationErrors.email = "Email address is required.";
     else if (!/\S+@\S+\.\S+/.test(data?.email))
       validationErrors.email = "Enter a valid email address.";
@@ -36,8 +36,7 @@ export default function CreateNewUserPage() {
 
     // If there are no errors, proceed with the form submission
     if (Object.keys(validationErrors).length === 0) {
-      console.log("Form Data:", data);
-      alert("User created successfully!");
+      signup(data);
     }
   };
 
@@ -51,15 +50,15 @@ export default function CreateNewUserPage() {
           {/* Full Name */}
           <div>
             <label
-              htmlFor="fullName"
+              htmlFor="username"
               className="mb-1 block text-sm font-medium text-gray-600"
             >
               Full Name
             </label>
             <input
               type="text"
-              id="fullName"
-              name="fullName"
+              id="username"
+              name="username"
               required
               placeholder="Enter your full name"
               className="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"

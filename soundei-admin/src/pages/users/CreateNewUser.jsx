@@ -1,4 +1,4 @@
-import CreateNewUserPage from "../../features/users/CreateNewUserPage";
+import CreateNewUserPage from "../../features/auth/CreateNewUserPage";
 
 export default function CreateNewUser() {
   return <CreateNewUserPage />;
