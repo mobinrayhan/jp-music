@@ -5,6 +5,8 @@ export default function CreateNewUserPage() {
   const [errors, setErrors] = useState({}); // State to manage form errors
   const { isPending, signup } = useCreateUser();
 
+  console.log(isPending);
+
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent default form submission behavior
     const formData = new FormData(event.target); // Create a FormData object
@@ -42,7 +44,7 @@ export default function CreateNewUserPage() {
 
   return (
     <section className="flex items-center justify-center rounded-lg shadow-md">
-      <div className="w-full rounded-lg bg-white p-20">
+      <div className={`w-full rounded-lg bg-white p-20`}>
         <h2 className="mb-6 text-center text-2xl font-semibold text-gray-800">
           Create New User
         </h2>
@@ -61,7 +63,8 @@ export default function CreateNewUserPage() {
               name="username"
               required
               placeholder="Enter your full name"
-              className="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={isPending}
+              className={`${isPending && "is-pending"} w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-50`}
             />
           </div>
 
@@ -79,7 +82,7 @@ export default function CreateNewUserPage() {
               required
               name="email"
               placeholder="Enter your email address"
-              className="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`${isPending && "is-pending"} w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-50`}
               autoComplete="username"
             />
           </div>
@@ -97,9 +100,10 @@ export default function CreateNewUserPage() {
               id="password"
               minLength={6}
               name="password"
+              disabled={isPending}
               required
               placeholder="Enter a password"
-              className="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`${isPending && "is-pending"} w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-50`}
               autoComplete="new-password"
             />
           </div>
@@ -117,10 +121,11 @@ export default function CreateNewUserPage() {
               required
               id="repeatPassword"
               autoComplete="new-password"
+              disabled={isPending}
               name="repeatPassword"
               minLength={6}
               placeholder="Re-enter the password"
-              className="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`${isPending && "is-pending"} w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-50`}
             />
           </div>
 
@@ -135,8 +140,9 @@ export default function CreateNewUserPage() {
             <select
               id="role"
               name="role"
+              disabled={isPending}
               required
-              className="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`${isPending && "is-pending"} w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-50`}
             >
               <option value="">Select a role</option>
               <option value="admin">Admin</option>
@@ -149,15 +155,21 @@ export default function CreateNewUserPage() {
           <div className="flex flex-col gap-4 md:flex-row">
             <button
               type="button"
-              className="w-full rounded-md bg-gray-300 px-4 py-2 text-gray-700 transition hover:bg-gray-400 md:w-auto"
+              disabled={isPending}
+              className={` ${isPending && "is-pending"} rounded-md bg-gray-300 px-4 py-2 text-gray-700 transition hover:bg-gray-400`}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="w-full rounded-md bg-blue-500 px-4 py-2 text-white transition hover:bg-blue-600 md:w-auto"
+              disabled={isPending}
+              className={` ${isPending && "is-pending"} flex h-12 w-52 items-center justify-center rounded-md bg-blue-500 px-4 py-2 text-white transition hover:bg-blue-600`}
             >
-              Create New User
+              {isPending ? (
+                <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
+              ) : (
+                "Create New User"
+              )}
             </button>
           </div>
         </form>
