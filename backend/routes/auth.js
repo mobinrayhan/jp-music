@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const authController = require('../controllers/authController');
-const { body, validationResult } = require('express-validator');
+const { body } = require('express-validator');
 
 router.post(
   '/signup',

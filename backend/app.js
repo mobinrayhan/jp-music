@@ -15,6 +15,7 @@ const categoryRouter = require('./routes/category');
 const audioRouter = require('./routes/audio');
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
+const adminAuthRouter = require('./routes/adminAuth');
 
 // const limiter = rateLimit({
 //   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -27,7 +28,9 @@ const allowedOrigins = [
   'http://localhost:3000',
   'https://soundei.com',
   'https://vps-front.soundei.com',
+  'http://localhost:5173',
 ];
+
 app.use(express.json());
 // app.use(limiter);
 // app.use(morgan('combined'));
@@ -35,6 +38,7 @@ app.use(helmet());
 app.use(
   cors({
     origin: allowedOrigins,
+    credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key'],
   })
@@ -127,6 +131,7 @@ app.use('/auth', authRouter);
 app.use('/users', userRouter);
 app.use('/audios', audioRouter);
 app.use('/category', categoryRouter);
+app.use('/admin', adminAuthRouter);
 
 app.use('/', (req, res) => {
   res.json({ message: 'api is working' });

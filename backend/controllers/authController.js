@@ -8,6 +8,8 @@ exports.createNewUser = async function (req, res, next) {
   const { username, email, password, role } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
 
+  console.log(username, email, password, role, hashedPassword);
+
   try {
     const transporter = nodemailer.createTransport({
       // service: process.env.EMAIL_SERVICE,
@@ -77,6 +79,8 @@ exports.createNewUserByProvider = async function (req, res, next) {
           }
         );
 
+        console.log('hi', token);
+
         return res.status(200).json({
           message: 'Login successful',
           token,
@@ -104,6 +108,8 @@ exports.createNewUserByProvider = async function (req, res, next) {
         expiresIn: '7d',
       }
     );
+
+    console.log('hlw', token);
 
     res.status(201).json({
       message: 'User registered successfully',
