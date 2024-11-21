@@ -5,8 +5,6 @@ export default function CreateNewUserPage() {
   const [errors, setErrors] = useState({}); // State to manage form errors
   const { isPending, signup } = useCreateUser();
 
-  console.log(isPending);
-
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent default form submission behavior
     const formData = new FormData(event.target); // Create a FormData object
@@ -38,7 +36,12 @@ export default function CreateNewUserPage() {
 
     // If there are no errors, proceed with the form submission
     if (Object.keys(validationErrors).length === 0) {
-      signup(data);
+      signup(data, {
+        onSuccess: () => {
+          event.target.reset(); // Reset the form
+          setErrors({}); // Clear errors if any
+        },
+      });
     }
   };
 
