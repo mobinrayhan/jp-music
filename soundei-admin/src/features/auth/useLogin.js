@@ -11,6 +11,13 @@ export default function useLogin() {
     mutationFn: loginUser,
     onSuccess: (user) => {
       queryClient.setQueryData(["user"], user);
+
+      const existedUser = localStorage.getItem("user");
+
+      if (existedUser) {
+        localStorage.clear("user");
+      }
+
       localStorage.setItem("user", JSON.stringify(user));
       toast.success(user.message || "User Logged In Successfully!");
       navigate("/dashboard/overview");

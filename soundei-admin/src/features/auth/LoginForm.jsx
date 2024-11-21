@@ -20,8 +20,6 @@ export default function LoginForm() {
     if (!data?.password) validationErrors.password = "Password is required.";
     setErrors(validationErrors);
 
-    console.log(data);
-
     // If there are no errors, proceed with the form submission
     if (Object.keys(validationErrors).length === 0) {
       login(data, {
@@ -82,9 +80,13 @@ export default function LoginForm() {
           <button
             type="submit"
             disabled={isPending}
-            className={`${isPending && "is-pending"} w-full rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+            className={`${isPending && "is-pending"} flex w-full items-center justify-center rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500`}
           >
-            Login
+            {isPending ? (
+              <div className="h-6 w-6 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
+            ) : (
+              "Login"
+            )}
           </button>
         </form>
 
