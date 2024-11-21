@@ -2,44 +2,50 @@ const jwt = require('jsonwebtoken');
 const userModel = require('../models/userModel');
 
 module.exports = isAuth = async (req, res, next) => {
-  const header = req.get('Authorization');
-  if (!header) {
-    return res.json({ message: 'Authorization header is missing' });
-  }
-  const token = header && header.split(' ')[1];
-
-  if (!token) {
-    const error = new Error('User is not authenticated!');
-    error.status = 404;
-    throw error;
-  }
-
-  let decodeToken;
   try {
-    decodeToken = jwt.verify(token, process.env.JWT_SECRET);
-  } catch (err) {
-    const error = new Error('User is not authenticated!');
-    error.status = 404;
-    throw error;
-  }
+    const header = req.get('Authorization');
 
-  if (!decodeToken) {
-    const error = new Error('User is not authenticated!');
-    error.status = 404;
-    throw error;
-  }
+    if (!header) {
+      const error = new Error('Authorization header is missing!');
+      error.status = 401;
+      return next(error); // Pass error to error-handling middleware
+    }
 
-  // Check if the user exists and if they are active
-  const user = await userModel.getUserById(decodeToken.id);
-  if (!user || !user.isActive) {
-    return res
-      .status(403)
-      .json({
+    const token = header.split(' ')[1]; // Extract token from Bearer token
+
+    if (!token) {
+      const error = new Error('User is not authenticated!');
+      error.status = 401;
+      return next(error);
+    }
+
+    let decodeToken;
+    try {
+      decodeToken = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      const error = new Error('Invalid token!');
+      error.status = 403;
+      return next(error);
+    }
+
+    if (!decodeToken) {
+      const error = new Error('User is not authenticated!');
+      error.status = 401;
+      return next(error);
+    }
+
+    // Check if the user exists and is active
+    const user = await userModel.getUserById(decodeToken.id);
+    if (!user || !user.isActive) {
+      return res.status(403).json({
         message:
           'Your account is inactive. Please contact support or check your email for more information.',
       });
-  }
+    }
 
-  req.user = decodeToken;
-  next();
+    req.user = decodeToken; // Attach the decoded token to the request
+    next(); // Call the next middleware
+  } catch (err) {
+    next(err); // Pass any unexpected error to the error-handling middleware
+  }
 };

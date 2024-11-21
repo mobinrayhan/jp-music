@@ -6,8 +6,6 @@ exports.createUserByAdmin = async function (req, res, next) {
   const { username, email, password, role } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  console.log(username, email, password, role, hashedPassword);
-
   try {
     const user = await authModels.findUser(email);
 
@@ -17,15 +15,13 @@ exports.createUserByAdmin = async function (req, res, next) {
       throw error;
     }
 
-    const createdUser = await authModels.createNewUser({
+    await authModels.createNewUser({
       username,
       password: hashedPassword,
       isActive: true,
       email,
       role,
     });
-
-    console.log(createdUser);
 
     return res.json({ message: 'User created successfully.' });
   } catch (err) {
@@ -70,5 +66,23 @@ exports.postLoginUser = async (req, res, next) => {
   } catch (err) {
     console.log(err);
     next(err);
+  }
+};
+
+exports.getAdminUserById = async (req, res, next) => {
+  const { email } = req.user;
+
+  try {
+    const user = await authModels.findUser(email);
+
+    if (!user) {
+      const error = new Error('User not Found!');
+      error.statusCode = 401;
+      throw error;
+    }
+
+    return res.status(200).json({ message: 'Admin user found!', user });
+  } catch (e) {
+    next(e);
   }
 };

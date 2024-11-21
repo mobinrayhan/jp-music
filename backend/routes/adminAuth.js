@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/adminAuthController');
 const { body } = require('express-validator');
+const isAuth = require('../middleware/is-auth');
 
 router.post(
   '/create-account',
@@ -19,6 +20,7 @@ router.post(
     .withMessage('Role Must be String!')
     .notEmpty()
     .withMessage('Role is required.'),
+  isAuth,
   adminController.createUserByAdmin
 );
 
@@ -30,5 +32,7 @@ router.post(
     .withMessage('Password must be at least 6 characters long.'),
   adminController.postLoginUser
 );
+
+router.get('/user/:userId', isAuth, adminController.getAdminUserById);
 
 module.exports = router;

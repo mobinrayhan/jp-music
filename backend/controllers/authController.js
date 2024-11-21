@@ -79,8 +79,6 @@ exports.createNewUserByProvider = async function (req, res, next) {
           }
         );
 
-        console.log('hi', token);
-
         return res.status(200).json({
           message: 'Login successful',
           token,
