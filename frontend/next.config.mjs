@@ -5,7 +5,7 @@ const config = (phase) => {
     return {
       env: {
         API_KEY: "9c035862-3350-4204-9c87-0a65d5c7c85f",
-        API_URL: "http://192.168.0.107:4000",
+        API_URL: "http://192.168.0.100:4000",
 
         GOOGLE_CLIENT_ID:
           "850868314693-ejhssoibt9576bdg5fctt1lbrs3bdi9t.apps.googleusercontent.com",

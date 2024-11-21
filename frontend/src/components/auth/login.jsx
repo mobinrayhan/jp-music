@@ -69,6 +69,7 @@ const Login = () => {
               name="email"
               type="email"
               id="email"
+              autoComplete="username"
               className="mt-2 w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:cursor-not-allowed"
               placeholder="Enter your email"
             />
@@ -83,6 +84,7 @@ const Login = () => {
             <input
               disabled={loading}
               type="password"
+              autoComplete="current-password"
               name="password"
               id="password"
               className="mt-2 w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:cursor-not-allowed"

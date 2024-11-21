@@ -10,11 +10,15 @@ const apiUrl = process.env.API_URL;
 export default function Favorites({ maxAudios, searchValue }) {
   const { data: session, status } = useSession();
 
+  console.log(session);
+
   const fetcherEndPoint = `/users/favorites?querySearch=${searchValue}&maxAudios=${maxAudios}`;
   const { data, error, mutate } = useSWR(
     session?.jwt ? [fetcherEndPoint, { jwt: session.jwt }] : null,
     ([endpoint, options]) => fetcher(endpoint, options),
   );
+
+  console.log(data);
 
   if (status === "loading" || !session.jwt || (!data && !error)) {
     return <AudioSkeleton />;

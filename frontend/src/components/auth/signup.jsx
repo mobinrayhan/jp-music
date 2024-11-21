@@ -106,6 +106,7 @@ function FormInputs({ onSubmitCount }) {
           required
           type="email"
           id="email"
+          autoComplete="username"
           name="email"
           className={`mt-2 w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 ${pending ? "cursor-not-allowed" : ""}`}
           placeholder="Enter your email"
@@ -123,6 +124,7 @@ function FormInputs({ onSubmitCount }) {
           required
           disabled={pending}
           type="password"
+          autoComplete="current-password"
           id="password"
           name="password"
           className={`mt-2 w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 ${pending ? "cursor-not-allowed" : ""}`}
