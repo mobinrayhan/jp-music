@@ -1,11 +1,8 @@
 import axiosInstance from "./axiosInstance";
 
 export const loginUser = async (credentials) => {
-  const response = await axiosInstance.post(
-    "/admin/create-account",
-    credentials,
-  );
-  return response.data; // Return server response (e.g., user info, message)
+  const response = await axiosInstance.post("/admin/login", credentials);
+  return response.data;
 };
 
 export const createNewUser = async (userData) => {
