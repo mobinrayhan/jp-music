@@ -8,8 +8,8 @@ export default function useCreateUser() {
     onSuccess: (user) => {
       toast.success(user.message || "User Created Successfully!");
     },
-    onError: ({ response }) => {
-      toast.error(response?.data?.message || "Something Went Wrong !");
+    onError: (err) => {
+      toast.error(err?.message || "Something Went Wrong !");
     },
   });
 
