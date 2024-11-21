@@ -39,8 +39,14 @@ exports.postLoginUser = async (req, res, next) => {
 
   try {
     const user = await authModels.findUser(email);
-    const isMatch = await bcrypt.compare(password, user.password);
 
+    if (!user) {
+      const error = new Error('User not Found!');
+      error.statusCode = 401;
+      throw error;
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       const error = new Error('Invalid credentials!');
       error.statusCode = 401;
@@ -62,6 +68,7 @@ exports.postLoginUser = async (req, res, next) => {
       isActive: user.isActive,
     });
   } catch (err) {
+    console.log(err);
     next(err);
   }
 };
