@@ -27,14 +27,7 @@ exports.postToggleFavourites = async function (req, res, next) {
   const userId = req.user.id;
 
   try {
-    const user = await userModel.getUserById(userId);
     const audio = await audioModel.geAudioInfoById(audioId);
-
-    if (!user) {
-      const error = new Error('User Not Found!');
-      error.statusCode = 404;
-      throw error;
-    }
 
     if (!audio) {
       const error = new Error('Audio Not Found!');
@@ -90,12 +83,6 @@ exports.getFavoriteIds = async (req, res, next) => {
   const userId = req.user.id;
 
   try {
-    const user = await userModel.getUserById(userId);
-    if (!user) {
-      const err = new Error('User Not Found!');
-      err.statusCode = 404;
-      throw err;
-    }
     const { favorites } = await userModel.getFavoriteIds(userId);
     return res.json({ favoriteIds: favorites });
   } catch (err) {
@@ -171,13 +158,6 @@ exports.getPlaylist = async (req, res, next) => {
   const { slug } = req.params;
 
   try {
-    const user = await userModel.getUserById(userId);
-    if (!user) {
-      const error = new Error('User Not Found!');
-      error.statusCode = 404;
-      throw error;
-    }
-
     const existedPlaylist = await userModel.getPlaylistBySlug({ userId, slug });
 
     if (!existedPlaylist) {
@@ -200,18 +180,11 @@ exports.postAddAudioToPlaylist = async (req, res, next) => {
   const { audioId, playlistSlug } = req.body;
 
   try {
-    const user = await userModel.getUserById(userId);
-
-    if (!user) {
-      const error = new Error('User Not Found!');
-      error.statusCode = 404;
-      throw error;
-    }
-
     const existedPlaylist = await userModel.getPlaylistBySlug({
       slug: playlistSlug,
       userId,
     });
+
     if (!existedPlaylist) {
       const error = new Error('Playlist not found!');
       error.statusCode = 404;
@@ -223,6 +196,7 @@ exports.postAddAudioToPlaylist = async (req, res, next) => {
       userId,
       audioId,
     });
+
     return res.json({ message: 'Added Audio To The Playlist Successfully!' });
   } catch (e) {
     next(e);
@@ -235,14 +209,6 @@ exports.getPlaylistAudios = async (req, res, next) => {
   const { querySearch, maxAudios } = req.query;
 
   try {
-    const user = await userModel.getUserById(userId);
-
-    if (!user) {
-      const error = new Error('User Not Found!');
-      error.statusCode = 404;
-      throw error;
-    }
-
     const existedPlaylist = await userModel.getPlaylistBySlug({
       slug: playlistSlug,
       userId,
