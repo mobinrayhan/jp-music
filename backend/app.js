@@ -12,7 +12,7 @@ const path = require('path');
 const { connectToDatabase } = require('./models/db');
 
 const isAuth = require('./middleware/isAuth');
-const isExistUser = require('./middleware/isUserExist');
+const existedUserWithRole = require('./middleware/existedUserWithRole');
 
 const categoryRouter = require('./routes/category');
 const audioRouter = require('./routes/audio');
@@ -131,7 +131,7 @@ const apiKeyMiddleware = (req, res, next) => {
 app.use(apiKeyMiddleware);
 
 app.use('/auth', authRouter);
-app.use('/users', isAuth, isExistUser(), userRouter);
+app.use('/users', isAuth, existedUserWithRole(), userRouter);
 app.use('/audios', audioRouter);
 app.use('/category', categoryRouter);
 app.use('/admin', adminAuthRouter);
@@ -143,6 +143,7 @@ app.use('/', (req, res) => {
 app.use((error, req, res, next) => {
   const status = error.statusCode || 500;
   const message = error.message;
+  console.log(error);
   res.status(status).json({ message });
 });
 

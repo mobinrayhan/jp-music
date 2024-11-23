@@ -394,7 +394,7 @@ exports.checkUserExists = async (input) => {
 
 exports.getActiveStatus = async (input) => {
   if (!input) {
-    throw new Error('Input is required to check user existence');
+    throw new Error('Input is required to check user status');
   }
 
   const query = getMongoQueryFromInput(input);
@@ -404,5 +404,20 @@ exports.getActiveStatus = async (input) => {
 
   return await userColl.findOne(query, {
     projection: { isActive: 1, _id: 0 },
+  });
+};
+
+exports.getUserRole = async (input) => {
+  if (!input) {
+    throw new Error('Input is required to check user role');
+  }
+
+  const query = getMongoQueryFromInput(input);
+
+  const db = await connectToDatabase();
+  const userColl = db.collection('users');
+
+  return await userColl.findOne(query, {
+    projection: { role: 1, _id: 0 },
   });
 };

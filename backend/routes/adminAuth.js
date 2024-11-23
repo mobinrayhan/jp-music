@@ -3,7 +3,7 @@ const router = express.Router();
 const adminController = require('../controllers/adminAuthController');
 const { body } = require('express-validator');
 const isAuth = require('../middleware/isAuth');
-const isUserExist = require('../middleware/isUserExist');
+const existedUserWithRole = require('../middleware/existedUserWithRole');
 
 router.post(
   '/create-account',
@@ -22,7 +22,7 @@ router.post(
     .notEmpty()
     .withMessage('Role is required.'),
   isAuth,
-  isUserExist(),
+  existedUserWithRole({ from: 'JWT', accessibleRole: 'admin' }),
   adminController.createUserByAdmin
 );
 
@@ -32,10 +32,15 @@ router.post(
   body('password')
     .isLength({ min: 6 })
     .withMessage('Password must be at least 6 characters long.'),
-  isUserExist({ from: 'body' }),
+  existedUserWithRole({ accessibleRole: 'admin', from: 'body' }),
   adminController.postLoginUser
 );
 
-router.get('/user/:userId', isAuth, adminController.getAdminUserById);
+router.get(
+  '/user/:userId',
+  isAuth,
+  existedUserWithRole({ accessibleRole: 'admin', from: 'params' }),
+  adminController.getAdminUserById
+);
 
 module.exports = router;

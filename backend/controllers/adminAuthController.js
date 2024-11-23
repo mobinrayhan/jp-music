@@ -24,9 +24,10 @@ exports.createUserByAdmin = async function (req, res, next) {
 };
 
 exports.postLoginUser = async (req, res, next) => {
-  const { password } = req.body;
+  const { email, password } = req.body;
 
   try {
+    const user = await authModels.findUser(email);
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {

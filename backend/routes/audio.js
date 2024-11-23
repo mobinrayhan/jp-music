@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const audioController = require('../controllers/audioController');
 const isAuth = require('../middleware/isAuth');
-const isExistUser = require('../middleware/isUserExist');
+const isExistUser = require('../middleware/existedUserWithRole');
 
 // router.get('/all', audioController.getAllAudios);
 // router.get('/category/:category', audioController.getAudiosByCategory);
