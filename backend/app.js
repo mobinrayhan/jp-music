@@ -11,6 +11,9 @@ const port = process.env.PORT || 4000;
 const path = require('path');
 const { connectToDatabase } = require('./models/db');
 
+const isAuth = require('./middleware/isAuth');
+const isExistUser = require('./middleware/isUserExist');
+
 const categoryRouter = require('./routes/category');
 const audioRouter = require('./routes/audio');
 const authRouter = require('./routes/auth');
@@ -128,7 +131,7 @@ const apiKeyMiddleware = (req, res, next) => {
 app.use(apiKeyMiddleware);
 
 app.use('/auth', authRouter);
-app.use('/users', userRouter);
+app.use('/users', isAuth, isExistUser(), userRouter);
 app.use('/audios', audioRouter);
 app.use('/category', categoryRouter);
 app.use('/admin', adminAuthRouter);
