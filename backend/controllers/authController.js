@@ -3,12 +3,11 @@ const userModels = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
+const { productionFrontURL, localhostFrontURL } = require('../constants/links');
 
 exports.createNewUser = async function (req, res, next) {
   const { username, email, password, role } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
-
-  console.log(username, email, password, role, hashedPassword);
 
   try {
     const transporter = nodemailer.createTransport({
@@ -22,15 +21,26 @@ exports.createNewUser = async function (req, res, next) {
       },
     });
 
-    const user = await authModels.findUser(email);
+    const isExistUser = await userModels.getActiveStatus(email);
+    const isActiveUser = await userModels.getActiveStatus(email);
 
-    if (user && user.isActive) {
-      const error = new Error('User already exists!');
+    if (isExistUser && !isActiveUser) {
+      const error = new Error(
+        'User already exists. Please try logging in or use a different email.'
+      );
       error.statusCode = 409;
       throw error;
     }
 
-    if (!user) {
+    if (isExistUser && isActiveUser) {
+      const error = new Error(
+        'Your account has been disabled by the administrator. Please contact support for further assistance.'
+      );
+      error.statusCode = 409;
+      throw error;
+    }
+
+    if (!isExistUser) {
       await authModels.createNewUser({
         username,
         password: hashedPassword,
@@ -45,8 +55,8 @@ exports.createNewUser = async function (req, res, next) {
     });
     const verificationLink = `${
       process.env.NODE_ENV === 'production'
-        ? 'https://vps-front.soundei.com'
-        : 'http://localhost:3000'
+        ? productionFrontURL
+        : localhostFrontURL
     }/verify-email?token=${token}`;
 
     // Send verification email
@@ -106,8 +116,6 @@ exports.createNewUserByProvider = async function (req, res, next) {
         expiresIn: '7d',
       }
     );
-
-    console.log('hlw', token);
 
     res.status(201).json({
       message: 'User registered successfully',
@@ -178,7 +186,6 @@ exports.getActiveStatus = async (req, res, next) => {
 
     return res.json({
       isActive: user.isActive,
-      // isActive: false,
       message: 'Get User Status Successfully',
     });
   } catch (err) {
@@ -214,8 +221,8 @@ exports.getForgetPassword = async (req, res, next) => {
     });
     const resetLink = `${
       process.env.NODE_ENV === 'production'
-        ? 'https://vps-front.soundei.com'
-        : 'http://localhost:3000'
+        ? productionFrontURL
+        : localhostFrontURL
     }/reset-password?token=${token}`;
 
     // Send verification email
@@ -232,6 +239,7 @@ exports.getForgetPassword = async (req, res, next) => {
   }
 };
 
+// NOT SURE WHERE I USED IT😭
 exports.isValidToken = async (req, res, next) => {
   const { token } = req.query;
 
@@ -255,13 +263,6 @@ exports.postForgetPassword = async (req, res, next) => {
   const { userId, newPassword } = req.body;
 
   try {
-    const user = userModels.getUserById(userId);
-    if (!user) {
-      const error = new Error('User Not Found!');
-      error.statusCode = 404;
-      throw error;
-    }
-
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     const result = await authModels.updatePasswordById(userId, hashedPassword);
 

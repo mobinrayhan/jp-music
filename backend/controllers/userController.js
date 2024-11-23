@@ -99,13 +99,6 @@ exports.postCreatePlaylist = async (req, res, next) => {
   const userId = req.user.id;
 
   try {
-    const user = await userModel.getUserById(userId);
-    if (!user) {
-      const error = new Error('User Not Found!');
-      error.statusCode = 404;
-      throw error;
-    }
-
     const isExistPlaylist = await userModel.getPlaylistBySlug({ slug, userId });
     const uniqueId = crypto.randomUUID();
 
@@ -125,12 +118,6 @@ exports.getPlaylists = async (req, res, next) => {
   const { querySearch, maxPlaylist } = req.query;
 
   try {
-    const user = await userModel.getUserById(userId);
-    if (!user) {
-      const error = new Error('User Not Found!');
-      error.statusCode = 404;
-      throw error;
-    }
     const { playlists, totalPlaylists } = await userModel.getPlaylists({
       userId,
       querySearch,

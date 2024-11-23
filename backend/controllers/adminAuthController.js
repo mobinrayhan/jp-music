@@ -7,13 +7,6 @@ exports.createUserByAdmin = async function (req, res, next) {
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await authModels.findUser(email);
-
-    if (user && user.isActive) {
-      const error = new Error('User already exists!');
-      error.statusCode = 409;
-      throw error;
-    }
 
     await authModels.createNewUser({
       username,
@@ -31,18 +24,11 @@ exports.createUserByAdmin = async function (req, res, next) {
 };
 
 exports.postLoginUser = async (req, res, next) => {
-  const { email, password } = req.body;
+  const { password } = req.body;
 
   try {
-    const user = await authModels.findUser(email);
-
-    if (!user) {
-      const error = new Error('User not Found!');
-      error.statusCode = 401;
-      throw error;
-    }
-
     const isMatch = await bcrypt.compare(password, user.password);
+
     if (!isMatch) {
       const error = new Error('Invalid credentials!');
       error.statusCode = 401;
@@ -64,7 +50,6 @@ exports.postLoginUser = async (req, res, next) => {
       isActive: user.isActive,
     });
   } catch (err) {
-    console.log(err);
     next(err);
   }
 };
