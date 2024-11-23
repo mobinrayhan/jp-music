@@ -28,7 +28,7 @@ const allowedOrigins = [
   'http://localhost:3000',
   'https://soundei.com',
   'https://vps-front.soundei.com',
-  'http://localhost:5173',
+  'http://localhost:3030',
 ];
 
 app.use(express.json());

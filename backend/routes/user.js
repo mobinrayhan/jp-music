@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const userController = require('../controllers/userController');
-const isAuth = require('../middleware/is-auth');
+const isAuth = require('../middleware/isAuth');
 
 router.get('/downloads', isAuth, userController.getDownloads);
 router.get('/favorites', isAuth, userController.getFavorites);

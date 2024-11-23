@@ -34,15 +34,6 @@ module.exports = isAuth = async (req, res, next) => {
       return next(error);
     }
 
-    // Check if the user exists and is active
-    const user = await userModel.getUserById(decodeToken.id);
-    if (!user || !user.isActive) {
-      return res.status(403).json({
-        message:
-          'Your account is inactive. Please contact support or check your email for more information.',
-      });
-    }
-
     req.user = decodeToken; // Attach the decoded token to the request
     next(); // Call the next middleware
   } catch (err) {

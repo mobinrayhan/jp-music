@@ -4,9 +4,9 @@ const jwt = require('jsonwebtoken');
 
 exports.createUserByAdmin = async function (req, res, next) {
   const { username, email, password, role } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
+    const hashedPassword = await bcrypt.hash(password, 10);
     const user = await authModels.findUser(email);
 
     if (user && user.isActive) {

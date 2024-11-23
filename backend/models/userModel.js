@@ -1,5 +1,6 @@
 const { connectToDatabase } = require('./db');
 const { ObjectId } = require('mongodb');
+const getMongoQueryFromInput = require('../helpers/getMongoQueryFromInput');
 
 exports.getUserById = async (id) => {
   const db = await connectToDatabase();
@@ -375,4 +376,33 @@ exports.getAudiosFromPlaylist = async ({
     .filter((audio) => audio); // Filter out any unmatched audios
 
   return { audios: orderedAudios, totalAudios };
+};
+
+exports.checkUserExists = async (input) => {
+  if (!input) {
+    throw new Error('Input is required to check user existence');
+  }
+
+  const query = getMongoQueryFromInput(input);
+
+  const db = await connectToDatabase();
+  const userColl = db.collection('users');
+
+  const count = await userColl.countDocuments(query, { limit: 1 });
+  return count > 0;
+};
+
+exports.getActiveStatus = async (input) => {
+  if (!input) {
+    throw new Error('Input is required to check user existence');
+  }
+
+  const query = getMongoQueryFromInput(input);
+
+  const db = await connectToDatabase();
+  const userColl = db.collection('users');
+
+  return await userColl.findOne(query, {
+    projection: { isActive: 1, _id: 0 },
+  });
 };

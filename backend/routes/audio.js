@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const audioController = require('../controllers/audioController');
-const isAuth = require('../middleware/is-auth');
+const isAuth = require('../middleware/isAuth');
 
 // router.get('/all', audioController.getAllAudios);
 // router.get('/category/:category', audioController.getAudiosByCategory);
