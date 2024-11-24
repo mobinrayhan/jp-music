@@ -37,6 +37,7 @@ const allowedOrigins = [
 ];
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 // app.use(limiter);
 // app.use(morgan('combined'));
 app.use(helmet());
@@ -45,7 +46,12 @@ app.use(
     origin: allowedOrigins,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'x-api-key',
+      'X-Upload-Path',
+    ],
   })
 );
 

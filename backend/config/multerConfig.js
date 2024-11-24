@@ -5,7 +5,7 @@ const { allowedTypes } = require('../helpers/allowedTypesForFile');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadPath = req.body.uploadPath || 'uploads'; // Default to 'uploads'
+    const uploadPath = req.headers['x-upload-path'] || 'uploads'; // Use custom header
     const fullPath = path.join(__dirname, '../', uploadPath);
 
     // Ensure the directory exists
@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
     cb(null, fullPath); // Set the upload destination
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+    const uniqueSuffix = `${crypto.randomUUID()}-soundei`;
     cb(null, `${uniqueSuffix}-${file.originalname}`);
   },
 });
@@ -35,4 +35,4 @@ const upload = multer({
   },
 });
 
-module.exports = upload;
+exports.upload = upload;
