@@ -1,11 +1,15 @@
 import JSZip from "jszip";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getMimeType } from "../../utils/getMimeType";
 import ListOfPreparedAudio from "./ListOfPreparedAudio";
+import useAudiosUpload from "./useAudiosUpload";
 
 export default function UploadAudiosForm() {
-  const [files, setFiles] = useState([]); // State for files
-  const [extractedFiles, setExtractedFiles] = useState([]);
+  const [files, setFiles] = useState([]); // State for selected files
+  const [extractedFiles, setExtractedFiles] = useState([]); // State for extracted files from ZIP
+  const { uploadFileMutation, isPending } = useAudiosUpload();
 
+  // Handle file selection
   const handleFileChange = async (event) => {
     const selectedFiles = event.target.files;
     const fileList = Array.from(selectedFiles);
@@ -13,7 +17,7 @@ export default function UploadAudiosForm() {
     const zipFiles = fileList.filter((file) => file.type === "application/zip");
     if (zipFiles.length) {
       const zip = new JSZip();
-      const zipFile = zipFiles[0]; // Assuming one zip file at a time
+      const zipFile = zipFiles[0]; // Assuming one ZIP file at a time
       const content = await zip.loadAsync(zipFile);
       const extracted = [];
 
@@ -22,8 +26,6 @@ export default function UploadAudiosForm() {
         if (!file.dir) {
           const fileContent = await file.async("blob");
           const fileNameOnly = filename.split("/").pop(); // Extract only the file name
-          extracted.push({ name: fileNameOnly, blob: fileContent });
-
           if (!extracted.some((f) => f.name === fileNameOnly)) {
             extracted.push({ name: fileNameOnly, blob: fileContent });
           }
@@ -39,7 +41,24 @@ export default function UploadAudiosForm() {
     setFiles(nonZipFiles);
   };
 
-  // Handle form submission
+  useEffect(() => {
+    // Add the beforeunload event listener if pending
+    const handleBeforeUnload = (e) => {
+      if (isPending) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+
+    if (isPending) {
+      window.addEventListener("beforeunload", handleBeforeUnload);
+    }
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isPending]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!files.length && !extractedFiles.length) {
@@ -48,13 +67,30 @@ export default function UploadAudiosForm() {
     }
 
     // Upload non-ZIP files
-    // files.forEach((file) => uploadMutation.mutate(file));
+    // files.forEach((file) => uploadFileMutation.mutate(file));
+    if (files.length) {
+      uploadFileMutation(files, {
+        onSuccess: () => {
+          event.target.reset();
+        },
+      });
+    }
 
     // Upload extracted ZIP files
-    extractedFiles.forEach((file) => {
-      const fileBlob = new File([file.blob], file.name);
-      // uploadMutation.mutate(fileBlob);
+    const extractedFilesWithType = extractedFiles.map((file) => {
+      const fileExtension = file.name.split(".").pop().toLowerCase();
+      const mimeType = getMimeType(fileExtension);
+      const fileBlob = new File([file.blob], file.name, { type: mimeType });
+      return fileBlob;
     });
+
+    if (extractedFilesWithType.length) {
+      uploadFileMutation(extractedFilesWithType, {
+        onSuccess: () => {
+          event.target.reset();
+        },
+      });
+    }
   };
 
   return (
@@ -79,7 +115,7 @@ export default function UploadAudiosForm() {
             onChange={handleFileChange}
           />
           <p className="mt-2 text-xs text-gray-500">
-            You can upload a single audio (.mp3, .wav, .ogg, .flac, .aac, .m4a,)
+            You can upload a single audio (.mp3, .wav, .ogg, .flac, .aac, .m4a)
             or a ZIP file containing multiple audios.
           </p>
         </div>
