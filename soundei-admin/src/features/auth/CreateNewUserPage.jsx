@@ -1,9 +1,18 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import Select from "react-select";
 import useCreateUser from "./useCreateUser";
+
+const usersRole = [
+  { value: "", label: "Select User Role" },
+  { value: "admin", label: "Admin" },
+  { value: "moderator", label: "Moderator" },
+  { value: "user", label: "User" },
+];
 
 export default function CreateNewUserPage() {
   const [errors, setErrors] = useState({}); // State to manage form errors
   const { isPending, signup } = useCreateUser();
+  const formRef = useRef();
 
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent default form submission behavior
@@ -51,7 +60,7 @@ export default function CreateNewUserPage() {
         <h2 className="mb-6 text-center text-2xl font-semibold text-gray-800">
           Create New User
         </h2>
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        <form className="space-y-6" onSubmit={handleSubmit} ref={formRef}>
           {/* Full Name */}
           <div>
             <label
@@ -140,24 +149,19 @@ export default function CreateNewUserPage() {
             >
               Role
             </label>
-            <select
-              id="role"
+            <Select
+              options={usersRole}
               name="role"
-              disabled={isPending}
-              required
-              className={`${isPending && "is-pending"} w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-50`}
-            >
-              <option value="">Select a role</option>
-              <option value="admin">Admin</option>
-              <option value="moderator">Moderator</option>
-              <option value="user">User</option>
-            </select>
+              id="role"
+              defaultValue={usersRole[0]}
+            />
           </div>
 
           {/* Buttons */}
           <div className="flex flex-col gap-4 md:flex-row">
             <button
               type="button"
+              onClick={() => formRef.current && formRef.current.reset()}
               disabled={isPending}
               className={` ${isPending && "is-pending"} rounded-md bg-gray-300 px-4 py-2 text-gray-700 transition hover:bg-gray-400`}
             >
