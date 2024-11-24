@@ -5,6 +5,7 @@ const morgan = require('morgan');
 require('dotenv').config();
 const cors = require('cors');
 const fs = require('fs');
+const multer = require('multer');
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -19,6 +20,7 @@ const audioRouter = require('./routes/audio');
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 const adminAuthRouter = require('./routes/adminAuth');
+const { allowedTypes } = require('./helpers/allowedTypesForFile');
 
 // const limiter = rateLimit({
 //   windowMs: 15 * 60 * 1000, // 15 minutes

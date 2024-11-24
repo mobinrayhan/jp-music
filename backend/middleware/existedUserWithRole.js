@@ -13,8 +13,6 @@ module.exports = existedUserWithRole = (
     if (options.from === 'JWT') userId = req.user.id;
 
     try {
-      console.log(req.user, req.body, userEmail, userId, 'FROM HERE');
-
       const isExistUser = await userModel.checkUserExists(userId || userEmail);
       if (!isExistUser) {
         const error = new Error('User not Found!');

@@ -325,7 +325,6 @@ exports.getAudiosFromPlaylist = async ({
   );
 
   if (!user) {
-    console.log('No user found with this ID.');
     return { audios: [], totalAudios: 0 };
   }
 
