@@ -10,10 +10,10 @@ export default function ProtectedRoute({ children }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if ((!user?.isActive && !isPending) || !token) {
+    if (((!user || !user?.isActive) && !isPending) || !token) {
       navigate("/login");
     }
-  }, [isPending, user?.isActive, navigate, token]);
+  }, [isPending, user, navigate, token]);
 
   if (isPending) return <FullPageSpinner />;
 

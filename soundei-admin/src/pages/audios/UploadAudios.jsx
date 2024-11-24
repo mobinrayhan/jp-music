@@ -1,3 +1,5 @@
+import UploadAudiosForm from "../../features/audios/UploadAudiosForm";
+
 export default function UploadAudios() {
-  return <div>UploadAudios</div>;
+  return <UploadAudiosForm />;
 }
