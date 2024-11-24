@@ -28,6 +28,10 @@ export default function DownloadCategory({ searchValue, maxAudios }) {
     return <p className={"py-6"}>{error.message}</p>;
   }
 
+  if (!data.audios.length) {
+    return <p>You Didn&lsquo;t Download Any Audio Yet!</p>;
+  }
+
   const parsedAudios = parsedURLAudio(data.audios);
   const catAudios = categorizeAudios(parsedAudios);
 
