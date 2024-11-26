@@ -24,13 +24,11 @@ export const createNewUser = async (userData) => {
     console.log(error);
 
     if (error.response) {
-      console.error("Error Response:", error.response.data);
       throw new Error(
         error.response.data.message ||
           "An error occurred while creating a new user.",
       );
     } else if (error.request) {
-      console.error("Error Request:", error.request);
       throw new Error(
         "No response received from the server. Please try again later.",
       );

@@ -1,13 +1,39 @@
 import JSZip from "jszip";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import Select from "react-select";
+import * as XLSX from "xlsx";
+import { categoryList } from "../../utils/category-list";
 import { getMimeType } from "../../utils/getMimeType";
 import ListOfPreparedAudio from "./ListOfPreparedAudio";
+import MetadataTable from "./MetadataTable";
 import useAudiosUpload from "./useAudiosUpload";
+
+const categoryOptions = categoryList
+  .map((catItem) => {
+    return (
+      catItem.category !== "all" && {
+        label:
+          catItem.category.charAt(0).toUpperCase() + catItem.category.slice(1),
+        value: catItem.category,
+      }
+    );
+  })
+  .filter(Boolean)
+  .sort((a, b) => a.label.localeCompare(b.label));
 
 export default function UploadAudiosForm() {
   const [files, setFiles] = useState([]); // State for selected files
   const [extractedFiles, setExtractedFiles] = useState([]); // State for extracted files from ZIP
   const { uploadFileMutation, isPending } = useAudiosUpload();
+  const [category, setCategory] = useState("");
+  const [extractedJsonMetadata, setExtractedJsonMetadata] = useState([]);
+  const defaultCategory = categoryOptions.find(
+    (cat) => cat.value === extractedJsonMetadata?.[0]?.category,
+  );
+
+  const uploadedAudioFiles =
+    (files.length && files) || (extractedFiles.length && extractedFiles);
 
   // Handle file selection
   const handleFileChange = async (event) => {
@@ -38,6 +64,7 @@ export default function UploadAudiosForm() {
     const nonZipFiles = fileList.filter(
       (file) => file.type !== "application/zip",
     );
+
     setFiles(nonZipFiles);
   };
 
@@ -62,18 +89,78 @@ export default function UploadAudiosForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!files.length && !extractedFiles.length) {
-      alert("No files to upload.");
+      toast.error("No Audio Provided !!");
       return;
     }
+
+    const formData = new FormData(event.target);
+    const category = formData.get("category");
+
+    if (!category) {
+      toast.error("No Category Selected!!");
+      return;
+    }
+    const isLengthSame =
+      extractedJsonMetadata.length === uploadedAudioFiles.length;
+
+    if (!isLengthSame) {
+      toast.error(
+        `You wanna upload ${uploadedAudioFiles.length} audios but your metadata listed ${extractedJsonMetadata.length} audios data!`,
+      );
+      return;
+    }
+
+    const isMatchedCategory = extractedJsonMetadata.every(
+      (audio) => audio.category === category,
+    );
+
+    if (!isMatchedCategory) {
+      toast.error("Category is not matched with metadata!");
+      return;
+    }
+
+    let matchCount = 0;
+    let nonMatchCount = 0;
+
+    uploadedAudioFiles.forEach((upAudio) => {
+      const isMatch = extractedJsonMetadata.some((metaData) => {
+        return metaData.id === upAudio.name;
+      });
+      if (isMatch) {
+        matchCount++;
+      } else {
+        nonMatchCount++;
+      }
+    });
+
+    if (nonMatchCount) {
+      toast.error(`Matches: ${matchCount}, Non-Matches: ${nonMatchCount}`);
+      return;
+    }
+
+    const metadata = extractedJsonMetadata.map((data) => {
+      return {
+        id: data.id,
+        name: data.name,
+        keywords: data.keywords,
+      };
+    });
+
+    console.log(metadata);
 
     // Upload non-ZIP files
     // files.forEach((file) => uploadFileMutation.mutate(file));
     if (files.length) {
-      uploadFileMutation(files, {
-        onSuccess: () => {
-          event.target.reset();
+      uploadFileMutation(
+        { files, category, metadata },
+        {
+          onSuccess: () => {
+            event.target.reset();
+            setFiles([]);
+            setExtractedJsonMetadata([]);
+          },
         },
-      });
+      );
     }
 
     // Upload extracted ZIP files
@@ -85,20 +172,63 @@ export default function UploadAudiosForm() {
     });
 
     if (extractedFilesWithType.length) {
-      uploadFileMutation(extractedFilesWithType, {
-        onSuccess: () => {
-          event.target.reset();
+      uploadFileMutation(
+        { files: extractedFilesWithType, category, metadata },
+        {
+          onSuccess: () => {
+            event.target.reset();
+            setExtractedFiles([]);
+            setExtractedJsonMetadata([]);
+          },
         },
-      });
+      );
     }
   };
 
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    // Read the file as a binary string
+    reader.onload = (e) => {
+      const binaryStr = e.target.result;
+
+      // Parse the file using XLSX
+      const workbook = XLSX.read(binaryStr, { type: "binary" });
+      const sheetName = workbook.SheetNames[0]; // Get the first sheet name
+      const worksheet = workbook.Sheets[sheetName]; // Get the first worksheet
+
+      // Convert sheet to JSON
+      const data = XLSX.utils.sheet_to_json(worksheet);
+
+      // Trim all string fields in the JSON data
+      const trimmedData = data.map((row) =>
+        Object.fromEntries(
+          Object.entries(row).map(([key, value]) => [
+            key,
+            typeof value === "string" ? value.trim() : value,
+          ]),
+        ),
+      );
+
+      setExtractedJsonMetadata(trimmedData);
+    };
+
+    reader.readAsBinaryString(file);
+  };
+
   return (
-    <div className="container mx-auto rounded-lg bg-white p-6 shadow-md">
+    <section className="container mx-auto rounded-lg bg-white p-6 shadow-md">
       <h2 className="mb-4 text-xl font-semibold text-gray-800">
         Upload Audio or ZIP File
       </h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+
+      <form
+        onSubmit={handleSubmit}
+        className={`grid grid-cols-1 gap-6 md:grid-cols-2 ${isPending ? "is-pending" : ""}`}
+      >
         <div>
           <label
             className="block text-sm font-medium text-gray-700"
@@ -109,29 +239,80 @@ export default function UploadAudiosForm() {
           <input
             type="file"
             id="fileUpload"
-            accept=".mp3,.wav,.ogg,.flac,.aac,.m4a,.zip"
+            disabled={isPending}
             multiple
+            accept=".mp3,.wav,.ogg,.flac,.aac,.m4a,.zip"
             className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
             onChange={handleFileChange}
           />
           <p className="mt-2 text-xs text-gray-500">
-            You can upload a single audio (.mp3, .wav, .ogg, .flac, .aac, .m4a)
-            or a ZIP file containing multiple audios.
+            You can upload (.mp3, .wav, .ogg, .flac, .aac, .m4a) or a ZIP file
+            containing multiple audios.
           </p>
+        </div>
+
+        <div>
+          <label
+            className="block text-sm font-medium text-gray-700"
+            htmlFor="metadata"
+          >
+            Upload Metadata
+          </label>
+          <input
+            required
+            type="file"
+            id="metadata"
+            disabled={isPending}
+            accept=".xlsx"
+            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
+            onChange={handleFileUpload}
+          />
+          <p className="mt-2 text-xs text-gray-500">
+            You can upload (.xlsx) file format!
+          </p>
+        </div>
+        <div>
+          <label
+            className="block text-sm font-medium text-gray-700"
+            htmlFor="category"
+          >
+            Category
+          </label>
+          <Select
+            isDisabled={isPending}
+            required
+            key={defaultCategory?.value}
+            defaultValue={defaultCategory}
+            options={categoryOptions}
+            id="category"
+            name="category"
+            onChange={(eve) => setCategory(eve.value)}
+          />
         </div>
         <button
           type="submit"
-          className="w-full rounded bg-blue-500 px-4 py-2 font-medium text-white hover:bg-blue-600"
+          disabled={isPending}
+          className="w-full self-end rounded bg-blue-500 px-4 py-2 font-medium text-white hover:bg-blue-600"
         >
-          Upload
+          {isPending ? "Uploading..." : "Upload"}
         </button>
       </form>
 
-      {extractedFiles.length ? (
-        <ListOfPreparedAudio extractedFiles={extractedFiles} files={files} />
+      {!extractedJsonMetadata.length && uploadedAudioFiles ? (
+        <ListOfPreparedAudio
+          extractedFiles={extractedFiles}
+          files={files}
+          category={category}
+        />
       ) : (
         ""
       )}
-    </div>
+
+      {extractedJsonMetadata.length ? (
+        <MetadataTable extractedJsonMetadata={extractedJsonMetadata} />
+      ) : (
+        ""
+      )}
+    </section>
   );
 }
