@@ -43,7 +43,13 @@ export async function GET(req) {
       );
     }
 
-    const fileName = `${audioInfo.audio.name}.${audioInfo.audio.type}`;
+    console.log(audioInfo);
+
+    const fileExtension = audioInfo.audio.previewURL.substr(
+      audioInfo.audio.previewURL.lastIndexOf(".") + 1,
+    );
+
+    const fileName = `${audioInfo.audio.name}.${fileExtension}`;
     const fileBuffer = await downloadRes.arrayBuffer();
 
     return new Response(fileBuffer, {
