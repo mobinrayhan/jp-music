@@ -21,6 +21,7 @@ const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 const adminAuthRouter = require('./routes/adminAuth');
 const { allowedTypes } = require('./helpers/allowedTypesForFile');
+const { productionFrontURL, localhostFrontURL } = require('./constants/links');
 
 // const limiter = rateLimit({
 //   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -87,8 +88,8 @@ app.get('/all-audios/preview/:category/:name', (req, res) => {
   res.setHeader(
     'Access-Control-Allow-Origin',
     process.env.NODE_ENV === 'production'
-      ? 'https://vps-front.soundei.com'
-      : 'http://192.168.0.107:3000'
+      ? productionFrontURL
+      : localhostFrontURL
   );
   res.setHeader('Access-Control-Allow-Headers', 'Range');
   res.setHeader(

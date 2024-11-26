@@ -15,20 +15,13 @@ router.post(
   audioController.postDownloadAudio
 );
 
-router.post('/upload-audios', upload.array('files', Infinity), (req, res) => {
-  try {
-    const { files } = req;
-    if (!files) {
-      return res.status(400).json({ error: 'No file uploaded' });
-    }
+router.post(
+  '/upload-audios',
+  isAuth,
+  upload.array('files', Infinity),
+  audioController.postUploadAudios
+);
 
-    res.status(200).json({
-      message: 'File uploaded successfully',
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
 router.get('/:id', audioController.getAudioById);
 
 module.exports = router;

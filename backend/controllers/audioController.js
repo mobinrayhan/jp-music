@@ -101,3 +101,47 @@ exports.getAudioById = async (req, res, next) => {
     next(e);
   }
 };
+
+exports.postUploadAudios = async (req, res, next) => {
+  try {
+    const { files } = req;
+    if (!files) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    const metadataArray = JSON.parse(req.body.metadata);
+    const uploadPath = req.headers['x-upload-path'];
+
+    const fileRecords = files.map((file) => {
+      const metadata = metadataArray.find(
+        (meta) => meta.id === file.originalname
+      );
+
+      if (!metadata) {
+        throw new Error(`Metadata not found for file ${file.originalname}`);
+      }
+
+      return {
+        name: metadata.name,
+        previewURL: `${uploadPath}/${file.filename}`,
+        category: uploadPath.split('/')[2].trim(),
+        keywords: metadata.keywords
+          .split(',')
+          .some((item) => !item.trim().length)
+          ? []
+          : metadata.keywords.split(',').map((item) => item.trim()),
+
+        createdAt: new Date(),
+      };
+    });
+
+    await audioModels.postUploadAudios(fileRecords);
+
+    return res.status(200).json({
+      message: 'Files uploaded and saved successfully',
+      data: fileRecords,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
