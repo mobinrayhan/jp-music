@@ -109,28 +109,25 @@ exports.postUploadAudios = async (req, res, next) => {
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    const metadataArray = JSON.parse(req.body.metadata);
+    const metadata = JSON.parse(req.body.metadata);
     const uploadPath = req.headers['x-upload-path'];
 
     const fileRecords = files.map((file) => {
-      const metadata = metadataArray.find(
-        (meta) => meta.id === file.originalname
-      );
+      const mdata = Array.isArray(metadata)
+        ? metadata.find((meta) => meta.id === file.originalname)
+        : metadata;
 
-      if (!metadata) {
+      if (!mdata) {
         throw new Error(`Metadata not found for file ${file.originalname}`);
       }
 
       return {
-        name: metadata.name,
+        name: mdata.name,
         previewURL: `${uploadPath}/${file.filename}`,
         category: uploadPath.split('/')[2].trim(),
-        keywords: metadata.keywords
-          .split(',')
-          .some((item) => !item.trim().length)
+        keywords: mdata.keywords.split(',').some((item) => !item.trim().length)
           ? []
-          : metadata.keywords.split(',').map((item) => item.trim()),
-
+          : mdata.keywords.split(',').map((item) => item.trim()),
         createdAt: new Date(),
       };
     });
