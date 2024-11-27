@@ -28,12 +28,15 @@ export default function UploadAudiosForm() {
   const { uploadFileMutation, isPending } = useAudiosUpload();
   const [category, setCategory] = useState("");
   const [extractedJsonMetadata, setExtractedJsonMetadata] = useState([]);
+
   const defaultCategory = categoryOptions.find(
     (cat) => cat.value === extractedJsonMetadata?.[0]?.category,
   );
-
   const uploadedAudioFiles =
     (files.length && files) || (extractedFiles.length && extractedFiles);
+
+  const isDisabledMetadata =
+    isPending || !uploadedAudioFiles || uploadedAudioFiles.length === 1;
 
   // Handle file selection
   const handleFileChange = async (event) => {
@@ -103,7 +106,7 @@ export default function UploadAudiosForm() {
     const isLengthSame =
       extractedJsonMetadata.length === uploadedAudioFiles.length;
 
-    if (!isLengthSame) {
+    if (!isLengthSame && uploadedAudioFiles.length <= 1) {
       toast.error(
         `You wanna upload ${uploadedAudioFiles.length} audios but your metadata listed ${extractedJsonMetadata.length} audios data!`,
       );
@@ -114,7 +117,7 @@ export default function UploadAudiosForm() {
       (audio) => audio.category === category,
     );
 
-    if (!isMatchedCategory) {
+    if (!isMatchedCategory && uploadedAudioFiles.length <= 1) {
       toast.error("Category is not matched with metadata!");
       return;
     }
@@ -133,20 +136,24 @@ export default function UploadAudiosForm() {
       }
     });
 
-    if (nonMatchCount) {
+    if (nonMatchCount && uploadedAudioFiles.length <= 1) {
       toast.error(`Matches: ${matchCount}, Non-Matches: ${nonMatchCount}`);
       return;
     }
 
-    const metadata = extractedJsonMetadata.map((data) => {
-      return {
-        id: data.id,
-        name: data.name,
-        keywords: data.keywords,
-      };
-    });
+    const name = formData.get("name");
+    const keywords = formData.get("keywords");
 
-    console.log(metadata);
+    const metadata =
+      uploadedAudioFiles.length <= 1
+        ? extractedJsonMetadata.map((data) => {
+            return {
+              id: data.id,
+              name: data.name,
+              keywords: data.keywords,
+            };
+          })
+        : { id: uploadedAudioFiles[0].name, name, keywords: keywords };
 
     // Upload non-ZIP files
     // files.forEach((file) => uploadFileMutation.mutate(file));
@@ -252,25 +259,72 @@ export default function UploadAudiosForm() {
         </div>
 
         <div>
-          <label
-            className="block text-sm font-medium text-gray-700"
-            htmlFor="metadata"
-          >
-            Upload Metadata
-          </label>
-          <input
-            required
-            type="file"
-            id="metadata"
-            disabled={isPending}
-            accept=".xlsx"
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
-            onChange={handleFileUpload}
-          />
-          <p className="mt-2 text-xs text-gray-500">
-            You can upload (.xlsx) file format!
-          </p>
+          {uploadedAudioFiles.length === 1 ? (
+            <>
+              <label
+                className="block text-sm font-medium text-gray-700"
+                htmlFor="keywords"
+              >
+                Enter keywords
+              </label>
+              <input
+                required
+                type="input"
+                id="keywords"
+                name="keywords"
+                disabled={isPending}
+                placeholder="Enter Audio File Keyword!"
+                className={`mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm`}
+              />
+              <p className="mt-2 text-xs text-gray-500">
+                You can write like this (james, korobi, mobin) format!
+              </p>
+            </>
+          ) : (
+            <>
+              {" "}
+              <label
+                className="block text-sm font-medium text-gray-700"
+                htmlFor="metadata"
+              >
+                Upload Metadata
+              </label>
+              <input
+                required
+                type="file"
+                id="metadata"
+                disabled={isDisabledMetadata}
+                accept=".xlsx"
+                className={`mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm`}
+                onChange={handleFileUpload}
+              />
+              <p className="mt-2 text-xs text-gray-500">
+                You can upload (.xlsx) file format!
+              </p>
+            </>
+          )}
         </div>
+
+        {uploadedAudioFiles.length === 1 ? (
+          <div>
+            <label
+              className="block text-sm font-medium text-gray-700"
+              htmlFor="name"
+            >
+              Enter Audio Name
+            </label>
+            <input
+              required
+              type="input"
+              id="name"
+              name="name"
+              disabled={isPending}
+              defaultValue={uploadedAudioFiles[0].name.replace(/\.[^/.]+$/, "")}
+              placeholder="Enter Audio Name!"
+              className={`mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm`}
+            />
+          </div>
+        ) : null}
         <div>
           <label
             className="block text-sm font-medium text-gray-700"
@@ -298,7 +352,7 @@ export default function UploadAudiosForm() {
         </button>
       </form>
 
-      {!extractedJsonMetadata.length && uploadedAudioFiles ? (
+      {!extractedJsonMetadata.length && uploadedAudioFiles.length > 1 ? (
         <ListOfPreparedAudio
           extractedFiles={extractedFiles}
           files={files}
