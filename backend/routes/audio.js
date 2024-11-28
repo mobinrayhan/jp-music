@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const audioController = require('../controllers/audioController');
 const isAuth = require('../middleware/isAuth');
+const existedUserWithRole = require('../middleware/existedUserWithRole');
 const isExistUser = require('../middleware/existedUserWithRole');
 const { upload } = require('../config/multerConfig');
 
@@ -11,13 +12,14 @@ router.get('/newest', audioController.getNewestAudiosWithSearch);
 router.post(
   '/download',
   isAuth,
-  isExistUser(),
+  existedUserWithRole(),
   audioController.postDownloadAudio
 );
 
 router.post(
   '/upload-audios',
   isAuth,
+  existedUserWithRole({ from: 'JWT', accessibleRole: 'admin' }),
   upload.array('files', Infinity),
   audioController.postUploadAudios
 );
