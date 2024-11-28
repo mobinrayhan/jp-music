@@ -1,4 +1,4 @@
-import { getToken } from "../lib/getToken";
+import { getToken } from "../lib/localStorageToken";
 import axiosInstance from "./axiosInstance";
 
 export const uploadAudios = async ({ files, category, metadata }) => {

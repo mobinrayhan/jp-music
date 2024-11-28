@@ -5,7 +5,7 @@ import Sidebar from "./Sidebar.jsx";
 export default function AppLayout() {
   return (
     <div className="grid h-screen grid-cols-[20rem_1fr] grid-rows-[auto_1fr]">
-      <header className="col-start-2 col-end-3 border-b border-gray-200 p-6">
+      <header className="col-start-2 col-end-3 flex border-b border-gray-200 p-4">
         <Header />
       </header>
 

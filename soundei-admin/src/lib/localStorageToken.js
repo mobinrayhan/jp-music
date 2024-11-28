@@ -4,3 +4,7 @@ export function getToken() {
 
   return JSON.parse(existedUser);
 }
+
+export function removeToken() {
+  return localStorage.removeItem("user");
+}

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useUser from "../features/auth/useUser";
-import { getToken } from "../lib/getToken";
+import { getToken } from "../lib/localStorageToken";
 import FullPageSpinner from "./FullPageSpinner";
 
 export default function ProtectedRoute({ children }) {

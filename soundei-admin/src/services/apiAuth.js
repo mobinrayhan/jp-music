@@ -1,4 +1,4 @@
-import { getToken } from "../lib/getToken";
+import { getToken, removeToken } from "../lib/localStorageToken";
 import axiosInstance from "./axiosInstance";
 
 export const loginUser = async (credentials) => {
@@ -70,4 +70,8 @@ export const getCurrentUser = async () => {
       throw new Error("An unexpected error occurred.");
     }
   }
+};
+
+export const logout = async () => {
+  return removeToken();
 };
