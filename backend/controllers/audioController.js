@@ -15,7 +15,7 @@ exports.getCategoryAudiosWithSearch = async (req, res, next) => {
     });
 
     if (!catWithSearchResult.totalAudios) {
-      const error = new Error('No Audios Found of this category!');
+      const error = new Error('No Audios Found !');
       error.statusCode = 404;
       throw error;
     }
@@ -125,7 +125,9 @@ exports.postUploadAudios = async (req, res, next) => {
         name: mdata.name,
         previewURL: `${uploadPath}/${file.filename}`,
         category: uploadPath.split('/')[2].trim(),
-        keywords: mdata.keywords.split(',').some((item) => !item.trim().length)
+        keywords: mdata?.keywords
+          ?.split(',')
+          .some((item) => !item.trim().length)
           ? []
           : mdata.keywords.split(',').map((item) => item.trim()),
         createdAt: new Date(),
