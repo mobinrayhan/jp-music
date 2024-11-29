@@ -12,7 +12,7 @@ export default function AudioQuery() {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedValue(inputValue);
-    }, 300);
+    }, 400);
 
     return () => {
       clearTimeout(handler);
@@ -38,6 +38,7 @@ export default function AudioQuery() {
         className="w-1/4 rounded-md border border-slate-200 p-2 px-4 placeholder:tracking-wider"
         placeholder="Enter Your Audio Name Or Keyword"
         onChange={(e) => setInputValue(e.target.value)}
+        value={inputValue}
       />
 
       <AudioTableOperation />

@@ -28,8 +28,8 @@ export const uploadAudios = async ({ files, category, metadata }) => {
   }
 };
 
-export const getAudios = async ({ maxAudioPerPage }) => {
-  const fetcherEndPoint = `/audios/search/${"all"}?querySearch=${""}&maxAudios=${maxAudioPerPage}`;
+export const getAudios = async ({ maxAudioPerPage, querySearch }) => {
+  const fetcherEndPoint = `/audios/search/${"all"}?querySearch=${querySearch || ""}&maxAudios=${maxAudioPerPage}`;
   const token = getToken();
 
   if (!token) {
