@@ -145,15 +145,15 @@ export default function UploadAudiosForm() {
     const keywords = formData.get("keywords");
 
     const metadata =
-      uploadedAudioFiles.length <= 1
-        ? extractedJsonMetadata.map((data) => {
+      uploadedAudioFiles.length === 1
+        ? { id: uploadedAudioFiles[0].name, name, keywords: keywords }
+        : extractedJsonMetadata.map((data) => {
             return {
               id: data.id,
               name: data.name,
               keywords: data.keywords,
             };
-          })
-        : { id: uploadedAudioFiles[0].name, name, keywords: keywords };
+          });
 
     // Upload non-ZIP files
     // files.forEach((file) => uploadFileMutation.mutate(file));

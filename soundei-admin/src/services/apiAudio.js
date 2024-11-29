@@ -22,10 +22,31 @@ export const uploadAudios = async ({ files, category, metadata }) => {
       },
     });
   } catch (error) {
-    console.log(error.response.data.message);
-
     throw new Error(
       error.response.data.message || "An error occurred while upload audios.",
+    );
+  }
+};
+
+export const getAudios = async ({ maxAudioPerPage }) => {
+  const fetcherEndPoint = `/audios/search/${"all"}?querySearch=${""}&maxAudios=${maxAudioPerPage}`;
+  const token = getToken();
+
+  if (!token) {
+    throw new Error("No Token Found");
+  }
+
+  try {
+    const data = await axiosInstance.get(fetcherEndPoint, {
+      headers: {
+        Authorization: `Bearer ${token.token}`,
+      },
+    });
+
+    return data;
+  } catch (error) {
+    throw new Error(
+      error.response.data.message || "An error occurred while fetching audios.",
     );
   }
 };
