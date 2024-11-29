@@ -1,3 +1,4 @@
+import AudioQuery from "./AudioQuery";
 import AudioTableList from "./AudioTableList";
 
 export default function AllAudiosPage() {
@@ -7,6 +8,7 @@ export default function AllAudiosPage() {
         All Audios
       </h1>
 
+      <AudioQuery />
       <AudioTableList />
     </section>
   );

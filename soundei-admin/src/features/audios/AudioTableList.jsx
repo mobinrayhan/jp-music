@@ -12,8 +12,6 @@ export default function AudioTableList() {
   const { audios, isPending } = useAudios();
   const maxAudiosParams = searchParams.get("maxAudios");
 
-  console.log(audios);
-
   if (isPending) {
     return (
       <div className="flex h-[76vh] items-center justify-center">

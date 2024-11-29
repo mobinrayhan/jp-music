@@ -106,7 +106,7 @@ export default function UploadAudiosForm() {
     const isLengthSame =
       extractedJsonMetadata.length === uploadedAudioFiles.length;
 
-    if (!isLengthSame && uploadedAudioFiles.length <= 1) {
+    if (!isLengthSame && uploadedAudioFiles.length > 1) {
       toast.error(
         `You wanna upload ${uploadedAudioFiles.length} audios but your metadata listed ${extractedJsonMetadata.length} audios data!`,
       );
@@ -117,7 +117,7 @@ export default function UploadAudiosForm() {
       (audio) => audio.category === category,
     );
 
-    if (!isMatchedCategory && uploadedAudioFiles.length <= 1) {
+    if (!isMatchedCategory && uploadedAudioFiles.length > 1) {
       toast.error("Category is not matched with metadata!");
       return;
     }
@@ -136,7 +136,7 @@ export default function UploadAudiosForm() {
       }
     });
 
-    if (nonMatchCount && uploadedAudioFiles.length <= 1) {
+    if (nonMatchCount && uploadedAudioFiles.length > 1) {
       toast.error(`Matches: ${matchCount}, Non-Matches: ${nonMatchCount}`);
       return;
     }
