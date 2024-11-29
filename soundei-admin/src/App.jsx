@@ -26,9 +26,11 @@ export default function App() {
     },
   });
 
+  const isRunningInDev = import.meta.env.DEV;
+
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {isRunningInDev && <ReactQueryDevtools initialIsOpen={false} />}
 
       <BrowserRouter>
         <Routes>
