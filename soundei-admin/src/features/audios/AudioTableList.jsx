@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { createPortal } from "react-dom";
 import { useSearchParams } from "react-router-dom";
 import Spinner from "../../ui/Spinner";
 import AudioTableBody from "./AudioTableBody";
@@ -9,7 +11,10 @@ export const MAX_AUDIO_PER_PAGE = 10;
 
 export default function AudioTableList() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [position, setPosition] = useState(null);
+  const [positionAudio, setPositionAudio] = useState(null);
   const { audios, isPending, error } = useAudios();
+
   const maxAudiosParams = searchParams.get("maxAudios");
   const sortBy = searchParams.get("sortBy") || "name-asc";
 
@@ -43,6 +48,20 @@ export default function AudioTableList() {
     setSearchParams(searchParams);
   }
 
+  const handleAddMenuPosition = (event, audio) => {
+    if (positionAudio?._id === audio._id) {
+      setPositionAudio(null);
+      return;
+    } else {
+      const buttonRect = event.target.getBoundingClientRect();
+      setPosition({
+        top: buttonRect.bottom + window.scrollY, // Button bottom
+        left: buttonRect.left + window.scrollX - 200, // Button left
+      });
+      setPositionAudio(audio);
+    }
+  };
+
   // SORTING AUDIOS - chat gpt and jonas 😝
   const [field, direction] = sortBy.split("-");
   const modifier = direction === "asc" ? 1 : -1;
@@ -60,18 +79,38 @@ export default function AudioTableList() {
   });
 
   return (
-    <div className="relative mt-6 overflow-x-auto">
-      <table className="w-full bg-white text-left text-sm text-black rtl:text-right">
-        <AudioTableHeader />
-        <AudioTableBody audios={sortedAudios} />
-        <AudioTableFooter
-          isPending={isPending}
-          onHasMore={handleHasMore}
-          onResetPagination={handleResetPagination}
-          maxAudiosParams={maxAudiosParams}
-          totalAudioLen={audios.totalAudios}
-        />
-      </table>
-    </div>
+    <>
+      <div className="relative mt-6 overflow-x-auto">
+        <table className="w-full bg-white text-left text-sm text-black rtl:text-right">
+          <AudioTableHeader />
+          <AudioTableBody
+            audios={sortedAudios}
+            onAddMenuPosition={handleAddMenuPosition}
+            positionAudioId={positionAudio?._id}
+          />
+          <AudioTableFooter
+            isPending={isPending}
+            onHasMore={handleHasMore}
+            onResetPagination={handleResetPagination}
+            maxAudiosParams={maxAudiosParams}
+            totalAudioLen={audios.totalAudios}
+          />
+        </table>
+      </div>
+
+      {positionAudio &&
+        createPortal(
+          <p
+            className={`absolute w-[200px] bg-green-400 p-4`}
+            style={{
+              top: position.top,
+              left: position.left,
+            }}
+          >
+            This child is placed in the document body.
+          </p>,
+          document.body,
+        )}
+    </>
   );
 }

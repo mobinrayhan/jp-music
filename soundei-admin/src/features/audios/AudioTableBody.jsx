@@ -1,6 +1,10 @@
 import { CiMenuKebab } from "react-icons/ci";
 
-export default function AudioTableBody({ audios }) {
+export default function AudioTableBody({
+  audios,
+  onAddMenuPosition,
+  positionAudioId,
+}) {
   return (
     <tbody>
       {audios.map(({ _id, name, category }) => (
@@ -14,7 +18,16 @@ export default function AudioTableBody({ audios }) {
           <td className="px-6 py-4">WILL BE ADDED</td>
           <td className="px-6 py-4">{category}</td>
           <td className="flex justify-center px-6 py-4">
-            <button className="border border-slate-200 p-2 transition-all duration-150 hover:bg-slate-100">
+            <button
+              className={`border border-slate-200 p-2 transition-all duration-150 hover:bg-slate-100 ${positionAudioId === _id ? "border-slate-300 bg-slate-200" : ""}`}
+              onClick={(eve) =>
+                onAddMenuPosition(eve, {
+                  _id,
+                  name,
+                  category,
+                })
+              }
+            >
               <CiMenuKebab size={20} />
             </button>
           </td>
