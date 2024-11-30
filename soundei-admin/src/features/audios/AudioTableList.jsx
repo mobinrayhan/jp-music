@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { createPortal } from "react-dom";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
+import OptionsWrapper from "../../ui/OptionsWrapper";
 import Spinner from "../../ui/Spinner";
 import AudioTableBody from "./AudioTableBody";
 import AudioTableFooter from "./AudioTableFooter";
@@ -49,6 +50,8 @@ export default function AudioTableList() {
   }
 
   const handleAddMenuPosition = (event, audio) => {
+    event.stopPropagation();
+
     if (positionAudio?._id === audio._id) {
       setPositionAudio(null);
       return;
@@ -98,19 +101,21 @@ export default function AudioTableList() {
         </table>
       </div>
 
-      {positionAudio &&
-        createPortal(
-          <p
-            className={`absolute w-[200px] bg-green-400 p-4`}
-            style={{
-              top: position.top,
-              left: position.left,
-            }}
-          >
-            This child is placed in the document body.
-          </p>,
-          document.body,
-        )}
+      {positionAudio && (
+        <OptionsWrapper
+          position={position}
+          onClose={setPositionAudio.bind(null, null)}
+        >
+          <ul>
+            <li className="flex cursor-pointer items-center gap-2 p-4 text-lg hover:bg-slate-100">
+              <FaEdit /> Edit
+            </li>
+            <li className="flex cursor-pointer items-center gap-2 p-4 text-lg hover:bg-slate-100">
+              <FaTrash /> Delete
+            </li>
+          </ul>
+        </OptionsWrapper>
+      )}
     </>
   );
 }
