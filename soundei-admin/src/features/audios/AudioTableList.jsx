@@ -9,6 +9,7 @@ import AudioTableHeader from "./AudioTableHeader";
 import useAudios from "./useAudios";
 
 export const MAX_AUDIO_PER_PAGE = 10;
+export const MENU_POPUP_WIDTH = 140;
 
 export default function AudioTableList() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -59,7 +60,7 @@ export default function AudioTableList() {
       const buttonRect = event.target.getBoundingClientRect();
       setPosition({
         top: buttonRect.bottom + window.scrollY, // Button bottom
-        left: buttonRect.left + window.scrollX - 200, // Button left
+        left: buttonRect.left + window.scrollX - MENU_POPUP_WIDTH, // Button left
       });
       setPositionAudio(audio);
     }
@@ -107,10 +108,10 @@ export default function AudioTableList() {
           onClose={setPositionAudio.bind(null, null)}
         >
           <ul>
-            <li className="flex cursor-pointer items-center gap-2 p-4 text-lg hover:bg-slate-100">
+            <li className="flex cursor-pointer items-center gap-2 p-2 px-4 text-sm transition-all duration-200 hover:bg-slate-100">
               <FaEdit /> Edit
             </li>
-            <li className="flex cursor-pointer items-center gap-2 p-4 text-lg hover:bg-slate-100">
+            <li className="flex cursor-pointer items-center gap-2 p-2 px-4 text-sm transition-all duration-200 hover:bg-slate-100">
               <FaTrash /> Delete
             </li>
           </ul>

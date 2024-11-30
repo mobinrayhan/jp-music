@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
+import { MENU_POPUP_WIDTH } from "../features/audios/AudioTableList";
 
 export default function OptionsWrapper({ position, onClose, children }) {
   useEffect(() => {
@@ -19,9 +20,10 @@ export default function OptionsWrapper({ position, onClose, children }) {
 
   return createPortal(
     <div
-      className={`portal-wrapper absolute w-[200px] overflow-hidden rounded-md bg-white shadow-[0px_2px_8px_0px_rgba(99,99,99,0.3)]`}
+      className={`portal-wrapper absolute overflow-hidden rounded-md bg-white shadow-[0px_2px_8px_0px_rgba(99,99,99,0.3)]`}
       style={{
         top: position.top,
+        width: `${MENU_POPUP_WIDTH}px`,
         left: position.left,
       }}
     >
