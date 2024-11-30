@@ -1,13 +1,33 @@
 import { CiMenuKebab } from "react-icons/ci";
+import { useSearchParams } from "react-router-dom";
 
 export default function AudioTableBody({
   audios,
   onAddMenuPosition,
   positionAudioId,
 }) {
+  const [searchParams] = useSearchParams();
+  const sortBy = searchParams.get("sortBy") || "name-asc";
+
+  // SORTING AUDIOS - chat gpt and jonas 😝
+  const [field, direction] = sortBy.split("-");
+  const modifier = direction === "asc" ? 1 : -1;
+  const sortedAudios = [...audios].sort((a, b) => {
+    const valueA = a[field];
+    const valueB = b[field];
+
+    if (typeof valueA === "string" && typeof valueB === "string") {
+      return valueA.localeCompare(valueB) * modifier;
+    } else if (valueA instanceof Date || valueB instanceof Date) {
+      return (new Date(valueA) - new Date(valueB)) * modifier;
+    } else {
+      return (valueA - valueB) * modifier;
+    }
+  });
+
   return (
     <tbody>
-      {audios.map(({ _id, name, category }) => (
+      {sortedAudios.map(({ _id, name, category }) => (
         <tr key={_id} className="border-b border-slate-200 bg-white">
           <th
             scope="row"

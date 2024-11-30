@@ -18,7 +18,6 @@ export default function AudioTableList() {
   const { audios, isPending, error } = useAudios();
 
   const maxAudiosParams = searchParams.get("maxAudios");
-  const sortBy = searchParams.get("sortBy") || "name-asc";
 
   if (isPending) {
     return (
@@ -66,29 +65,13 @@ export default function AudioTableList() {
     }
   };
 
-  // SORTING AUDIOS - chat gpt and jonas 😝
-  const [field, direction] = sortBy.split("-");
-  const modifier = direction === "asc" ? 1 : -1;
-  const sortedAudios = [...audios.audios].sort((a, b) => {
-    const valueA = a[field];
-    const valueB = b[field];
-
-    if (typeof valueA === "string" && typeof valueB === "string") {
-      return valueA.localeCompare(valueB) * modifier;
-    } else if (valueA instanceof Date || valueB instanceof Date) {
-      return (new Date(valueA) - new Date(valueB)) * modifier;
-    } else {
-      return (valueA - valueB) * modifier;
-    }
-  });
-
   return (
     <>
       <div className="relative mt-6 overflow-x-auto">
         <table className="w-full bg-white text-left text-sm text-black rtl:text-right">
           <AudioTableHeader />
           <AudioTableBody
-            audios={sortedAudios}
+            audios={audios.audios}
             onAddMenuPosition={handleAddMenuPosition}
             positionAudioId={positionAudio?._id}
           />
