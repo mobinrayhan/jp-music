@@ -24,6 +24,14 @@ router.post(
   audioController.postUploadAudios
 );
 
+router.post(
+  '/edit',
+  isAuth,
+  upload.single('file'),
+  existedUserWithRole({ from: 'JWT', accessibleRole: 'admin' }),
+  audioController.postEditAudio
+);
+
 router.get('/:id', audioController.getAudioById);
 
 module.exports = router;

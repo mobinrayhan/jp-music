@@ -146,6 +146,11 @@ exports.postDownloadAudio = async function (audioId, userId) {
 exports.postUploadAudios = async function (audiosArr) {
   const db = await connectToDatabase();
   const audioColl = await db.collection('audios');
-
   return audioColl.insertMany(audiosArr);
+};
+
+exports.postUpdateAudio = async (id, audioInfo) => {
+  const db = await connectToDatabase();
+  const audioColl = await db.collection('audios');
+  return audioColl.updateOne({ _id: new ObjectId(id) }, { $set: audioInfo });
 };

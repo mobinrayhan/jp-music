@@ -1,6 +1,10 @@
 const audioModels = require('../models/audioModel');
 const path = require('node:path');
 const fs = require('node:fs');
+const { stringToKeywords } = require('../helpers/stringToKeywords');
+const { deleteFileFromPath } = require('../helpers/deleteFileFromPath');
+
+const appDir = path.dirname(require.main.filename);
 
 exports.getCategoryAudiosWithSearch = async (req, res, next) => {
   const { querySearch } = req.query;
@@ -125,11 +129,7 @@ exports.postUploadAudios = async (req, res, next) => {
         name: mdata.name,
         previewURL: `${uploadPath}/${file.filename}`,
         category: uploadPath.split('/')[2].trim(),
-        keywords: mdata?.keywords
-          ?.split(',')
-          .some((item) => !item.trim().length)
-          ? []
-          : mdata.keywords.split(',').map((item) => item.trim()),
+        keywords: stringToKeywords(mdata?.keywords),
         createdAt: new Date(),
       };
     });
@@ -142,5 +142,61 @@ exports.postUploadAudios = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+  }
+};
+
+exports.postEditAudio = async (req, res, next) => {
+  const { audioId, keywords, category, name } = req.body;
+  const file = req.file;
+  const uploadPath = req.headers['x-upload-path'];
+
+  try {
+    const audio = await audioModels.geAudioInfoById(audioId);
+
+    if (!audio) {
+      const error = new Error('No Audios Found!');
+      error.statusCode = 404;
+      throw error;
+    }
+
+    let previewURL;
+
+    if (category !== audio.category) {
+      const oldPath = path.join(appDir, audio.previewURL);
+      const audioPathParts = audio.previewURL.split('/'); // Split the path into parts
+      const fileName = audioPathParts[audioPathParts.length - 1]; // Get the file name
+      const newDir = path.join(appDir, uploadPath); // New directory
+      const newPath = path.join(newDir, fileName); // Full path including file name
+
+      // Ensure the destination directory exists
+      if (!fs.existsSync(newDir)) {
+        fs.mkdirSync(newDir, { recursive: true });
+      }
+
+      // Move the file
+      fs.renameSync(oldPath, newPath);
+      previewURL = `${uploadPath}/${fileName}`;
+    }
+
+    if (file) {
+      const audioPath = path.join(appDir, audio.previewURL);
+      deleteFileFromPath(audioPath);
+      previewURL = `${uploadPath}/${file.filename}`;
+    }
+
+    const updatedAudio = {
+      keywords: stringToKeywords(keywords),
+      category,
+      name,
+      previewURL: previewURL || audio.previewURL,
+    };
+
+    const updatedDoc = await audioModels.postUpdateAudio(audioId, updatedAudio);
+
+    if (updatedDoc.modifiedCount === 1 || updatedDoc.matchedCount === 1) {
+      return res.json({ message: 'Updated Audio Successfully!' });
+    }
+  } catch (e) {
+    next(e);
   }
 };
