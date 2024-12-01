@@ -1,4 +1,3 @@
-import { useSearchParams } from "react-router-dom";
 import Spinner from "../../ui/Spinner";
 import AudioTableBody from "./AudioTableBody";
 import AudioTableFooter from "./AudioTableFooter";
@@ -9,9 +8,7 @@ export const MAX_AUDIO_PER_PAGE = 10;
 export const MENU_POPUP_WIDTH = 140;
 
 export default function AudioTableList() {
-  const [searchParams, setSearchParams] = useSearchParams();
   const { audios, isPending, error } = useAudios();
-  const maxAudiosParams = searchParams.get("maxAudios");
 
   if (isPending) {
     return (
@@ -29,24 +26,13 @@ export default function AudioTableList() {
     );
   }
 
-  function handleHasMore() {
-    if (maxAudiosParams) {
-      searchParams.set("maxAudios", +maxAudiosParams + MAX_AUDIO_PER_PAGE);
-    } else {
-      searchParams.set("maxAudios", MAX_AUDIO_PER_PAGE * 2);
-    }
-    setSearchParams(searchParams);
-  }
-
   return (
-    <>
-      <div className="relative mt-6 overflow-x-auto">
-        <table className="w-full bg-white text-left text-sm text-black rtl:text-right">
-          <AudioTableHeader />
-          <AudioTableBody audios={audios.audios} />
-          <AudioTableFooter onHasMore={handleHasMore} />
-        </table>
-      </div>
-    </>
+    <div className="relative mt-6 overflow-x-auto">
+      <table className="w-full bg-white text-left text-sm text-black rtl:text-right">
+        <AudioTableHeader />
+        <AudioTableBody audios={audios.audios} />
+        <AudioTableFooter />
+      </table>
+    </div>
   );
 }

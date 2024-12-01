@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { MAX_AUDIO_PER_PAGE } from "./AudioTableList";
 import useAudios from "./useAudios";
 
-export default function AudioTableFooter({ onHasMore }) {
+export default function AudioTableFooter() {
   const { audios, isPending } = useAudios();
   const [searchParams, setSearchParams] = useSearchParams();
   const maxAudiosParams = searchParams.get("maxAudios");
@@ -12,6 +12,15 @@ export default function AudioTableFooter({ onHasMore }) {
     setSearchParams(searchParams);
   }
   const totalAudioLen = audios.totalAudios;
+
+  function handleHasMore() {
+    if (maxAudiosParams) {
+      searchParams.set("maxAudios", +maxAudiosParams + MAX_AUDIO_PER_PAGE);
+    } else {
+      searchParams.set("maxAudios", MAX_AUDIO_PER_PAGE * 2);
+    }
+    setSearchParams(searchParams);
+  }
 
   return (
     <tfoot className="bg-slate-200">
@@ -32,7 +41,7 @@ export default function AudioTableFooter({ onHasMore }) {
           {+maxAudiosParams <= totalAudioLen ? (
             <button
               disabled={isPending}
-              onClick={onHasMore}
+              onClick={handleHasMore}
               className={`rounded bg-blue-500 px-6 py-2 text-white`}
             >
               {isPending ? "Loading..." : "Load More"}
