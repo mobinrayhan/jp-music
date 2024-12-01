@@ -10,8 +10,10 @@ export default function AudioTableHeader() {
         </th>
         <th scope="col" className="px-6 py-3">
           Category
+        </th>{" "}
+        <th scope="col" className="px-6 py-3">
+          Keywords
         </th>
-
         <th scope="col" className="px-6 py-3 text-center">
           Action
         </th>

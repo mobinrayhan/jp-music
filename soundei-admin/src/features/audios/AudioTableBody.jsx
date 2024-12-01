@@ -27,7 +27,7 @@ export default function AudioTableBody({
 
   return (
     <tbody>
-      {sortedAudios.map(({ _id, name, category }) => (
+      {sortedAudios.map(({ _id, name, category, keywords, ...rest }) => (
         <tr key={_id} className="border-b border-slate-200 bg-white">
           <th
             scope="row"
@@ -37,6 +37,9 @@ export default function AudioTableBody({
           </th>
           <td className="px-6 py-4">WILL BE ADDED</td>
           <td className="px-6 py-4">{category}</td>
+          <td className="px-6 py-4">
+            {keywords?.join(", ") || "No Keywords Found!"}
+          </td>
           <td className="flex justify-center px-6 py-4">
             <button
               className={`border border-slate-200 p-2 transition-all duration-150 hover:bg-slate-100 ${positionAudioId === _id ? "border-slate-300 bg-slate-200" : ""}`}
@@ -45,6 +48,8 @@ export default function AudioTableBody({
                   _id,
                   name,
                   category,
+                  keywords,
+                  ...rest,
                 })
               }
             >
