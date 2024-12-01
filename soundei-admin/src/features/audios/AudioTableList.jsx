@@ -11,7 +11,6 @@ export const MENU_POPUP_WIDTH = 140;
 export default function AudioTableList() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { audios, isPending, error } = useAudios();
-
   const maxAudiosParams = searchParams.get("maxAudios");
 
   if (isPending) {
@@ -39,24 +38,13 @@ export default function AudioTableList() {
     setSearchParams(searchParams);
   }
 
-  function handleResetPagination() {
-    searchParams.delete("maxAudios");
-    setSearchParams(searchParams);
-  }
-
   return (
     <>
       <div className="relative mt-6 overflow-x-auto">
         <table className="w-full bg-white text-left text-sm text-black rtl:text-right">
           <AudioTableHeader />
           <AudioTableBody audios={audios.audios} />
-          <AudioTableFooter
-            isPending={isPending}
-            onHasMore={handleHasMore}
-            onResetPagination={handleResetPagination}
-            maxAudiosParams={maxAudiosParams}
-            totalAudioLen={audios.totalAudios}
-          />
+          <AudioTableFooter onHasMore={handleHasMore} />
         </table>
       </div>
     </>
