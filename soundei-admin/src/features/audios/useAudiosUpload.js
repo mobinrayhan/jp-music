@@ -8,9 +8,9 @@ export default function useAudiosUpload() {
 
   const { mutate: uploadFileMutation, isPending } = useMutation({
     mutationFn: async ({ files, category, metadata }) =>
-      uploadAudios({ files, category, metadata }),
+      await uploadAudios({ files, category, metadata }),
     onSuccess: () => {
-      queryClient.invalidateQueries("uploadedFiles");
+      queryClient.invalidateQueries(["audios"]);
       toast.success("Uploaded Audios Successfully!");
     },
     onError: (error) => {

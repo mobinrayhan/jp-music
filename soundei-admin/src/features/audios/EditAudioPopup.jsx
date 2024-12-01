@@ -1,8 +1,11 @@
+import toast from "react-hot-toast";
 import Select from "react-select";
 import Input from "../../ui/Input";
 import { categoryOptions } from "./UploadAudiosForm";
+import useEditAudio from "./useEditAudio";
 
 export default function EditAudioPopup({ editableAudio, onClose }) {
+  const { editAudioFn } = useEditAudio();
   const { category, keywords, name, _id } = editableAudio;
   const defaultCategory = categoryOptions.find((cat) => cat.value === category);
 
@@ -10,12 +13,15 @@ export default function EditAudioPopup({ editableAudio, onClose }) {
     event.preventDefault();
 
     const formData = new FormData(event.target);
-
-    const audioName = formData.get("audioName");
-    const keywords = formData.get("keywords");
-    const category = formData.get("category");
-
-    console.log({ audioName, keywords, category });
+    editAudioFn(formData, {
+      onSuccess: (audio) => {
+        toast.success(audio.data?.message || "Audio Updated Successfully!");
+        onClose();
+      },
+      onError: (err) => {
+        toast.error(err.message || "Something went wrong!");
+      },
+    });
   }
 
   return (
@@ -42,8 +48,8 @@ export default function EditAudioPopup({ editableAudio, onClose }) {
             header={"Edit Audio Name"}
             placeholder="Changer Your Audio Name"
             defaultValue={name}
-            name="audioName"
-            id="audioName"
+            name="name"
+            id="name"
             required
           />{" "}
         </div>
@@ -56,7 +62,7 @@ export default function EditAudioPopup({ editableAudio, onClose }) {
             id="keywords"
           />
         </div>
-        <div className="col-start-1 col-end-[-1]">
+        <div className="col-start-1 col-end-3">
           <label
             className="block text-sm font-medium text-gray-700"
             htmlFor="category"
@@ -70,6 +76,22 @@ export default function EditAudioPopup({ editableAudio, onClose }) {
             name="category"
           />
         </div>
+
+        <div className="col-start-3 col-end-[-1]">
+          <Input
+            type="file"
+            id="file"
+            name="file"
+            // disabled={isPending}
+            accept=".mp3,.wav,.ogg,.flac,.aac,.m4a"
+            header={"Select New  Audio!"}
+            // onChange={handleFileChange}
+            instruction={"You can upload (.mp3, .wav, .ogg, .flac, .aac, .m4a)"}
+          />
+        </div>
+
+        {/* for getting id */}
+        <input type="hidden" name="audioId" value={_id} />
 
         <button className="bg-blue-500 p-3 tracking-wider text-white">
           Edit Audio

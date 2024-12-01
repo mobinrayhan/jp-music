@@ -30,12 +30,24 @@ export default function AudioTableBody({ audios, positionAudioId }) {
     }
   };
 
-  function handleOnEdit() {
-    // for removing scroll
-    document.body.style.overflow = "hidden";
+  function handleEditAudio() {
+    const body = document.body;
+
+    if (body.getAttribute("style") === "overflow: hidden;") {
+      document.body.style.overflow = "auto";
+    } else {
+      document.body.style.overflow = "hidden";
+    }
 
     setIsEditableAudio((prev) => (prev ? null : positionAudio));
     console.log(isEditableAudio);
+    setPositionAudio(null);
+  }
+
+  function handleDeleteAudio() {
+    if (confirm("Do You Want To Delete This Audio?") === true) {
+      console.log(positionAudio._id, "Deleted");
+    }
     setPositionAudio(null);
   }
 
@@ -100,11 +112,14 @@ export default function AudioTableBody({ audios, positionAudioId }) {
           <ul>
             <li
               className="flex cursor-pointer items-center gap-2 p-2 px-4 text-sm transition-all duration-200 hover:bg-slate-100"
-              onClick={handleOnEdit}
+              onClick={handleEditAudio}
             >
               <FaEdit /> Edit
             </li>
-            <li className="flex cursor-pointer items-center gap-2 p-2 px-4 text-sm transition-all duration-200 hover:bg-slate-100">
+            <li
+              className="flex cursor-pointer items-center gap-2 p-2 px-4 text-sm transition-all duration-200 hover:bg-slate-100"
+              onClick={handleDeleteAudio}
+            >
               <FaTrash /> Delete
             </li>
           </ul>
@@ -115,10 +130,10 @@ export default function AudioTableBody({ audios, positionAudioId }) {
         createPortal(
           <>
             {" "}
-            <Backdrop onClick={handleOnEdit} />
+            <Backdrop onClick={handleEditAudio} />
             <EditAudioPopup
               editableAudio={isEditableAudio}
-              onClose={handleOnEdit}
+              onClose={handleEditAudio}
             />
           </>,
           document.body,

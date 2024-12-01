@@ -50,3 +50,28 @@ export const getAudios = async ({ maxAudioPerPage, querySearch }) => {
     );
   }
 };
+
+// export const editAudio = async ({ audioName, keywords, category, _id }) => {
+export const editAudio = async (formData) => {
+  const token = getToken();
+
+  if (!token) {
+    throw new Error("No Token Found");
+  }
+
+  try {
+    const data = await axiosInstance.post("/audios/edit", formData, {
+      headers: {
+        Authorization: `Bearer ${token.token}`,
+        "Content-Type": "multipart/form-data",
+        "X-Upload-Path": `all-audios/preview/${formData.get("category")}`,
+      },
+    });
+
+    return data;
+  } catch (error) {
+    throw new Error(
+      error.response.data.message || "An error occurred while fetching audios.",
+    );
+  }
+};

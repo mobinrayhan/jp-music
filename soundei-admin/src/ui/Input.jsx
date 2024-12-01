@@ -12,10 +12,7 @@ export default function Input({ header, instruction, ...rest }) {
         {...rest}
       />
       {instruction && (
-        <p className="mt-2 text-xs text-gray-500">
-          You can upload (.mp3, .wav, .ogg, .flac, .aac, .m4a) or a ZIP file
-          containing multiple audios.
-        </p>
+        <p className="mt-2 text-xs text-gray-500">{instruction}</p>
       )}
     </div>
   );
