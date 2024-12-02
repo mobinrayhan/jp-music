@@ -32,6 +32,12 @@ router.post(
   audioController.postEditAudio
 );
 
+router.delete(
+  '/delete',
+  isAuth,
+  existedUserWithRole({ from: 'JWT', accessibleRole: 'admin' }),
+  audioController.deleteAudio
+);
 router.get('/:id', audioController.getAudioById);
 
 module.exports = router;

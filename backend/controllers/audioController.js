@@ -200,3 +200,31 @@ exports.postEditAudio = async (req, res, next) => {
     next(e);
   }
 };
+
+exports.deleteAudio = async (req, res, next) => {
+  const { audioId } = req.body;
+  try {
+    const audio = await audioModels.geAudioInfoById(audioId);
+
+    if (!audio) {
+      const error = new Error('No Audios Found!');
+      error.statusCode = 404;
+      throw error;
+    }
+
+    const audioPath = path.join(appDir, audio.previewURL);
+    deleteFileFromPath(audioPath);
+
+    const result = await audioModels.deleteAudio(audioId);
+
+    if (result.deletedCount === 1) {
+      return res.json({ message: 'Deleted Audio Successfully!' });
+    } else {
+      const error = new Error('Something Went Wrong To Delete Audio!');
+      error.statusCode = 404;
+      throw error;
+    }
+  } catch (error) {
+    next(error);
+  }
+};

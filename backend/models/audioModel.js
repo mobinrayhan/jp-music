@@ -149,8 +149,17 @@ exports.postUploadAudios = async function (audiosArr) {
   return audioColl.insertMany(audiosArr);
 };
 
-exports.postUpdateAudio = async (id, audioInfo) => {
+exports.postUpdateAudio = async (audioId, audioInfo) => {
   const db = await connectToDatabase();
   const audioColl = await db.collection('audios');
-  return audioColl.updateOne({ _id: new ObjectId(id) }, { $set: audioInfo });
+  return audioColl.updateOne(
+    { _id: new ObjectId(audioId) },
+    { $set: audioInfo }
+  );
+};
+
+exports.deleteAudio = async (audioId) => {
+  const db = await connectToDatabase();
+  const audioColl = await db.collection('audios');
+  return audioColl.deleteOne({ _id: new ObjectId(audioId) });
 };
