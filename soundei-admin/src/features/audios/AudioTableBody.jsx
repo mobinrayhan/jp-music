@@ -7,12 +7,14 @@ import Backdrop from "../../ui/Backdrop";
 import OptionsWrapper from "../../ui/OptionsWrapper";
 import { MENU_POPUP_WIDTH } from "./AudioTableList";
 import EditAudioPopup from "./EditAudioPopup";
+import useDeleteAudio from "./useDeleteAudio";
 
 export default function AudioTableBody({ audios, positionAudioId }) {
   const [searchParams] = useSearchParams();
   const [positionAudio, setPositionAudio] = useState(null);
   const [position, setPosition] = useState(null);
   const [isEditableAudio, setIsEditableAudio] = useState(null);
+  const { audioDeleteFn } = useDeleteAudio();
 
   const handleAddMenuPosition = (event, audio) => {
     event.stopPropagation();
@@ -46,7 +48,7 @@ export default function AudioTableBody({ audios, positionAudioId }) {
 
   function handleDeleteAudio() {
     if (confirm("Do You Want To Delete This Audio?") === true) {
-      console.log(positionAudio._id, "Deleted");
+      audioDeleteFn({ audioId: positionAudio._id });
     }
     setPositionAudio(null);
   }

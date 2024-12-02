@@ -71,7 +71,32 @@ export const editAudio = async (formData) => {
     return data;
   } catch (error) {
     throw new Error(
-      error.response.data.message || "An error occurred while fetching audios.",
+      error.response.data.message || "An error occurred while updating audio.",
+    );
+  }
+};
+
+export const deleteAudio = async ({ audioId }) => {
+  const token = getToken();
+
+  if (!token) {
+    throw new Error("No Token Found");
+  }
+
+  try {
+    const data = await axiosInstance.delete("/audios/delete", {
+      headers: {
+        Authorization: `Bearer ${token.token}`,
+        "Content-Type": "application/json",
+      },
+      data: {
+        audioId,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw new Error(
+      error.response.data.message || "An error occurred while deleting audio.",
     );
   }
 };
