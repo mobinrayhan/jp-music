@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import AudioTableOperation from "./AudioTableOperation";
 
-export default function AudioQuery() {
+export default function QuerySearch({ placeholder }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [inputValue, setInputValue] = useState(
     searchParams.get("querySearch") || "",
@@ -32,16 +31,12 @@ export default function AudioQuery() {
   }, [debouncedValue, searchParams, setSearchParams]);
 
   return (
-    <header className="flex items-center justify-between">
-      <input
-        type="search"
-        className="w-1/4 rounded-md border border-slate-200 p-2 px-4 placeholder:tracking-wider"
-        placeholder="Enter Your Audio Name Or Keyword"
-        onChange={(e) => setInputValue(e.target.value)}
-        value={inputValue}
-      />
-
-      <AudioTableOperation />
-    </header>
+    <input
+      type="search"
+      className="w-1/4 rounded-md border border-slate-200 p-2 px-4 placeholder:tracking-wider"
+      placeholder={placeholder || "PLEASE WRITE A PLACEHOLDER"}
+      onChange={(e) => setInputValue(e.target.value)}
+      value={inputValue}
+    />
   );
 }

@@ -1,20 +1,20 @@
 import QuerySearch from "../../ui/QuerySearch";
-import AudioTableList from "./AudioTableList";
-import AudioTableOperation from "./AudioTableOperation";
+import UsersTableList from "./UsersTableList";
+import UsesTableOption from "./UsesTableOption";
 
-export default function AllAudiosPage() {
+export default function AllUsersPage() {
   return (
     <section className="rounded-md bg-slate-100 p-6">
       <h1 className="text-center text-3xl font-semibold tracking-wider">
-        All Audios
+        All Users
       </h1>
 
       <header className="flex items-center justify-between">
-        <QuerySearch placeholder={"Enter Your Audio Name Or Keyword"} />
-        <AudioTableOperation />
+        <QuerySearch placeholder={"Enter User Name  Or E-mail"} />
+        <UsesTableOption />
       </header>
 
-      <AudioTableList />
+      <UsersTableList />
     </section>
   );
 }

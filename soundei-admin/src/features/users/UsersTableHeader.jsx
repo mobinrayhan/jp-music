@@ -1,4 +1,4 @@
-export default function AudioTableHeader() {
+export default function UsersTableHeader() {
   return (
     <thead className="bg-slate-200 text-xs uppercase">
       <tr>
@@ -6,13 +6,20 @@ export default function AudioTableHeader() {
           Name
         </th>
         <th scope="col" className="px-6 py-3">
-          preview
+          E-mail
         </th>
         <th scope="col" className="px-6 py-3">
-          Category
+          Role
         </th>{" "}
         <th scope="col" className="px-6 py-3">
-          Keywords
+          Status
+        </th>
+        <th scope="col" className="px-6 py-3">
+          Created At
+        </th>
+        <th scope="col" className="px-6 py-3">
+          {/* (will be added after talking with boss) */}
+          Last Login
         </th>
         <th scope="col" className="px-6 py-3 text-center">
           Actions
