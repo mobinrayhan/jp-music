@@ -5,7 +5,7 @@ import AudioTableHeader from "./AudioTableHeader";
 import useAudios from "./useAudios";
 
 export const MAX_AUDIO_PER_PAGE = 10;
-export const MENU_POPUP_WIDTH = 140;
+export const MENU_POPUP_WIDTH = 160;
 
 export default function AudioTableList() {
   const { audios, isPending, error } = useAudios();
