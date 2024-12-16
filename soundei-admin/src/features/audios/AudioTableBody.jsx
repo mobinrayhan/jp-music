@@ -2,16 +2,16 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import { CiMenuKebab } from "react-icons/ci";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { useSearchParams } from "react-router-dom";
+import useSortBySelect from "../../hooks/useSortBySelect";
 import Backdrop from "../../ui/Backdrop";
 import OptionsWrapper from "../../ui/OptionsWrapper";
-import { sortFromParams } from "../../utils/healper";
 import { MENU_POPUP_WIDTH } from "./AudioTableList";
 import EditAudioPopup from "./EditAudioPopup";
 import useDeleteAudio from "./useDeleteAudio";
 
 export default function AudioTableBody({ audios, positionAudioId }) {
-  const [searchParams] = useSearchParams();
+  const { sortedData: sortedAudios } = useSortBySelect(audios);
+
   const [positionAudio, setPositionAudio] = useState(null);
   const [position, setPosition] = useState(null);
   const [isEditableAudio, setIsEditableAudio] = useState(null);
@@ -53,9 +53,6 @@ export default function AudioTableBody({ audios, positionAudioId }) {
     }
     setPositionAudio(null);
   }
-
-  const sortBy = searchParams.get("sortBy") || "name-asc";
-  const sortedAudios = sortFromParams({ datas: audios, params: sortBy });
 
   return (
     <>

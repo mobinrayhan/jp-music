@@ -1,7 +1,10 @@
-// SORTING AUDIOS - chat gpt and jonas 😝
+import { useSearchParams } from "react-router-dom";
 
-export const sortFromParams = ({ params, datas }) => {
-  const [field, direction] = params.split("-");
+export default function useSortBySelect(datas) {
+  const [searchParams] = useSearchParams();
+  const sortBy = searchParams.get("sortBy") || "name-asc";
+
+  const [field, direction] = sortBy.split("-");
   const modifier = direction === "asc" ? 1 : -1;
   const sortedData = [...datas].sort((a, b) => {
     const valueA = a[field];
@@ -16,5 +19,5 @@ export const sortFromParams = ({ params, datas }) => {
     }
   });
 
-  return sortedData;
-};
+  return { sortedData };
+}
