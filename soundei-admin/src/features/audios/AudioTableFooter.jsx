@@ -29,11 +29,9 @@ export default function AudioTableFooter() {
           <span>
             Showing <strong>1</strong> to{" "}
             <strong>
-              {maxAudiosParams && +maxAudiosParams <= totalAudioLen
-                ? maxAudiosParams
-                : +maxAudiosParams > totalAudioLen
-                  ? totalAudioLen
-                  : MAX_AUDIO_PER_PAGE}
+              {maxAudiosParams
+                ? Math.min(+maxAudiosParams, totalAudioLen)
+                : Math.min(MAX_AUDIO_PER_PAGE, totalAudioLen)}
             </strong>{" "}
             audios of <strong>{totalAudioLen}</strong> results
           </span>
