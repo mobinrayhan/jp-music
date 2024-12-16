@@ -396,7 +396,6 @@ exports.getAudiosFromPlaylist = async ({
   // Step 2: Find the specific playlist by slug
   const playlist = user.playlists.find((pl) => pl.slug === playlistSlug);
   if (!playlist) {
-    console.log('No playlist found with this slug.');
     return { audios: [], totalAudios: 0 };
   }
 
@@ -483,5 +482,21 @@ exports.getUserRole = async (input) => {
 
   return await userColl.findOne(query, {
     projection: { role: 1, _id: 0 },
+  });
+};
+
+exports.toggleActiveStatus = async (input) => {
+  if (!input) {
+    throw new Error('Input is required to check user role');
+  }
+
+  const query = getMongoQueryFromInput(input);
+
+  const db = await connectToDatabase();
+  const userColl = db.collection('users');
+  const existedUser = await userColl.findOne(query);
+
+  return await userColl.updateOne(query, {
+    $set: { isActive: !existedUser.isActive },
   });
 };

@@ -240,9 +240,24 @@ exports.getAllUsersWithSearch = async (req, res, next) => {
       limit: +limit,
     });
 
-    console.log({ users, totalCount });
-
     return res.json({ message: 'Get All Users!', users, totalCount });
+  } catch (e) {
+    next(e);
+  }
+};
+
+exports.postUpdateActiveStatus = async (req, res, next) => {
+  const { userId } = req.body;
+
+  try {
+    const { modifiedCount } = await userModel.toggleActiveStatus(userId);
+
+    if (!modifiedCount) {
+      const error = new Error('No Active Status Updated!');
+      error.statusCode = 204;
+      throw error;
+    }
+    return res.json({ message: 'Updated Active Status Successfully!' });
   } catch (e) {
     next(e);
   }

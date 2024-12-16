@@ -18,5 +18,6 @@ router.get(
 router.get('/get-playlist/:slug', userController.getPlaylist);
 router.get('/favorites-ids', userController.getFavoriteIds);
 router.post('/toggle-favorites', userController.postToggleFavourites);
+router.put('/toggle-active-status', userController.postUpdateActiveStatus);
 
 module.exports = router;
