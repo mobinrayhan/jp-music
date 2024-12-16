@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools/production";
 import { Toaster } from "react-hot-toast";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import UserDetail from "./features/users/UserDetail.jsx";
 import AllAudios from "./pages/audios/AllAudios.jsx";
 import Categories from "./pages/audios/Categories.jsx";
 import UploadAudios from "./pages/audios/UploadAudios.jsx";
@@ -46,6 +47,7 @@ export default function App() {
               <Route path="overview" element={<h1>Hello overview</h1>} />
             </Route>
             <Route path="users">
+              <Route path="detail/:id" element={<UserDetail />} />
               <Route path="all" element={<AllUsers />} />
               <Route path="roles" element={<RolesAndPermission />} />
               <Route path="blocked" element={<BlockList />} />

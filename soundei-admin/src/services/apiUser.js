@@ -3,8 +3,6 @@ import { getToken } from "../lib/localStorageToken";
 import axiosInstance from "./axiosInstance";
 
 export const getUsers = async ({ querySearch, page }) => {
-  console.log(querySearch, page);
-
   const fetcherEndPoint = `/users/all?querySearch=${querySearch}&page=${page}&limit=${USER_LIMIT_PER_PAGE}`;
   const token = getToken();
 
@@ -22,7 +20,11 @@ export const getUsers = async ({ querySearch, page }) => {
     return data;
   } catch (error) {
     throw new Error(
-      error.response.data.message || "An error occurred while fetching audios.",
+      error.response.data.message || "An error occurred while fetching users.",
     );
   }
+};
+
+export const updateUserActiveStatus = async ({ id }) => {
+  console.log(id);
 };

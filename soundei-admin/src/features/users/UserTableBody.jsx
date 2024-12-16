@@ -1,18 +1,23 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { CiMenuKebab } from "react-icons/ci";
 import { FaEdit, FaEye } from "react-icons/fa";
 import { IoIosSwitch } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
 import useSortBySelect from "../../hooks/useSortBySelect";
 import OptionsWrapper from "../../ui/OptionsWrapper";
 import { formatDateTimeWithSeconds } from "../../utils/helper";
 import { MENU_POPUP_WIDTH } from "../audios/AudioTableList";
+import useUserActiveStatus from "./useUserActiveStatus";
 
 export default function UserTableBody({ users }) {
   const { sortedData: sortedUser } = useSortBySelect({
     datas: users,
     defaultOrder: "username-asc",
   });
+  const { updateUserMutation } = useUserActiveStatus();
 
+  const navigate = useNavigate();
   const [positionUser, setPositionUser] = useState(null);
   const [position, setPosition] = useState(null);
 
@@ -31,6 +36,27 @@ export default function UserTableBody({ users }) {
       setPositionUser(user);
     }
   };
+
+  function handleViewDetail() {
+    navigate(`/users/detail/${positionUser._id}`);
+  }
+
+  function handleUserActivity() {
+    updateUserMutation(
+      { id: positionUser._id },
+      {
+        onSuccess: (data) => {
+          toast.success(data?.message | `User Updated Successfully`);
+        },
+        onError: (error) => {
+          toast.error(error?.message || "Something Went Wrong!");
+        },
+        onSettled: () => {
+          setPositionUser(null);
+        },
+      },
+    );
+  }
 
   return (
     <>
@@ -64,7 +90,7 @@ export default function UserTableBody({ users }) {
               </td>
               <td className="flex justify-center px-6 py-4">
                 <button
-                  className={`border border-slate-200 p-2 transition-all duration-150 hover:bg-slate-100 ${/*positionAudioId === _id */ Math.random() ? "border-slate-300 bg-slate-200" : ""}`}
+                  className={`border border-slate-200 p-2 transition-all duration-150 hover:bg-slate-100 ${positionUser?._id === _id ? "border-slate-300 bg-slate-200" : ""}`}
                   onClick={(eve) => handleAddMenuPosition(eve, user)}
                 >
                   <CiMenuKebab size={20} />
@@ -75,6 +101,7 @@ export default function UserTableBody({ users }) {
         })}
       </tbody>
 
+      {/* We did not manage loading state here  */}
       {positionUser && (
         <OptionsWrapper
           position={position}
@@ -83,7 +110,7 @@ export default function UserTableBody({ users }) {
           <ul>
             <li
               className="flex cursor-pointer items-center gap-2 p-2 px-4 text-sm transition-all duration-200 hover:bg-slate-100"
-              // onClick={handleEditAudio}
+              onClick={handleViewDetail}
             >
               <FaEye /> View Detail
             </li>{" "}
@@ -95,7 +122,7 @@ export default function UserTableBody({ users }) {
             </li>
             <li
               className="flex cursor-pointer items-center gap-2 p-2 px-4 text-sm transition-all duration-200 hover:bg-slate-100"
-              // onClick={handleDeleteAudio}
+              onClick={handleUserActivity}
             >
               {positionUser.isActive ? (
                 <>
