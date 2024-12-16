@@ -230,13 +230,20 @@ exports.getPlaylistAudios = async (req, res, next) => {
 };
 
 exports.getAllUsersWithSearch = async (req, res, next) => {
-  const { querySearch, page } = req.query;
-  const limit = 10; // Number of users per page
-  const skip = (+page - 1) * limit; // Calculate how many records to skip
+  const { querySearch, page, limit } = req.query;
+  const skip = (+page - 1) * +limit; // Calculate how many records to skip
 
-  const users = await userModel.getAllUsers({ querySearch, skip, limit });
+  try {
+    const { users, totalCount } = await userModel.getAllUsers({
+      querySearch,
+      skip,
+      limit: +limit,
+    });
 
-  console.log({ querySearch, page, users });
+    console.log({ users, totalCount });
 
-  return res.json({ message: 'Get All Users!', users });
+    return res.json({ message: 'Get All Users!', users, totalCount });
+  } catch (e) {
+    next(e);
+  }
 };

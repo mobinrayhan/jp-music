@@ -24,26 +24,48 @@ exports.getAllUsers = async ({ limit, skip, querySearch }) => {
           },
         ]
       : []),
-    // Step 2: Sort by createdAt descending
-    { $sort: { createdAt: -1 } },
-    // Step 3: Skip and Limit for Pagination
-    { $skip: skip },
-    { $limit: limit },
-    // Step 4: Project selected fields
+    // Step 2: Facet for paginated data and total count
     {
-      $project: {
-        _id: 1,
-        username: 1,
-        email: 1,
-        role: 1,
-        isActive: 1,
-        createdAt: 1,
-        lastLogin: 1,
+      $facet: {
+        users: [
+          // Sort by createdAt descending
+          { $sort: { createdAt: -1 } },
+          // Skip and Limit for Pagination
+          { $skip: skip },
+          { $limit: limit },
+          // Project selected fields
+          {
+            $project: {
+              _id: 1,
+              username: 1,
+              email: 1,
+              role: 1,
+              isActive: 1,
+              createdAt: 1,
+              lastLogin: 1,
+            },
+          },
+        ],
+        totalCount: [
+          { $count: 'count' }, // Total count of users
+        ],
+      },
+    },
+    // Step 3: Flatten the totalCount array to return a single number
+    {
+      $addFields: {
+        totalCount: { $arrayElemAt: ['$totalCount.count', 0] },
       },
     },
   ];
 
-  return await collection.aggregate(pipeline).toArray();
+  // Run the aggregation
+  const result = await collection.aggregate(pipeline).toArray();
+
+  // Extract users and totalCount from the result
+  const { users, totalCount } = result[0] || { users: [], totalCount: 0 };
+
+  return { users, totalCount };
 };
 exports.getUserById = async (id) => {
   const db = await connectToDatabase();
