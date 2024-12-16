@@ -2,7 +2,6 @@ const router = require('express').Router();
 const audioController = require('../controllers/audioController');
 const isAuth = require('../middleware/isAuth');
 const existedUserWithRole = require('../middleware/existedUserWithRole');
-const isExistUser = require('../middleware/existedUserWithRole');
 const { upload } = require('../config/multerConfig');
 
 // router.get('/all', audioController.getAllAudios);

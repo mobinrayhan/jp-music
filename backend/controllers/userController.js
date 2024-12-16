@@ -228,3 +228,15 @@ exports.getPlaylistAudios = async (req, res, next) => {
     next(e);
   }
 };
+
+exports.getAllUsersWithSearch = async (req, res, next) => {
+  const { querySearch, page } = req.query;
+  const limit = 10; // Number of users per page
+  const skip = (+page - 1) * limit; // Calculate how many records to skip
+
+  const users = await userModel.getAllUsers({ querySearch, skip, limit });
+
+  console.log({ querySearch, page, users });
+
+  return res.json({ message: 'Get All Users!', users });
+};

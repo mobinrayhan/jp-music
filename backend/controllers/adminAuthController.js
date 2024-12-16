@@ -44,6 +44,8 @@ exports.postLoginUser = async (req, res, next) => {
       }
     );
 
+    await authModels.updateLastLogin(email);
+
     return res.status(200).json({
       message: 'Login successful',
       token,

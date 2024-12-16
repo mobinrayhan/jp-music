@@ -2,6 +2,49 @@ const { connectToDatabase } = require('./db');
 const { ObjectId } = require('mongodb');
 const getMongoQueryFromInput = require('../helpers/getMongoQueryFromInput');
 
+exports.getAllUsers = async ({ limit, skip, querySearch }) => {
+  const db = await connectToDatabase();
+  const collection = await db.collection('users');
+
+  const pipeline = [
+    // Step 1: Match based on querySearch if it's not empty
+    ...(querySearch
+      ? [
+          {
+            $match: {
+              $or: [
+                { username: { $regex: querySearch, $options: 'i' } }, // Includes in name
+                { email: { $regex: querySearch, $options: 'i' } }, // Includes in email
+                { username: { $regex: `^${querySearch}`, $options: 'i' } }, // Starts with name
+                { email: { $regex: `^${querySearch}`, $options: 'i' } }, // Starts with email
+                { username: { $regex: `${querySearch}$`, $options: 'i' } }, // Ends with name
+                { email: { $regex: `${querySearch}$`, $options: 'i' } }, // Ends with email
+              ],
+            },
+          },
+        ]
+      : []),
+    // Step 2: Sort by createdAt descending
+    { $sort: { createdAt: -1 } },
+    // Step 3: Skip and Limit for Pagination
+    { $skip: skip },
+    { $limit: limit },
+    // Step 4: Project selected fields
+    {
+      $project: {
+        _id: 1,
+        username: 1,
+        email: 1,
+        role: 1,
+        isActive: 1,
+        createdAt: 1,
+        lastLogin: 1,
+      },
+    },
+  ];
+
+  return await collection.aggregate(pipeline).toArray();
+};
 exports.getUserById = async (id) => {
   const db = await connectToDatabase();
   const collection = await db.collection('users');

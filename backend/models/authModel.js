@@ -34,6 +34,8 @@ exports.createNewUser = async function ({
     email,
     role,
     isActive,
+    createdAt: new Date(),
+    lastLogin: null,
     playlists: [],
     downloads: [],
     favorites: [],
@@ -61,4 +63,10 @@ exports.updatePasswordById = async function (userId, newPassword) {
     { _id: new ObjectId(userId) },
     { $set: { password: newPassword } }
   );
+};
+
+exports.updateLastLogin = async function (email) {
+  const db = await connectToDatabase();
+  const collection = await db.collection('users');
+  return collection.updateOne({ email }, { $set: { lastLogin: new Date() } });
 };

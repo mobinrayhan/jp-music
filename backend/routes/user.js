@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const userController = require('../controllers/userController');
 
+router.get('/all', userController.getAllUsersWithSearch);
 router.get('/downloads', userController.getDownloads);
 router.get('/favorites', userController.getFavorites);
 router.post('/create-playlist', userController.postCreatePlaylist);
