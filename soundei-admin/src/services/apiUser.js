@@ -12,7 +12,7 @@ export const getUsers = async ({ querySearch, page }) => {
   }
 
   try {
-    const data = await axiosInstance.get(fetcherEndPoint, {
+    const { data } = await axiosInstance.get(fetcherEndPoint, {
       headers: {
         Authorization: `Bearer ${token.token}`,
       },

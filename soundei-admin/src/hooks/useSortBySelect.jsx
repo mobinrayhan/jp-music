@@ -1,8 +1,8 @@
 import { useSearchParams } from "react-router-dom";
 
-export default function useSortBySelect(datas) {
+export default function useSortBySelect({ datas, defaultOrder }) {
   const [searchParams] = useSearchParams();
-  const sortBy = searchParams.get("sortBy") || "name-asc";
+  const sortBy = searchParams.get("sortBy") || defaultOrder;
 
   const [field, direction] = sortBy.split("-");
   const modifier = direction === "asc" ? 1 : -1;

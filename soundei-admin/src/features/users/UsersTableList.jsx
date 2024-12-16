@@ -1,5 +1,6 @@
 import Spinner from "../../ui/Spinner";
 import UsersTableHeader from "./UsersTableHeader";
+import UserTableBody from "./UserTableBody";
 import useUsers from "./useUsers";
 
 export default function UsersTableList() {
@@ -27,6 +28,7 @@ export default function UsersTableList() {
     <div className="relative mt-6 overflow-x-auto">
       <table className="w-full bg-white text-left text-sm text-black rtl:text-right">
         <UsersTableHeader />
+        <UserTableBody users={data.users} />
       </table>
     </div>
   );

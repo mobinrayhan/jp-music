@@ -10,7 +10,10 @@ import EditAudioPopup from "./EditAudioPopup";
 import useDeleteAudio from "./useDeleteAudio";
 
 export default function AudioTableBody({ audios, positionAudioId }) {
-  const { sortedData: sortedAudios } = useSortBySelect(audios);
+  const { sortedData: sortedAudios } = useSortBySelect({
+    datas: audios,
+    defaultOrder: "name-asc",
+  });
 
   const [positionAudio, setPositionAudio] = useState(null);
   const [position, setPosition] = useState(null);

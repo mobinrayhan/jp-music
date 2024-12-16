@@ -1,39 +1,52 @@
 import { CiMenuKebab } from "react-icons/ci";
+import useSortBySelect from "../../hooks/useSortBySelect";
 
-export default function UserTableBody({ sortedUsers }) {
+export default function UserTableBody({ users }) {
+  const { sortedData: sortedUser } = useSortBySelect({
+    datas: users,
+    defaultOrder: "username-asc",
+  });
+
+  console.log(sortedUser);
+
   return (
     <tbody>
-      {sortedUsers.map(({ _id, name, category, keywords, ...rest }) => (
-        <tr key={_id} className="border-b border-slate-200 bg-white">
-          <th
-            scope="row"
-            className="0 whitespace-nowrap px-6 py-4 font-medium text-black"
-          >
-            {name}
-          </th>
-          <td className="px-6 py-4">WILL BE ADDED</td>
-          <td className="px-6 py-4">{category}</td>
-          <td className="px-6 py-4">
-            {keywords?.join(", ") || "No Keywords Found!"}
-          </td>
-          <td className="flex justify-center px-6 py-4">
-            <button
-              className={`border border-slate-200 p-2 transition-all duration-150 hover:bg-slate-100 ${/*positionAudioId === _id */ Math.random() ? "border-slate-300 bg-slate-200" : ""}`}
-              //   onClick={(eve) =>
-              //     handleAddMenuPosition(eve, {
-              //       _id,
-              //       name,
-              //       category,
-              //       keywords,
-              //       ...rest,
-              //     })
-              //   }
+      {sortedUser.map((user) => {
+        const { _id, email, isActive, lastLogin, role, username, createdAt } =
+          user;
+
+        return (
+          <tr key={_id} className="border-b border-slate-200 bg-white">
+            <th
+              scope="row"
+              className="0 whitespace-nowrap px-6 py-4 font-medium text-black"
             >
-              <CiMenuKebab size={20} />
-            </button>
-          </td>
-        </tr>
-      ))}
+              {username}
+            </th>
+            <td className="px-6 py-4">{email}</td>
+            <td className="px-6 py-4">{role}</td>
+            <td className="px-6 py-4">{isActive ? "Active" : "Disabled"}</td>
+            <td className="px-6 py-4">{createdAt}</td>
+            <td className="px-6 py-4">{lastLogin}</td>
+            <td className="flex justify-center px-6 py-4">
+              <button
+                className={`border border-slate-200 p-2 transition-all duration-150 hover:bg-slate-100 ${/*positionAudioId === _id */ Math.random() ? "border-slate-300 bg-slate-200" : ""}`}
+                //   onClick={(eve) =>
+                //     handleAddMenuPosition(eve, {
+                //       _id,
+                //       name,
+                //       category,
+                //       keywords,
+                //       ...rest,
+                //     })
+                //   }
+              >
+                <CiMenuKebab size={20} />
+              </button>
+            </td>
+          </tr>
+        );
+      })}
     </tbody>
   );
 }
