@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import useUsers from "./useUsers";
 
-export const USER_LIMIT_PER_PAGE = 3;
+export const USER_LIMIT_PER_PAGE = 5;
 
 export default function UsersTableFooter() {
   const [querySearch, setSearchParams] = useSearchParams();
@@ -25,7 +25,7 @@ export default function UsersTableFooter() {
   const disableNextBtn =
     Math.ceil(totalUsersLen / USER_LIMIT_PER_PAGE) === currentPage;
 
-  return (
+  return USER_LIMIT_PER_PAGE < totalUsersLen ? (
     <tfoot className="bg-slate-200">
       <td colSpan="7" className="p-3">
         <div className="flex items-center justify-between">
@@ -57,5 +57,5 @@ export default function UsersTableFooter() {
         </div>
       </td>
     </tfoot>
-  );
+  ) : null;
 }
