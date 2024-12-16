@@ -5,6 +5,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
 import Backdrop from "../../ui/Backdrop";
 import OptionsWrapper from "../../ui/OptionsWrapper";
+import { sortFromParams } from "../../utils/healper";
 import { MENU_POPUP_WIDTH } from "./AudioTableList";
 import EditAudioPopup from "./EditAudioPopup";
 import useDeleteAudio from "./useDeleteAudio";
@@ -53,22 +54,8 @@ export default function AudioTableBody({ audios, positionAudioId }) {
     setPositionAudio(null);
   }
 
-  // SORTING AUDIOS - chat gpt and jonas 😝
   const sortBy = searchParams.get("sortBy") || "name-asc";
-  const [field, direction] = sortBy.split("-");
-  const modifier = direction === "asc" ? 1 : -1;
-  const sortedAudios = [...audios].sort((a, b) => {
-    const valueA = a[field];
-    const valueB = b[field];
-
-    if (typeof valueA === "string" && typeof valueB === "string") {
-      return valueA.localeCompare(valueB) * modifier;
-    } else if (valueA instanceof Date || valueB instanceof Date) {
-      return (new Date(valueA) - new Date(valueB)) * modifier;
-    } else {
-      return (valueA - valueB) * modifier;
-    }
-  });
+  const sortedAudios = sortFromParams({ datas: audios, params: sortBy });
 
   return (
     <>
