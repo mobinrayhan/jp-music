@@ -1,10 +1,11 @@
+import { USER_LIMIT_PER_PAGE } from "../features/users/UsersTableFooter";
 import { getToken } from "../lib/localStorageToken";
 import axiosInstance from "./axiosInstance";
 
 export const getUsers = async ({ querySearch, page }) => {
   console.log(querySearch, page);
 
-  const fetcherEndPoint = `/users/all?querySearch=${querySearch}&page=${page}`;
+  const fetcherEndPoint = `/users/all?querySearch=${querySearch}&page=${page}&limit=${USER_LIMIT_PER_PAGE}`;
   const token = getToken();
 
   if (!token) {

@@ -1,4 +1,5 @@
 import Spinner from "../../ui/Spinner";
+import UsersTableFooter from "./UsersTableFooter";
 import UsersTableHeader from "./UsersTableHeader";
 import UserTableBody from "./UserTableBody";
 import useUsers from "./useUsers";
@@ -29,6 +30,7 @@ export default function UsersTableList() {
       <table className="w-full bg-white text-left text-sm text-black rtl:text-right">
         <UsersTableHeader />
         <UserTableBody users={data.users} />
+        <UsersTableFooter />
       </table>
     </div>
   );

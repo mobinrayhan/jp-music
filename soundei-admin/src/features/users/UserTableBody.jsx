@@ -8,8 +8,6 @@ export default function UserTableBody({ users }) {
     defaultOrder: "username-asc",
   });
 
-  console.log(sortedUser);
-
   return (
     <tbody>
       {sortedUser.map((user) => {
@@ -35,7 +33,9 @@ export default function UserTableBody({ users }) {
               {createdAt ? formatDateTimeWithSeconds(createdAt) : "NOT SET"}
             </td>
             <td className="px-6 py-4">
-              {lastLogin ? formatDateTimeWithSeconds(lastLogin) : "NOT SET"}
+              {lastLogin
+                ? formatDateTimeWithSeconds(lastLogin)
+                : "No LOGGED IN"}
             </td>
             <td className="flex justify-center px-6 py-4">
               <button
