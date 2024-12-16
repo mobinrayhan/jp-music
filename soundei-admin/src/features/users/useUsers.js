@@ -19,8 +19,6 @@ export default function useUsers() {
   const pageCount = Math.ceil(data?.totalCount / USER_LIMIT_PER_PAGE);
 
   if (pageCount > page) {
-    console.log({ querySearch, page: page + 1 });
-
     queryClient.prefetchQuery({
       queryKey: ["users", page + 1, querySearch],
       queryFn: () => getUsers({ querySearch, page: page + 1 }),

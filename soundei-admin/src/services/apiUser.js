@@ -26,5 +26,28 @@ export const getUsers = async ({ querySearch, page }) => {
 };
 
 export const updateUserActiveStatus = async ({ id }) => {
-  console.log(id);
+  const token = getToken();
+
+  if (!token) {
+    throw new Error("No Token Found");
+  }
+
+  try {
+    const { data } = await axiosInstance.put(
+      "/users/toggle-active-status",
+      { userId: id },
+      {
+        headers: {
+          Authorization: `Bearer ${token.token}`,
+        },
+      },
+    );
+
+    return data;
+  } catch (error) {
+    throw new Error(
+      error.response.data.message ||
+        "An error occurred while updating users status.",
+    );
+  }
 };

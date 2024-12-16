@@ -1,10 +1,10 @@
 import { useState } from "react";
-import toast from "react-hot-toast";
 import { CiMenuKebab } from "react-icons/ci";
 import { FaEdit, FaEye } from "react-icons/fa";
 import { IoIosSwitch } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import useSortBySelect from "../../hooks/useSortBySelect";
+import { getToken } from "../../lib/localStorageToken";
 import OptionsWrapper from "../../ui/OptionsWrapper";
 import { formatDateTimeWithSeconds } from "../../utils/helper";
 import { MENU_POPUP_WIDTH } from "../audios/AudioTableList";
@@ -16,6 +16,7 @@ export default function UserTableBody({ users }) {
     defaultOrder: "username-asc",
   });
   const { updateUserMutation } = useUserActiveStatus();
+  const token = getToken();
 
   const navigate = useNavigate();
   const [positionUser, setPositionUser] = useState(null);
@@ -45,12 +46,6 @@ export default function UserTableBody({ users }) {
     updateUserMutation(
       { id: positionUser._id },
       {
-        onSuccess: (data) => {
-          toast.success(data?.message | `User Updated Successfully`);
-        },
-        onError: (error) => {
-          toast.error(error?.message || "Something Went Wrong!");
-        },
         onSettled: () => {
           setPositionUser(null);
         },
@@ -89,12 +84,16 @@ export default function UserTableBody({ users }) {
                   : "No LOGGED IN"}
               </td>
               <td className="flex justify-center px-6 py-4">
-                <button
-                  className={`border border-slate-200 p-2 transition-all duration-150 hover:bg-slate-100 ${positionUser?._id === _id ? "border-slate-300 bg-slate-200" : ""}`}
-                  onClick={(eve) => handleAddMenuPosition(eve, user)}
-                >
-                  <CiMenuKebab size={20} />
-                </button>
+                {token.userId === _id ? (
+                  <span className="rounded-full bg-green-500 p-2" />
+                ) : (
+                  <button
+                    className={`border border-slate-200 p-2 transition-all duration-150 hover:bg-slate-100 ${positionUser?._id === _id ? "border-slate-300 bg-slate-200" : ""}`}
+                    onClick={(eve) => handleAddMenuPosition(eve, user)}
+                  >
+                    <CiMenuKebab size={20} />
+                  </button>
+                )}
               </td>
             </tr>
           );
