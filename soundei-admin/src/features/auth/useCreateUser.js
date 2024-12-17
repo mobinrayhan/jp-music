@@ -9,7 +9,7 @@ export default function useCreateUser() {
     mutationFn: createNewUser,
     onSuccess: (user) => {
       toast.success(user.message || "User Created Successfully!");
-      queryClient.invalidateQueries("users");
+      queryClient.invalidateQueries(["users"]);
     },
     onError: (err) => {
       toast.error(err?.message || "Something Went Wrong !");

@@ -11,7 +11,7 @@ export default function useUserActiveStatus() {
       console.log(data);
 
       toast.success(data?.message || `User Updated Successfully`);
-      queryClient.invalidateQueries("users");
+      queryClient.invalidateQueries(["users"]);
     },
     onError: (error) => {
       toast.error(error?.message || "Something Went Wrong!");
