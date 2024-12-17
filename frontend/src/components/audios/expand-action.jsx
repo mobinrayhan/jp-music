@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { FaLink, FaPlus } from "react-icons/fa6";
 import { MdOutlineFileDownload } from "react-icons/md";
@@ -24,7 +24,8 @@ export default function ExpandAction({
       const response = await fetch(`/api/download?id=${audioId}`);
 
       if (response.status === 401) {
-        push(`/login?ref=/${pathName}`);
+        await signOut();
+        push(`/login?ref=${pathName}`);
       }
 
       if (response.ok) {
@@ -63,9 +64,7 @@ export default function ExpandAction({
         const { error } = await response.json();
         alert(error || "Something Went Wrong!");
       }
-    } catch (error) {
-      console.error("Error during download:", error);
-    }
+    } catch (error) {}
   };
 
   return (
