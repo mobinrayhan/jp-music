@@ -44,21 +44,25 @@ export default function App() {
           >
             <Route index element={<Navigate to={"/dashboard/overview"} />} />
             <Route path="dashboard">
+              <Route index element={<Navigate to={"overview"} />} />
               <Route path="overview" element={<h1>Hello overview</h1>} />
             </Route>
             <Route path="users">
-              <Route path="detail/:id" element={<UserDetail />} />
+              <Route index element={<Navigate to={"all"} />} />
               <Route path="all" element={<AllUsers />} />
               <Route path="roles" element={<RolesAndPermission />} />
               <Route path="blocked" element={<BlockList />} />
               <Route path="new" element={<CreateNewUser />} />
+              <Route path="detail/:id" element={<UserDetail />} />
             </Route>{" "}
             <Route path="audio">
+              <Route index element={<Navigate to={"all"} />} />
               <Route path="all" element={<AllAudios />} />
               <Route path="upload" element={<UploadAudios />} />
               <Route path="categories" element={<Categories />} />
             </Route>
             <Route path={"settings"}>
+              <Route index element={<Navigate to={"general"} />} />
               <Route path="general" element={<General />} />
               <Route path="payment" element={<Payments />} />
               <Route path="notifications" element={<Notification />} />
