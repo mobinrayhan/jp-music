@@ -6,6 +6,14 @@ exports.createUserByAdmin = async function (req, res, next) {
   const { username, email, password, role } = req.body;
 
   try {
+    const user = await authModels.findUser(email);
+
+    if (user) {
+      const error = new Error('User Already Found With This Email!');
+      error.statusCode = 401;
+      throw error;
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await authModels.createNewUser({
