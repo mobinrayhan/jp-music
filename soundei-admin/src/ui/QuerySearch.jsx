@@ -20,11 +20,16 @@ export default function QuerySearch({ placeholder }) {
 
   useEffect(() => {
     const updatedParams = new URLSearchParams(searchParams);
+    const page = searchParams.get("page");
 
     if (debouncedValue) {
       updatedParams.set("querySearch", debouncedValue);
     } else {
       updatedParams.delete("querySearch");
+    }
+
+    if (page) {
+      searchParams.delete("page");
     }
 
     setSearchParams(updatedParams);
