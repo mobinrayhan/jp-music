@@ -8,8 +8,6 @@ export default function useUserActiveStatus() {
   const { isPending, mutate: updateUserMutation } = useMutation({
     mutationFn: ({ id }) => updateUserActiveStatus({ id }),
     onSuccess: (data) => {
-      console.log(data);
-
       toast.success(data?.message || `User Updated Successfully`);
       queryClient.invalidateQueries(["users"]);
     },

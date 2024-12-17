@@ -46,7 +46,6 @@ export default function AudioTableBody({ audios, positionAudioId }) {
     }
 
     setIsEditableAudio((prev) => (prev ? null : positionAudio));
-    console.log(isEditableAudio);
     setPositionAudio(null);
   }
 

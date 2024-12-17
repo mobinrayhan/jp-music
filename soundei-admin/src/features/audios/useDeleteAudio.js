@@ -6,8 +6,7 @@ export default function useDeleteAudio() {
 
   const { data, mutate: audioDeleteFn } = useMutation({
     mutationFn: async ({ audioId }) => deleteAudio({ audioId }),
-    onSuccess: (data) => {
-      console.log(data);
+    onSuccess: () => {
       queryClient.invalidateQueries(["audios"]);
     },
   });
