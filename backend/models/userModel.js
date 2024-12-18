@@ -67,10 +67,15 @@ exports.getAllUsers = async ({ limit, skip, querySearch }) => {
 
   return { users, totalCount };
 };
-exports.getUserById = async (id) => {
+exports.getUser = async (input, projection) => {
+  if (!input) {
+    throw new Error('Input is required to check user status');
+  }
+  const query = getMongoQueryFromInput(input);
+
   const db = await connectToDatabase();
   const collection = await db.collection('users');
-  return collection.findOne({ _id: new ObjectId(id) });
+  return collection.findOne(query, { projection });
 };
 
 exports.getDownloadsById = async ({ userId, querySearch = '', maxAudios }) => {
@@ -499,4 +504,17 @@ exports.toggleActiveStatus = async (input) => {
   return await userColl.updateOne(query, {
     $set: { isActive: !existedUser.isActive },
   });
+};
+
+exports.updateUser = async ({ input, updatedUser }) => {
+  if (!input) {
+    throw new Error('Input is required to check user role');
+  }
+
+  const query = getMongoQueryFromInput(input);
+
+  const db = await connectToDatabase();
+  const userColl = db.collection('users');
+
+  return userColl.updateOne(query, { $set: updatedUser });
 };

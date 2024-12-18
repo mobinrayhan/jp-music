@@ -1,6 +1,7 @@
 const audioModel = require('../models/audioModel');
 const userModel = require('../models/userModel');
 const slugify = require('slugify');
+const bcrypt = require('bcryptjs');
 
 exports.getDownloads = async function (req, res, next) {
   const { maxAudios, querySearch } = req.query;
@@ -51,7 +52,7 @@ exports.getFavorites = async function (req, res, next) {
   const { maxAudios, querySearch } = req.query;
 
   try {
-    const user = await userModel.getUserById(userId);
+    const user = await userModel.getUser(userId);
     if (!user) {
       const error = new Error('User Not Found!');
       error.statusCode = 404;
@@ -258,6 +259,58 @@ exports.postUpdateActiveStatus = async (req, res, next) => {
       throw error;
     }
     return res.json({ message: 'Updated Active Status Successfully!' });
+  } catch (e) {
+    next(e);
+  }
+};
+
+exports.editUser = async (req, res, next) => {
+  const { username, email, password, role } = req.body;
+
+  try {
+    const exitingUser = await userModel.getUser(email, {
+      playlists: 0,
+      downloads: 0,
+      favorites: 0,
+      createdAt: 0,
+      lastLogin: 0,
+      isActive: 0,
+    });
+
+    let updatedUser;
+
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      updatedUser = {
+        username,
+        email,
+        password: hashedPassword,
+        role,
+      };
+    } else {
+      updatedUser = {
+        username,
+        email,
+        password: exitingUser.password,
+        role,
+      };
+    }
+
+    const latestUser = await userModel.updateUser({
+      updatedUser,
+      input: exitingUser._id.toString(),
+    });
+
+    if (latestUser.modifiedCount === 1) {
+      res.status(200).json({
+        message: 'Updated User successfully!',
+        userId: exitingUser._id.toString(),
+      });
+    } else {
+      const error = new Error('Updated User does not match!');
+      error.statusCode = 404;
+      throw error;
+    }
   } catch (e) {
     next(e);
   }

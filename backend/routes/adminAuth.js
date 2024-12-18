@@ -55,14 +55,4 @@ router.get(
   adminController.getAdminUserById
 );
 
-router.put(
-  '/update-user',
-  isAuth,
-  existedUserWithRole({
-    accessibleRole: 'admin',
-    from: 'params',
-    checkIsActive: true,
-  })
-);
-
 module.exports = router;

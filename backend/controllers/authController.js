@@ -182,7 +182,7 @@ exports.verifyEmail = async (req, res, next) => {
 exports.getActiveStatus = async (req, res, next) => {
   try {
     const { userId } = req.params;
-    const user = await userModels.getUserById(userId);
+    const user = await userModels.getUser(userId);
 
     return res.json({
       isActive: user.isActive,
