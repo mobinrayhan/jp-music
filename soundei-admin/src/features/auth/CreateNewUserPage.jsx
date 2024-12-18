@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import Select from "react-select";
 import useCreateUser from "./useCreateUser";
 
-const usersRole = [
+export const usersRole = [
   { value: "", label: "Select User Role" },
   { value: "admin", label: "Admin" },
   { value: "moderator", label: "Moderator" },

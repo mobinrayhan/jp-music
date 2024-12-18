@@ -47,7 +47,33 @@ export const updateUserActiveStatus = async ({ id }) => {
   } catch (error) {
     throw new Error(
       error.response.data.message ||
-        "An error occurred while updating users status.",
+        "An error occurred while updating user status.",
+    );
+  }
+};
+
+export const updateUser = async ({ updateFormData }) => {
+  const token = getToken();
+
+  if (!token) {
+    throw new Error("No Token Found");
+  }
+
+  try {
+    const { data } = await axiosInstance.put(
+      "/users/update-user",
+      updateFormData,
+      {
+        headers: {
+          Authorization: `Bearer ${token.token}`,
+        },
+      },
+    );
+
+    return data;
+  } catch (error) {
+    throw new Error(
+      error.response.data.message || "An error occurred while updating user.",
     );
   }
 };
