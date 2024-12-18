@@ -22,7 +22,7 @@ export default function AudioTableFooter() {
     setSearchParams(searchParams);
   }
 
-  return (
+  return MAX_AUDIO_PER_PAGE >= totalAudioLen ? null : (
     <tfoot className="bg-slate-200">
       <td colSpan="6" className="p-3">
         <div className="flex items-center justify-between">

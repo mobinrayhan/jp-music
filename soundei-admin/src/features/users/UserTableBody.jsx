@@ -1,26 +1,25 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { CiMenuKebab } from "react-icons/ci";
 import { FaEdit, FaEye } from "react-icons/fa";
 import { IoIosSwitch } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
-import useSortBySelect from "../../hooks/useSortBySelect";
 import { getToken } from "../../lib/localStorageToken";
+import Backdrop from "../../ui/Backdrop";
 import OptionsWrapper from "../../ui/OptionsWrapper";
 import { formatDateTimeWithSeconds } from "../../utils/helper";
 import { MENU_POPUP_WIDTH } from "../audios/AudioTableList";
+import EditUserPop from "./EditUserPop";
 import useUserActiveStatus from "./useUserActiveStatus";
 
-export default function UserTableBody({ users }) {
-  const { sortedData: sortedUser } = useSortBySelect({
-    datas: users,
-    defaultOrder: "username-asc",
-  });
+export default function UserTableBody({ sortedUser }) {
   const { updateUserMutation } = useUserActiveStatus();
   const token = getToken();
 
   const navigate = useNavigate();
   const [positionUser, setPositionUser] = useState(null);
   const [position, setPosition] = useState(null);
+  const [editableUser, setEditableUser] = useState(null);
 
   const handleAddMenuPosition = (event, user) => {
     event.stopPropagation();
@@ -51,6 +50,18 @@ export default function UserTableBody({ users }) {
         },
       },
     );
+  }
+
+  function handleEditableUser() {
+    const body = document.body;
+
+    if (body.getAttribute("style") === "overflow: hidden;") {
+      document.body.style.overflow = "auto";
+    } else {
+      document.body.style.overflow = "hidden";
+    }
+
+    setEditableUser((prev) => (prev ? null : positionUser));
   }
 
   return (
@@ -115,7 +126,7 @@ export default function UserTableBody({ users }) {
             </li>{" "}
             <li
               className="flex cursor-pointer items-center gap-2 p-2 px-4 text-sm transition-all duration-200 hover:bg-slate-100"
-              // onClick={handleEditAudio}
+              onClick={handleEditableUser}
             >
               <FaEdit /> Edit
             </li>
@@ -136,6 +147,19 @@ export default function UserTableBody({ users }) {
           </ul>
         </OptionsWrapper>
       )}
+
+      {editableUser &&
+        createPortal(
+          <>
+            {" "}
+            <Backdrop onClick={handleEditableUser} />
+            <EditUserPop
+              editableUser={editableUser}
+              onClose={handleEditableUser}
+            />
+          </>,
+          document.body,
+        )}
     </>
   );
 }

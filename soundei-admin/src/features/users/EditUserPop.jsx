@@ -1,29 +1,6 @@
-import toast from "react-hot-toast";
-import Select from "react-select";
 import Input from "../../ui/Input";
-import { categoryOptions } from "./UploadAudiosForm";
-import useEditAudio from "./useEditAudio";
 
-export default function EditAudioPopup({ editableAudio, onClose }) {
-  const { editAudioFn } = useEditAudio();
-  const { category, keywords, name, _id } = editableAudio;
-  const defaultCategory = categoryOptions.find((cat) => cat.value === category);
-
-  function handleEditFormSubmit(event) {
-    event.preventDefault();
-
-    const formData = new FormData(event.target);
-    editAudioFn(formData, {
-      onSuccess: (audio) => {
-        toast.success(audio.data?.message || "Audio Updated Successfully!");
-        onClose();
-      },
-      onError: (err) => {
-        toast.error(err.message || "Something went wrong!");
-      },
-    });
-  }
-
+export default function EditUserPop({ onClose, editableUser }) {
   return (
     <section className="absolute left-1/2 top-1/2 z-10 w-[50rem] -translate-x-1/2 -translate-y-1/2 bg-white">
       <div className="relative p-4">
@@ -36,33 +13,33 @@ export default function EditAudioPopup({ editableAudio, onClose }) {
       </div>
 
       <h1 className="text-center text-3xl font-semibold tracking-wider">
-        Edit Audio
+        Edit User
       </h1>
 
       <form
         className="grid grid-cols-4 gap-6 p-6"
-        onSubmit={handleEditFormSubmit}
+        // onSubmit={handleEditFormSubmit}
       >
         <div className="col-start-1 col-end-3">
           <Input
-            header={"Edit Audio Name"}
-            placeholder="Change  Audio Name"
+            header={"User Name"}
+            placeholder="Changer User Name"
             defaultValue={name}
-            name="name"
-            id="name"
+            name="username"
+            id="username"
             required
           />{" "}
         </div>
         <div className="col-start-3 col-end-[-1]">
           <Input
-            header={"Edit Audio Keywords"}
-            placeholder="Change  Audio Keywords"
-            defaultValue={keywords}
-            name="keywords"
-            id="keywords"
+            header={"User Email"}
+            placeholder="Change User Email"
+            type="email"
+            name="email"
+            id="email"
           />
         </div>
-        <div className="col-start-1 col-end-3">
+        {/* <div className="col-start-1 col-end-3">
           <label
             className="block text-sm font-medium text-gray-700"
             htmlFor="category"
@@ -75,9 +52,9 @@ export default function EditAudioPopup({ editableAudio, onClose }) {
             defaultValue={defaultCategory}
             name="category"
           />
-        </div>
+        </div> */}
 
-        <div className="col-start-3 col-end-[-1]">
+        {/* <div className="col-start-3 col-end-[-1]">
           <Input
             type="file"
             id="file"
@@ -88,13 +65,13 @@ export default function EditAudioPopup({ editableAudio, onClose }) {
             // onChange={handleFileChange}
             instruction={"You can upload (.mp3, .wav, .ogg, .flac, .aac, .m4a)"}
           />
-        </div>
+        </div> */}
 
         {/* for getting id */}
-        <input type="hidden" name="audioId" value={_id} />
+        {/* <input type="hidden" name="audioId" value={_id} /> */}
 
         <button className="bg-blue-500 p-3 tracking-wider text-white">
-          Edit Audio
+          Edit User
         </button>
       </form>
     </section>
