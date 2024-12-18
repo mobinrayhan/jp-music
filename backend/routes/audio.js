@@ -18,7 +18,11 @@ router.post(
 router.post(
   '/upload-audios',
   isAuth,
-  existedUserWithRole({ from: 'JWT', accessibleRole: 'admin' }),
+  existedUserWithRole({
+    from: 'JWT',
+    accessibleRole: 'admin',
+    checkIsActive: true,
+  }),
   upload.array('files', Infinity),
   audioController.postUploadAudios
 );
@@ -27,14 +31,22 @@ router.post(
   '/edit',
   isAuth,
   upload.single('file'),
-  existedUserWithRole({ from: 'JWT', accessibleRole: 'admin' }),
+  existedUserWithRole({
+    from: 'JWT',
+    accessibleRole: 'admin',
+    checkIsActive: true,
+  }),
   audioController.postEditAudio
 );
 
 router.delete(
   '/delete',
   isAuth,
-  existedUserWithRole({ from: 'JWT', accessibleRole: 'admin' }),
+  existedUserWithRole({
+    from: 'JWT',
+    accessibleRole: 'admin',
+    checkIsActive: true,
+  }),
   audioController.deleteAudio
 );
 router.get('/:id', audioController.getAudioById);

@@ -145,10 +145,6 @@ app.use('/audios', audioRouter);
 app.use('/category', categoryRouter);
 app.use('/admin', adminAuthRouter);
 
-app.use('/', (req, res) => {
-  res.json({ message: 'api is working' });
-});
-
 app.use((error, req, res, next) => {
   const status = error.statusCode || 500;
   const message = error.message;
