@@ -2,6 +2,8 @@ import { useSearchParams } from "react-router-dom";
 
 export default function SortBy({ options = [] }) {
   const [searchParams, setSearchParams] = useSearchParams();
+  const sortBy = searchParams.get("sortBy");
+  const defaultOption = options.find((option) => option.value === sortBy);
 
   function handleSearchParams(value) {
     searchParams.set("sortBy", value);
@@ -14,7 +16,11 @@ export default function SortBy({ options = [] }) {
       onChange={(eve) => handleSearchParams(eve.target.value)}
     >
       {options.map(({ value, label }) => (
-        <option key={label} value={value}>
+        <option
+          key={label}
+          value={value}
+          selected={sortBy && value === defaultOption.value}
+        >
           {label}
         </option>
       ))}
