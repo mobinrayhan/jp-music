@@ -71,6 +71,17 @@ export default function AudioTableBody({ audios, positionAudioId }) {
             <td className="px-6 py-4">
               {keywords?.join(", ") || "No Keywords Found!"}
             </td>
+            <td className="px-6 py-4">
+              {rest?.downloadCount ? (
+                <strong>
+                  {rest?.downloadCount === 1
+                    ? `${rest?.downloadCount} Time Downloaded`
+                    : `${rest?.downloadCount} Times Downloaded`}
+                </strong>
+              ) : (
+                "Not Downloaded YET"
+              )}
+            </td>
             <td className="flex justify-center px-6 py-4">
               <button
                 className={`border border-slate-200 p-2 transition-all duration-150 hover:bg-slate-100 ${positionAudioId === _id ? "border-slate-300 bg-slate-200" : ""}`}

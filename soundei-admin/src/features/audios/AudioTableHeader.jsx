@@ -14,6 +14,9 @@ export default function AudioTableHeader() {
         <th scope="col" className="px-6 py-3">
           Keywords
         </th>
+        <th scope="col" className="px-6 py-3">
+          Download Count
+        </th>
         <th scope="col" className="px-6 py-3 text-center">
           Actions
         </th>
