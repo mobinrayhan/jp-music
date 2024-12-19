@@ -2,7 +2,7 @@ import QuerySearch from "../../ui/QuerySearch";
 import UsersTableList from "./UsersTableList";
 import UsesTableOption from "./UsesTableOption";
 
-export default function AllUsersPage() {
+export default function BlockUsersPage() {
   return (
     <section className="rounded-md bg-slate-100 p-6">
       <h1 className="text-center text-3xl font-semibold tracking-wider">
@@ -11,12 +11,7 @@ export default function AllUsersPage() {
 
       <header className="flex items-center justify-between">
         <QuerySearch placeholder={"Enter User Name  Or E-mail"} />
-        <UsesTableOption
-          moreSortedOptions={[
-            { label: "Active Users", value: "isActive-true" },
-            { label: "Disabled Users", value: "isActive-false" },
-          ]}
-        />
+        <UsesTableOption />
       </header>
 
       <UsersTableList />
