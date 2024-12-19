@@ -131,6 +131,7 @@ exports.postUploadAudios = async (req, res, next) => {
         category: uploadPath.split('/')[2].trim(),
         keywords: stringToKeywords(mdata?.keywords),
         createdAt: new Date(),
+        downloadCount: 0,
       };
     });
 
