@@ -1,17 +1,9 @@
-import useSortBySelect from "../../hooks/useSortBySelect";
 import Spinner from "../../ui/Spinner";
 import UsersTableFooter from "./UsersTableFooter";
 import UsersTableHeader from "./UsersTableHeader";
 import UserTableBody from "./UserTableBody";
-import useUsers from "./useUsers";
 
-export default function UsersTableList() {
-  const { data, error, isPending } = useUsers();
-  const { sortedData: sortedUser } = useSortBySelect({
-    datas: data?.users ?? [],
-    defaultOrder: "username-asc",
-  });
-
+export default function UsersTableList({ isPending, error, sortedUser }) {
   if (isPending) {
     return (
       <div className="flex h-[76vh] items-center justify-center">

@@ -1,8 +1,16 @@
+import useSortBySelect from "../../hooks/useSortBySelect";
 import QuerySearch from "../../ui/QuerySearch";
 import UsersTableList from "./UsersTableList";
 import UsesTableOption from "./UsesTableOption";
+import useUsers from "./useUsers";
 
 export default function AllUsersPage() {
+  const { data, error, isPending } = useUsers();
+  const { sortedData: sortedUser } = useSortBySelect({
+    datas: data?.users ?? [],
+    defaultOrder: "username-asc",
+  });
+
   return (
     <section className="rounded-md bg-slate-100 p-6">
       <h1 className="text-center text-3xl font-semibold tracking-wider">
@@ -19,7 +27,11 @@ export default function AllUsersPage() {
         />
       </header>
 
-      <UsersTableList />
+      <UsersTableList
+        error={error}
+        isPending={isPending}
+        sortedUser={sortedUser}
+      />
     </section>
   );
 }

@@ -9,7 +9,7 @@ export default defineConfig({
     port: 3030,
   },
   preview: {
-    port: 8080,
+    port: 3030,
   },
   optimizeDeps: {
     exclude: ["js-big-decimal"],
