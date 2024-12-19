@@ -13,7 +13,7 @@ export default function useEditUser() {
     mutationFn: ({ updateFormData }) => updateUser({ updateFormData }),
     onSuccess: (data) => {
       toast.success(data.message || "Updated User!");
-      queryClient.invalidateQueries(["users"]);
+      queryClient.invalidateQueries(["users", "disabledUsers"]);
     },
   });
 

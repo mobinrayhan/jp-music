@@ -9,7 +9,7 @@ export default function useUserActiveStatus() {
     mutationFn: ({ id }) => updateUserActiveStatus({ id }),
     onSuccess: (data) => {
       toast.success(data?.message || `User Updated Successfully`);
-      queryClient.invalidateQueries(["users"]);
+      queryClient.invalidateQueries(["users", "disabledUsers"]);
     },
     onError: (error) => {
       toast.error(error?.message || "Something Went Wrong!");
