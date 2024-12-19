@@ -31,7 +31,19 @@ export default function AudioTableList() {
       <table className="w-full bg-white text-left text-sm text-black rtl:text-right">
         <AudioTableHeader />
         <AudioTableBody audios={audios.audios} />
-        <AudioTableFooter />
+
+        {audios.audios.length ? (
+          <AudioTableFooter />
+        ) : (
+          <tfoot>
+            <td colSpan="7" className="p-10">
+              <h3 className="text-center text-2xl tracking-wider">
+                {" "}
+                No audios were found based on your search and filter criteria.
+              </h3>
+            </td>
+          </tfoot>
+        )}
       </table>
     </div>
   );

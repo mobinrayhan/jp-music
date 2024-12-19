@@ -37,7 +37,7 @@ export default function UsersTableList({
             <td colSpan="7" className="p-10">
               <h3 className="text-center text-2xl tracking-wider">
                 {" "}
-                No Filtered Users Found!
+                No users found for the given criteria.
               </h3>
             </td>
           </tfoot>
