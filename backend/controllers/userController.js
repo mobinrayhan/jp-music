@@ -315,3 +315,25 @@ exports.editUser = async (req, res, next) => {
     next(e);
   }
 };
+
+exports.getDisabledUsers = async (req, res, next) => {
+  const { querySearch, page, limit } = req.query;
+  const skip = (+page - 1) * +limit; // Calculate how many records to skip
+
+  try {
+    const { disabledUsers, totalCount } = await userModel.getAllDisabledUsers({
+      querySearch,
+      skip,
+      limit: +limit,
+    });
+
+    console.log(disabledUsers);
+    return res.json({
+      message: 'Get All Disabled Users!',
+      disabledUsers,
+      totalCount,
+    });
+  } catch (e) {
+    next(e);
+  }
+};

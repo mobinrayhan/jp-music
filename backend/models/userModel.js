@@ -25,6 +25,7 @@ exports.getAllUsers = async ({ limit, skip, querySearch }) => {
         ]
       : []),
     // Step 2: Facet for paginated data and total count
+    { $sort: { createdAt: -1 } }, // Sort by newest users,
     {
       $facet: {
         users: [
@@ -67,6 +68,76 @@ exports.getAllUsers = async ({ limit, skip, querySearch }) => {
 
   return { users, totalCount };
 };
+
+exports.getAllDisabledUsers = async ({ limit, skip, querySearch }) => {
+  const db = await connectToDatabase();
+  const collection = await db.collection('users');
+
+  const pipeline = [
+    { $match: { isActive: false } },
+    ...(querySearch
+      ? [
+          {
+            $match: {
+              $or: [
+                { username: { $regex: querySearch, $options: 'i' } }, // Includes in name
+                { email: { $regex: querySearch, $options: 'i' } }, // Includes in email
+                { username: { $regex: `^${querySearch}`, $options: 'i' } }, // Starts with name
+                { email: { $regex: `^${querySearch}`, $options: 'i' } }, // Starts with email
+                { username: { $regex: `${querySearch}$`, $options: 'i' } }, // Ends with name
+                { email: { $regex: `${querySearch}$`, $options: 'i' } }, // Ends with email
+              ],
+            },
+          },
+        ]
+      : []),
+    { $sort: { createdAt: -1 } }, // Sort by newest users
+    {
+      $facet: {
+        users: [
+          // Sort by createdAt descending
+          { $sort: { createdAt: -1 } },
+          // Skip and Limit for Pagination
+          { $skip: skip },
+          { $limit: limit },
+          // Project selected fields
+          {
+            $project: {
+              _id: 1,
+              username: 1,
+              email: 1,
+              role: 1,
+              isActive: 1,
+              createdAt: 1,
+              lastLogin: 1,
+            },
+          },
+        ],
+        totalCount: [
+          { $count: 'count' }, // Total count of users
+        ],
+      },
+    },
+    // Step 3: Flatten the totalCount array to return a single number
+    {
+      $addFields: {
+        totalCount: { $arrayElemAt: ['$totalCount.count', 0] },
+      },
+    },
+  ];
+
+  // Run the aggregation
+  const result = await collection.aggregate(pipeline).toArray();
+
+  // Extract users and totalCount from the result
+  const { users: disabledUsers, totalCount } = result[0] || {
+    disabledUsers: [],
+    totalCount: 0,
+  };
+
+  return { disabledUsers, totalCount };
+};
+
 exports.getUser = async (input, projection) => {
   if (!input) {
     throw new Error('Input is required to check user status');
