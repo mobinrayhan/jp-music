@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import { getDisabledUsers, getUsers } from "../../services/apiUser";
+import { getDisabledUsers } from "../../services/apiUser";
 import { USER_LIMIT_PER_PAGE } from "./UsersTableFooter";
 
 export default function useDisabledUsers() {
@@ -21,14 +21,14 @@ export default function useDisabledUsers() {
   if (pageCount > page) {
     queryClient.prefetchQuery({
       queryKey: ["disabledUsers", page + 1, querySearch],
-      queryFn: () => getUsers({ querySearch, page: page + 1 }),
+      queryFn: () => getDisabledUsers({ querySearch, page: page + 1 }),
     });
   }
 
   if (page > 1) {
     queryClient.prefetchQuery({
       queryKey: ["disabledUsers", page - 1, querySearch],
-      queryFn: () => getUsers({ querySearch, page: page - 1 }),
+      queryFn: () => getDisabledUsers({ querySearch, page: page - 1 }),
     });
   }
 
