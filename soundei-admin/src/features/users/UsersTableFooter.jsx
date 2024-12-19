@@ -1,13 +1,9 @@
 import { useSearchParams } from "react-router-dom";
-import useUsers from "./useUsers";
 
 export const USER_LIMIT_PER_PAGE = 10;
 
-export default function UsersTableFooter() {
+export default function UsersTableFooter({ totalUsersLen, isPending }) {
   const [querySearch, setSearchParams] = useSearchParams();
-  const { data, isPending } = useUsers();
-
-  const totalUsersLen = data?.totalCount;
 
   const currentPage = +querySearch.get("page") || 1;
 

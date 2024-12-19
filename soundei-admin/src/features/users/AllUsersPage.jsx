@@ -31,6 +31,7 @@ export default function AllUsersPage() {
         error={error}
         isPending={isPending}
         sortedUser={sortedUser}
+        totalCount={data?.totalCount}
       />
     </section>
   );

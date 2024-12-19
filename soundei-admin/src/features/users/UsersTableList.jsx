@@ -3,7 +3,12 @@ import UsersTableFooter from "./UsersTableFooter";
 import UsersTableHeader from "./UsersTableHeader";
 import UserTableBody from "./UserTableBody";
 
-export default function UsersTableList({ isPending, error, sortedUser }) {
+export default function UsersTableList({
+  isPending = false,
+  error = null,
+  sortedUser = [],
+  totalCount = 0,
+}) {
   if (isPending) {
     return (
       <div className="flex h-[76vh] items-center justify-center">
@@ -26,7 +31,7 @@ export default function UsersTableList({ isPending, error, sortedUser }) {
         <UsersTableHeader />
         <UserTableBody sortedUser={sortedUser} />
         {sortedUser.length ? (
-          <UsersTableFooter />
+          <UsersTableFooter totalUsersLen={totalCount} isPending={isPending} />
         ) : (
           <tfoot>
             <td colSpan="7" className="p-10">

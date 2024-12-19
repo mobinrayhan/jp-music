@@ -25,6 +25,30 @@ export const getUsers = async ({ querySearch, page }) => {
   }
 };
 
+export const getDisabledUsers = async ({ querySearch, page }) => {
+  const fetcherEndPoint = `/users/disabled-users?querySearch=${querySearch}&page=${page}&limit=${USER_LIMIT_PER_PAGE}`;
+  const token = getToken();
+
+  if (!token) {
+    throw new Error("No Token Found");
+  }
+
+  try {
+    const { data } = await axiosInstance.get(fetcherEndPoint, {
+      headers: {
+        Authorization: `Bearer ${token.token}`,
+      },
+    });
+
+    return data;
+  } catch (error) {
+    throw new Error(
+      error.response.data.message ||
+        "An error occurred while fetching disabled users.",
+    );
+  }
+};
+
 export const updateUserActiveStatus = async ({ id }) => {
   const token = getToken();
 
