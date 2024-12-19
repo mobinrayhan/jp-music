@@ -18,12 +18,6 @@ exports.getCategoryAudiosWithSearch = async (req, res, next) => {
       maxAudio: Number(maxAudios),
     });
 
-    if (!catWithSearchResult.totalAudios) {
-      const error = new Error('No Audios Found !');
-      error.statusCode = 404;
-      throw error;
-    }
-
     return res.json({
       message: 'Get Category Audios Successfully',
       ...catWithSearchResult,
