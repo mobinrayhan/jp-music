@@ -14,7 +14,7 @@ export default function BlockUsersPage() {
   return (
     <section className="rounded-md bg-slate-100 p-6">
       <h1 className="text-center text-3xl font-semibold tracking-wider">
-        All Users
+        Blocked Users
       </h1>
 
       <header className="flex items-center justify-between">
