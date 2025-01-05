@@ -56,12 +56,21 @@ app.use(
   })
 );
 
+app.use('/images', (req, res, next) => {
+  // Check if the requested path has a trailing slash
+  if (req.path.endsWith('/')) {
+    // Remove the trailing slash and redirect to the correct URL
+    return res.redirect(301, req.path.slice(0, -1));
+  }
+  next();
+});
+
 // Serve static images
 app.use(
   '/images',
   express.static(path.join(__dirname, 'images'), {
-    setHeaders: (res, path) => {
-      res.setHeader('Cross-Origin-Resource-Policy', 'same-site'); // If on the same domain
+    setHeaders: (res, filePath) => {
+      res.setHeader('Cross-Origin-Resource-Policy', 'same-site'); // Adjust as needed
     },
   })
 );
