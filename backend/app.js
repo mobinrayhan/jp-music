@@ -20,7 +20,7 @@ const audioRouter = require('./routes/audio');
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 const adminAuthRouter = require('./routes/adminAuth');
-const { allowedTypes } = require('./helpers/allowedTypesForFile');
+const settingsRouter = require('./routes/settings');
 const { productionFrontURL, localhostFrontURL } = require('./constants/links');
 
 // const limiter = rateLimit({
@@ -144,6 +144,7 @@ app.use('/users', isAuth, existedUserWithRole(), userRouter);
 app.use('/audios', audioRouter);
 app.use('/category', categoryRouter);
 app.use('/admin', adminAuthRouter);
+app.use('/settings', settingsRouter);
 
 app.use((error, req, res, next) => {
   const status = error.statusCode || 500;
