@@ -9,7 +9,6 @@ export default async function HeaderLogo() {
     cache: "no-store",
   });
   const logo = data?.general?.find((gen) => gen.name === "Logo");
-  console.log(logo);
 
   return (
     <Link href={"/category/all"} className="flex items-center gap-1">
