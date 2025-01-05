@@ -1,3 +1,5 @@
+import UpdateWebsiteSettings from "../../features/settings/UpdateWebsiteSettings";
+
 export default function General() {
-  return <div>General</div>;
+  return <UpdateWebsiteSettings />;
 }

@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools/production";
 import { Toaster } from "react-hot-toast";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import DashboardPage from "./features/dashboard/DashboardPage.jsx";
 import UserDetail from "./features/users/UserDetail.jsx";
 import AllAudios from "./pages/audios/AllAudios.jsx";
 import Categories from "./pages/audios/Categories.jsx";
@@ -45,7 +46,7 @@ export default function App() {
             <Route index element={<Navigate to={"/dashboard/overview"} />} />
             <Route path="dashboard">
               <Route index element={<Navigate to={"overview"} />} />
-              <Route path="overview" element={<h1>Hello overview</h1>} />
+              <Route path="overview" element={<DashboardPage />} />
             </Route>
             <Route path="users">
               <Route index element={<Navigate to={"all"} />} />
