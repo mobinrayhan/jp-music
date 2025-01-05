@@ -78,8 +78,13 @@ const config = (phase) => {
       // API_URL: "http://192.168.0.107:4000",
       API_URL: "http://localhost:4000",
 
-      NEXTAUTH_URL: "http://192.168.0.107:3000",
+      NEXTAUTH_URL: "http://localhost:3000",
+      // NEXTAUTH_URL: "http://192.168.0.107:3000",
       // NEXTAUTH_URL: "https://vps-front.soundei.com",
+
+      NEXT_PUBLIC_RECAPTCHA_SITE_KEY:
+        "6LeDqHkqAAAAAJZf2kqnMNlkPpdqxYVOdPbp7iun",
+      RECAPTCHA_SECRET_KEY: "6LeDqHkqAAAAAMrFuOz2IsC0t4zTrMWGRlYNLBD-",
     },
 
     webpack(config) {

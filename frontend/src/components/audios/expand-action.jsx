@@ -1,6 +1,6 @@
 "use client";
 
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { FaLink, FaPlus } from "react-icons/fa6";
 import { MdOutlineFileDownload } from "react-icons/md";
@@ -24,7 +24,6 @@ export default function ExpandAction({
       const response = await fetch(`/api/download?id=${audioId}`);
 
       if (response.status === 401) {
-        await signOut();
         push(`/login?ref=${pathName}`);
       }
 
