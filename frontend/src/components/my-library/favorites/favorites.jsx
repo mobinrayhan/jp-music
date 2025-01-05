@@ -16,8 +16,6 @@ export default function Favorites({ maxAudios, searchValue }) {
     ([endpoint, options]) => fetcher(endpoint, options),
   );
 
-  console.log(data);
-
   if (status === "loading" || !session.jwt || (!data && !error)) {
     return <AudioSkeleton />;
   }
