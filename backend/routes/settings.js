@@ -1,7 +1,8 @@
 const { Router } = require('express');
-const { postGeneral } = require('../controllers/settingsController');
+const { updateGeneral } = require('../controllers/settingsController');
+const { upload } = require('../config/multerConfig');
 const router = Router();
 
-router.post('/general', postGeneral);
+router.put('/general', upload.single('logo'), updateGeneral);
 
 module.exports = router;
