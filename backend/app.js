@@ -155,19 +155,13 @@ app.use('/category', categoryRouter);
 app.use('/admin', adminAuthRouter);
 app.use(
   '/settings',
-  isAuth,
-  existedUserWithRole({
-    from: 'JWT',
-    accessibleRole: 'admin',
-    checkIsActive: true,
-  }),
+
   settingsRouter
 );
 
 app.use((error, req, res, next) => {
   const status = error.statusCode || 500;
   const message = error.message;
-  console.log(error);
   res.status(status).json({ message });
 });
 

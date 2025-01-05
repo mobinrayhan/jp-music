@@ -4,7 +4,7 @@ const path = require('node:path');
 const { deleteFileFromPath } = require('../helpers/deleteFileFromPath');
 
 exports.updateGeneral = async (req, res, next) => {
-  const { facebook, instagram, twitter } = req.body;
+  const { facebook, instagram, twitter, youtube } = req.body;
   const file = req.file;
   const uploadPath = req.headers['x-upload-path'];
 
@@ -24,17 +24,32 @@ exports.updateGeneral = async (req, res, next) => {
       logoUrl = logo;
     }
 
+    const links = req.body;
+    const transformToArray = Object.entries(links).map(([name, link]) => ({
+      name,
+      link,
+      type: 'link',
+    }));
+
     const finalData = [
-      { link: facebook, name: 'Facebook', type: 'link' },
-      { link: instagram, name: 'Instagram', type: 'link' },
-      { link: twitter, name: 'Twitter', type: 'link' },
+      ...transformToArray,
       { link: logoUrl, name: 'Logo', type: 'image' },
     ];
 
-    const data = await updateGeneral(finalData);
+    await updateGeneral(finalData);
 
-    res.json({ message: 'Settings Controller Update' });
+    res.json({ message: 'Settings Update Successfully!' });
   } catch (err) {
     next(err);
+  }
+};
+
+exports.getGeneral = async (req, res, next) => {
+  try {
+    const general = await getGeneral();
+
+    res.json({ message: 'Get General successfully!', general });
+  } catch (e) {
+    next(e);
   }
 };

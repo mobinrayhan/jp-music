@@ -1,8 +1,25 @@
 const { Router } = require('express');
-const { updateGeneral } = require('../controllers/settingsController');
+const {
+  updateGeneral,
+  getGeneral,
+} = require('../controllers/settingsController');
 const { upload } = require('../config/multerConfig');
+const isAuth = require('../middleware/isAuth');
+const existedUserWithRole = require('../middleware/existedUserWithRole');
 const router = Router();
 
-router.put('/general', upload.single('logo'), updateGeneral);
+router.get('/general', getGeneral);
+
+router.put(
+  '/general',
+  isAuth,
+  existedUserWithRole({
+    from: 'JWT',
+    accessibleRole: 'admin',
+    checkIsActive: true,
+  }),
+  upload.single('logo'),
+  updateGeneral
+);
 
 module.exports = router;

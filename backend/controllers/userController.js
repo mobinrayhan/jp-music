@@ -327,7 +327,6 @@ exports.getDisabledUsers = async (req, res, next) => {
       limit: +limit,
     });
 
-    console.log(disabledUsers);
     return res.json({
       message: 'Get All Disabled Users!',
       disabledUsers,
