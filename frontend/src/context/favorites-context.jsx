@@ -56,8 +56,6 @@ export function FavoritesContextProvider({ children }) {
       setFavorites((prevFavorites) => {
         const isFavorited = prevFavorites.includes(audioId);
 
-        console.log(isFavorited);
-
         return isFavorited
           ? prevFavorites.filter((id) => id !== audioId)
           : prevFavorites;

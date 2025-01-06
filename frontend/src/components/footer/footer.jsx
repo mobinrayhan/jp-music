@@ -6,7 +6,6 @@ export default async function Footer() {
     cache: "no-store",
   });
   const links = data?.general?.filter((gen) => gen.type === "link");
-  console.log(links);
 
   return (
     <footer className="bg-gray-200 py-2">

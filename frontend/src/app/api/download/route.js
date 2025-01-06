@@ -43,8 +43,6 @@ export async function GET(req) {
       );
     }
 
-    console.log(audioInfo);
-
     const fileExtension = audioInfo.audio.previewURL.substr(
       audioInfo.audio.previewURL.lastIndexOf(".") + 1,
     );
