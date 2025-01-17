@@ -8,7 +8,7 @@ export default async function Footer() {
   const links = data?.general?.filter((gen) => gen.type === "link");
 
   return (
-    <footer className="bg-gray-200 py-2">
+    <footer className="bg-gray-200 py-2 dark:bg-slate-600">
       <div className="custom-container flex flex-col items-center gap-4 md:flex-row md:justify-between">
         <small className="block tracking-wider">
           &copy; Copyright soundei {new Date().getFullYear()}

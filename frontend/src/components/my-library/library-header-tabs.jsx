@@ -34,7 +34,7 @@ export default function LibraryHeaderTabs({ params }) {
           <li key={role} className="">
             <Link
               href={link}
-              className={`block h-full w-full border-x border-x-white p-2 px-4 hover:border-x-gray-200 hover:bg-gray-200 ${activePath === link?.split("/")?.[2] ? "bg-gray-200" : ""}`}
+              className={`block h-full w-full border-x border-x-white p-2 px-4 hover:border-x-gray-200 hover:bg-gray-200 dark:border-x-slate-600 dark:hover:bg-slate-700 ${activePath === link?.split("/")?.[2] ? "bg-gray-200 dark:bg-slate-600" : ""}`}
             >
               {role}
             </Link>

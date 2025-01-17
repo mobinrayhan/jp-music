@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useCallback, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 
 function useDebounce(value, delay) {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -22,32 +22,35 @@ function useDebounce(value, delay) {
 export default function SearchInput() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const initialSearchTerm = searchParams.get('querySearch') || '';
-  
+  const initialSearchTerm = searchParams.get("querySearch") || "";
+
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const debouncedSearchTerm = useDebounce(searchTerm, 300); // 300ms delay
 
-  const updateQueryParam = useCallback((value) => {
-    const params = new URLSearchParams(searchParams);
-    if (value) {
-      params.set('querySearch', value);
-    } else {
-      params.delete('querySearch');
-    }
-    router.push(`?${params.toString()}`, { scroll: false });
-  }, [router, searchParams]);
+  const updateQueryParam = useCallback(
+    (value) => {
+      const params = new URLSearchParams(searchParams);
+      if (value) {
+        params.set("querySearch", value);
+      } else {
+        params.delete("querySearch");
+      }
+      router.push(`?${params.toString()}`, { scroll: false });
+    },
+    [router, searchParams],
+  );
 
   useEffect(() => {
     updateQueryParam(debouncedSearchTerm);
   }, [debouncedSearchTerm, updateQueryParam]);
 
   return (
-    <section className="my-4 bg-gray-200">
+    <section className="my-4 bg-gray-200 dark:bg-slate-600">
       <div className="custom-container">
         <input
           type="text"
           placeholder="Search your sound effects"
-          className="w-full border-none bg-gray-200 px-3 py-2 outline-none"
+          className="w-full border-none bg-gray-200 px-3 py-2 outline-none dark:bg-slate-600"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />

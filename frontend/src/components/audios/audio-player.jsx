@@ -106,7 +106,7 @@ export default function AudioPlayer() {
   if (!currentTrack) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-10 mt-20 border-t bg-white shadow-lg">
+    <div className="fixed bottom-0 left-0 right-0 z-10 mt-20 border-t bg-white shadow-lg dark:bg-slate-950">
       <div className="custom-container grid w-full grid-cols-1 items-center justify-center md:grid-cols-8 md:gap-4">
         <h3 className="text-center text-lg font-semibold md:col-span-8 md:text-left">
           {currentTrack.name}

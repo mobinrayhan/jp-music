@@ -58,7 +58,11 @@ function FormInputs({ onCreatingPlaylist, hasShowBtn, onHideAddPlaylist }) {
         placeholder="Enter Your Playlist Name"
       />
 
-      <Button className="rounded-sm" type="submit" disabled={pending}>
+      <Button
+        className="rounded-sm dark:bg-slate-700 dark:text-white"
+        type="submit"
+        disabled={pending}
+      >
         {pending ? "Creating..." : "Create Playlist"}
       </Button>
 

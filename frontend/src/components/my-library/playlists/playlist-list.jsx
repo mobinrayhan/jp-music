@@ -55,13 +55,15 @@ export default function PlaylistList({
         <li>
           <button
             disabled={isAddingAudio}
-            className="flex w-full items-center gap-2 bg-transparent transition duration-75 hover:bg-slate-100 md:gap-4"
+            className="flex w-full items-center gap-2 bg-transparent transition duration-75 hover:bg-slate-100 dark:hover:bg-slate-700 md:gap-4"
             onClick={onShowAddPlaylist}
           >
             <div className="flex h-10 w-10 items-center justify-center bg-[#000000]">
               <RiAddLargeFill size={20} className="text-white" />
             </div>
-            <span className="text-black">Add a new playlist</span>
+            <span className="text-black dark:text-white">
+              Add a new playlist
+            </span>
           </button>
         </li>
 
@@ -77,13 +79,13 @@ export default function PlaylistList({
               <li key={slug} className="pb-3">
                 <button
                   disabled={isAddingAudio}
-                  className={`flex w-full items-center gap-2 bg-transparent transition duration-100 hover:bg-slate-100 md:gap-4 ${activePlaylist === slug && "translate-x-3 !bg-slate-100 shadow"}`}
+                  className={`flex w-full items-center gap-2 bg-transparent transition duration-100 hover:bg-slate-100 dark:hover:bg-slate-600 md:gap-4 ${activePlaylist === slug && "translate-x-3 !bg-slate-100 shadow dark:!bg-slate-600"}`}
                   onClick={handleActivePlaylist.bind(null, slug)}
                 >
                   <div className="flex h-10 w-10 items-center justify-center bg-[#000000]">
                     <IoPlaySharp size={20} className="text-white" />
                   </div>
-                  <span className="text-black">{name}</span>
+                  <span className="text-black dark:text-white">{name}</span>
                 </button>
               </li>
             ))}

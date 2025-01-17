@@ -44,7 +44,7 @@ export function AddToPlaylist({ audioId }) {
           disabled={isPlaylistLoading}
           type="text"
           placeholder="Search your playlist"
-          className="w-full rounded-sm border-none bg-gray-200 px-3 py-2 outline-none"
+          className="w-full rounded-sm border-none bg-gray-200 px-3 py-2 outline-none dark:bg-slate-600"
         />
       )}
 
