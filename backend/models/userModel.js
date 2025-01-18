@@ -589,3 +589,30 @@ exports.updateUser = async ({ input, updatedUser }) => {
 
   return userColl.updateOne(query, { $set: updatedUser });
 };
+
+exports.getAccountInfo = async (input) => {
+  if (!input) {
+    throw new Error('Input is required to check user role');
+  }
+
+  const query = getMongoQueryFromInput(input);
+
+  const db = await connectToDatabase();
+  const userColl = db.collection('users');
+  return await userColl
+    .aggregate([
+      {
+        $match: query, // Find the specific user based on the query
+      },
+      {
+        $project: {
+          username: 1,
+          email: 1,
+          totalDownloads: { $size: '$downloads' },
+          totalPlaylists: { $size: '$playlists' },
+          totalFavorites: { $size: '$favorites' },
+        },
+      },
+    ])
+    .next();
+};

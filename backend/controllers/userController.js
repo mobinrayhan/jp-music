@@ -336,3 +336,15 @@ exports.getDisabledUsers = async (req, res, next) => {
     next(e);
   }
 };
+
+exports.accountInfo = async (req, res, next) => {
+  const { id } = req.user;
+
+  try {
+    const accountInfo = await userModel.getAccountInfo(id);
+    res.json({ message: 'Accounts Info Get Successfully!', accountInfo });
+  } catch (e) {
+    console.log(e);
+    next(e);
+  }
+};

@@ -23,5 +23,6 @@ router.post('/toggle-favorites', userController.postToggleFavourites);
 router.put('/toggle-active-status', userController.postUpdateActiveStatus);
 router.put('/update-user', userController.editUser);
 router.get('/disabled-users', userController.getDisabledUsers);
+router.get('/account-info', userController.accountInfo);
 
 module.exports = router;
