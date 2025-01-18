@@ -1,3 +1,5 @@
+import AccountMain from "@/components/account/account-main";
+
 export const metadata = {
   title: "Soundei | Account Settings – Manage Your Profile",
   description:
@@ -18,5 +20,5 @@ export default async function Accounts() {
   //   );
   // }
 
-  return <div>Accounts</div>;
+  return <AccountMain />;
 }

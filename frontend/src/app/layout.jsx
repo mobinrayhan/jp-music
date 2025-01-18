@@ -46,7 +46,7 @@ export async function generateMetadata() {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="light">
       <body>
         <NextAuthProvider>{children}</NextAuthProvider>
       </body>
