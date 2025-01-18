@@ -34,6 +34,7 @@ const allowedOrigins = [
   'http://localhost:3000',
   'https://soundei.com',
   'https://vps-front.soundei.com',
+  'https://boss-admin.soundei.com',
   'http://localhost:3030',
 ];
 
