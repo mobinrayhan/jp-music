@@ -76,9 +76,9 @@ const config = (phase) => {
 
       // API_URL: "https://vps-backend.soundei.com",
       // API_URL: "http://192.168.0.107:4000",
-      API_URL: "http://185.197.251.107:4000",
+      API_URL: "https://api.soundei.com",
 
-      NEXTAUTH_URL: "http://185.197.251.107:4000",
+      NEXTAUTH_URL: "https://soundei.com",
       // NEXTAUTH_URL: "http://192.168.0.107:3000",
       // NEXTAUTH_URL: "https://vps-front.soundei.com",
 
