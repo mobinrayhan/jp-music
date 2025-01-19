@@ -3,7 +3,7 @@ import { fetchWithApiKey } from "@/utils/api";
 import { getServerSession } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "../ui/button";
+import SignoutButton from "./signout-btn";
 
 export default async function AccountMain() {
   const session = await getServerSession(authOptions);
@@ -33,7 +33,7 @@ export default async function AccountMain() {
               <p>{user.accountInfo.email}</p>
             </div>
 
-            <Button className="ml-auto">Logout</Button>
+            <SignoutButton />
           </article>
         </header>
 
