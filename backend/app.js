@@ -8,7 +8,7 @@ const fs = require('fs');
 const multer = require('multer');
 
 const app = express();
-const port = process.env.PORT || 4000;
+const port = 4000;
 const path = require('path');
 const { connectToDatabase } = require('./models/db');
 
